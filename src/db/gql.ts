@@ -21,23 +21,21 @@ export const createSchema = (connectionString: string) => {
     });
 };
 
-export type GqlInvoke = ReturnType<ReturnType<typeof makeGqlClientFactory>>;
-export const makeGqlClientFactory = (schema: GraphQLSchema) => {
-    return (pgClient: PoolClient) => {
-        return <T = any>(strings: TemplateStringsArray, ...values: unknown[]) => (params: {
-            variables?: Record<string, any>;
-        }) => {
-            const { variables } = params;
-            const query = typeof strings === 'string' ? strings : String.raw(strings, ...values);
-            return graphql<T>(schema, query, null, { pgClient }, variables).then((x) => {
-                if (x.errors) {
-                    console.log(x.errors);
-                    throw new GqlError('Gql error', x.errors);
-                }
+export type GqlInvoke = ReturnType<typeof createGqlClient>;
+export const createGqlClient = (pgClient: PoolClient, schema: GraphQLSchema) => {
+    return <T = any>(strings: TemplateStringsArray, ...values: unknown[]) => (params: {
+        variables?: Record<string, any>;
+    }) => {
+        const { variables } = params;
+        const query = typeof strings === 'string' ? strings : String.raw(strings, ...values);
+        return graphql<T>(schema, query, null, { pgClient }, variables).then((x) => {
+            if (x.errors) {
+                console.log(x.errors);
+                throw new GqlError('Gql error', x.errors);
+            }
 
-                return x.data as T;
-            });
-        };
+            return x.data as T;
+        });
     };
 };
 

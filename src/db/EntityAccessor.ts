@@ -17,7 +17,7 @@ import {
 } from './entity';
 import { GqlInvoke } from './gql';
 
-export const OPT_TYPES = 'OPT_TYPES';
+const OPT_TYPES = 'OPT_TYPES';
 
 export type FindAndCountResult<E extends EntityBase, F extends FieldSelector<E, F>> = {
     items: Array<OriginInfer<E, F>>;
@@ -42,7 +42,7 @@ export class EntityAccessor<E extends EntityBase> {
     private pkArgDef: string = '';
     private pkArgsAssign: string = '';
 
-    public constructor(private params: { typeName: string }) {
+    public constructor(private typeName: string) {
         this.optTypes = {
             filter: `${this.typeName}Filter!`,
             first: 'Int!',
@@ -114,19 +114,15 @@ export class EntityAccessor<E extends EntityBase> {
     };
 
     private get itemName() {
-        return camelCase(this.params.typeName);
+        return camelCase(this.typeName);
     }
 
     private get listName() {
         return pluralize(this.itemName);
     }
 
-    private get typeName() {
-        return this.params.typeName;
-    }
-
     private get pluralTypeName() {
-        return pluralize(this.params.typeName);
+        return pluralize(this.typeName);
     }
 
     private prepareQuery = (query: Partial<Query<any, any>>) => {
@@ -159,9 +155,7 @@ export class EntityAccessor<E extends EntityBase> {
             query${declStr} {
                 items: ${this.listName + varsAssign + selector}
             }          
-        `({ variables }).then((x) => {
-            return x.items as Array<OriginInfer<E, F>>;
-        });
+        `({ variables }).then((x) => x.items as Array<OriginInfer<E, F>>);
     };
 
     public findAndCount = <F extends FieldSelector<E, F>>(
@@ -236,9 +230,7 @@ export class EntityAccessor<E extends EntityBase> {
             query${declStr} {
                 item: ${this.itemName}(${this.pkArgsAssign}) ${selector}
             }
-        `({ variables: { ...pk, ...variables } }).then((x) => {
-            return (x.item ?? null) as OriginInfer<E, F> | null;
-        });
+        `({ variables: { ...pk, ...variables } }).then((x) => (x.item ?? null) as OriginInfer<E, F> | null);
     };
 
     public findByPkOrError = async <F extends FieldSelector<E, F>>(
@@ -271,9 +263,7 @@ export class EntityAccessor<E extends EntityBase> {
                     item: ${this.itemName} ${selector}
                 }
             }
-        `({ variables: { item, ...variables } }).then((x) => {
-            return x.result.item as OriginInfer<E, F>;
-        });
+        `({ variables: { item, ...variables } }).then((x) => x.result.item as OriginInfer<E, F>);
     };
 
     public update = <F extends FieldSelector<E, F> = []>(

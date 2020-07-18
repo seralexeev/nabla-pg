@@ -137,7 +137,7 @@ export type Filter<T> =
               : NonNullable<T[P]> extends EntityConnection<infer Entity>
               ? ConnectionFilter<Entity>
               : T[P] extends JsonObject | null
-              ? JsonFilter
+              ? JsonFilter | Scalar<T[P]>
               : T[P] extends string | null
               ? Scalar<T[P]> | StringFilter
               : Scalar<T[P]>;
