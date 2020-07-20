@@ -1,6 +1,6 @@
 import PgManyToManyPlugin from '@graphile-contrib/pg-many-to-many';
 import PgSimplifyInflectorPlugin from '@graphile-contrib/pg-simplify-inflector';
-import { graphql, GraphQLSchema, GraphQLError } from 'graphql';
+import { graphql, GraphQLError, GraphQLSchema } from 'graphql';
 import { PoolClient } from 'pg';
 import { createPostGraphileSchema } from 'postgraphile';
 import ConnectionFilterPlugin from 'postgraphile-plugin-connection-filter';

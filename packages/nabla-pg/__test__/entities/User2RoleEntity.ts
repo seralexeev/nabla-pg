@@ -1,5 +1,5 @@
-import { EntityBase } from '../../db/entity';
-import { EntityAccessor } from '../../db/EntityAccessor';
+import { EntityBase } from '../../src/entity';
+import { EntityAccessor } from '../../src/EntityAccessor';
 
 export type User2RoleEntity = EntityBase<'User2Role', { userId: string; roleName: string }>;
 

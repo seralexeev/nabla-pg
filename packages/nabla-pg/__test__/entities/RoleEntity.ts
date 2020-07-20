@@ -1,5 +1,5 @@
-import { EntityBase } from '../../db/entity';
-import { EntityAccessor } from '../../db/EntityAccessor';
+import { EntityBase } from '../../src/entity';
+import { EntityAccessor } from '../../src/EntityAccessor';
 import { UserEntity } from './UserEntity';
 
 export const permissions = ['*', 'orders.view', 'orders.create', 'payment.confirm'] as const;

@@ -1,6 +1,6 @@
 import { GraphQLSchema } from 'graphql';
 import { Pool, PoolClient } from 'pg';
-import { GqlInvoke, createGqlClient } from './gql';
+import { createGqlClient, GqlInvoke } from './gql';
 import { createSqlClient, SqlInvoke } from './sql';
 
 export type Transaction = { gql: GqlInvoke; sql: SqlInvoke; client: PoolClient };

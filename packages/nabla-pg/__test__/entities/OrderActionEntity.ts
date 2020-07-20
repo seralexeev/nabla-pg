@@ -1,6 +1,6 @@
-import { EntityBase, IdPkey, JsonObject } from '../../db/entity';
+import { EntityBase, IdPkey, JsonObject } from '../../src/entity';
+import { EntityAccessor } from '../../src/EntityAccessor';
 import { UserEntity } from './UserEntity';
-import { EntityAccessor } from '../../db/EntityAccessor';
 
 export const orderActions = ['CREATE', 'CHANGE', 'FEEDBACK'] as const;
 export type OrderActionType = typeof orderActions[number];

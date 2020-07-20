@@ -1,7 +1,7 @@
-import { EntityBase, IdPkey, DefaultValue } from '../../db/entity';
-import { UserEntity } from './UserEntity';
+import { DefaultValue, EntityBase, IdPkey } from '../../src/entity';
+import { EntityAccessor } from '../../src/EntityAccessor';
 import { OrderActionEntity } from './OrderActionEntity';
-import { EntityAccessor } from '../../db/EntityAccessor';
+import { UserEntity } from './UserEntity';
 
 const statuses = ['DRAFT', 'NEW', 'IN_PROGRESS', 'DONE', 'CANCELED'] as const;
 export type OrderStatus = typeof statuses[number];

@@ -1,11 +1,11 @@
 import { Pool } from 'pg';
-import { createPg } from '../db';
-import { createSchema } from '../db/gql';
+import { createPg } from '../src';
+import { createSchema } from '../src/gql';
+import { OrderActions } from './entities/OrderActionEntity';
+import { OrderFeedback, Orders } from './entities/OrderEntity';
 import { Roles } from './entities/RoleEntity';
 import { User2Roles } from './entities/User2RoleEntity';
 import { Users } from './entities/UserEntity';
-import { Orders, OrderFeedback } from './entities/OrderEntity';
-import { OrderActions } from './entities/OrderActionEntity';
 
 const connectionString = 'postgres://nabla:nabla@localhost:5433/nabla_db';
 
@@ -223,6 +223,13 @@ describe('EntityAccessor tests', () => {
                     offset: 0,
                     orderBy: [['createdAt', 'DESC']],
                 }),
+            },
+            first: 5,
+            offset: 2,
+            filter: {
+                fullName: {
+                    includesInsensitive: 'Nik',
+                },
             },
         });
 

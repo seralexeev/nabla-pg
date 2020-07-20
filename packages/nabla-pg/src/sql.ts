@@ -1,4 +1,4 @@
-import { Pool, PoolClient, QueryResultRow } from 'pg';
+import { PoolClient } from 'pg';
 
 export type SqlInvoke = ReturnType<typeof createSqlClient>;
 export const createSqlClient = (client: PoolClient) => {

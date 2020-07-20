@@ -1,4 +1,4 @@
-import { camelCase, isError, merge, snakeCase } from 'lodash';
+import { camelCase, merge, snakeCase } from 'lodash';
 import pluralize from 'pluralize';
 import {
     ConnectionQuery,
@@ -13,7 +13,7 @@ import {
     NominalType,
     OriginInfer,
     PrimaryKey,
-    Query,
+    Query
 } from './entity';
 import { GqlInvoke } from './gql';
 
@@ -207,12 +207,8 @@ export class EntityAccessor<E extends EntityBase> {
         args: { filter: Filter<E>; selector: F },
     ): Promise<OriginInfer<E, F>> => {
         const res = await this.findOne(gql, args);
-        if (isError(res)) {
-            return res;
-        }
-
         if (!res) {
-            throw new Error('Not found');
+            throw new NotFoundError(`${this.typeName} not found`);
         }
 
         return res;
@@ -238,12 +234,8 @@ export class EntityAccessor<E extends EntityBase> {
         args: { pk: PrimaryKey<E>; selector: F },
     ): Promise<OriginInfer<E, F>> => {
         const res = await this.findByPk(gql, args);
-        if (isError(res)) {
-            return res;
-        }
-
         if (!res) {
-            throw new Error('Not found');
+            throw new NotFoundError(`${this.typeName} not found`);
         }
 
         return res;
@@ -334,10 +326,6 @@ export class EntityAccessor<E extends EntityBase> {
     ): Promise<OriginInfer<E, F>> => {
         const { patch, ...rest } = args;
         let res = await this.findByPk(gql, rest);
-        if (isError(res)) {
-            return res;
-        }
-
         if (!res) {
             res = await this.create(gql, rest);
         } else if (patch) {
@@ -402,3 +390,9 @@ const printFieldSelector = (ctx: PrepareQueryContext, query: any): string => {
         return res;
     }
 };
+
+export class NotFoundError extends Error {
+    constructor(message: string) {
+        super(message);
+    }
+}

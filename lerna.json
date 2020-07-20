@@ -1,0 +1,11 @@
+{
+  "packages": ["packages/*"],
+  "version": "independent",
+  "hoist": true,
+  "granularPathspec": false,
+  "command": {
+    "version": {
+      "allowBranch": "master"
+    }
+  }
+}
