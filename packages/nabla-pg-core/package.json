@@ -1,0 +1,13 @@
+{
+  "name": "nabla-pg-core",
+  "version": "0.0.1",
+  "dependencies": {
+    "graphql": "15.3.0",
+    "pg": "8.3.0",
+    "@graphile-contrib/pg-simplify-inflector": "6.0.0",
+    "postgraphile": "4.7.0",
+    "postgraphile-plugin-connection-filter": "2.0.0",
+    "@graphile-contrib/pg-many-to-many": "1.0.0-beta.13",
+    "lodash": "4.17.19"
+  }
+}

@@ -28,9 +28,9 @@ export const createGqlClient = (pgClient: PoolClient, schema: GraphQLSchema) => 
     }) => {
         const { variables } = params;
         const query = typeof strings === 'string' ? strings : String.raw(strings, ...values);
-        return graphql<T>(schema, query, null, { pgClient }, variables).then((x) => {
+        return graphql(schema, query, null, { pgClient }, variables).then((x) => {
             if (x.errors) {
-                console.log(x.errors);
+                console.error(x.errors);
                 throw new GqlError('Gql error', x.errors);
             }
 

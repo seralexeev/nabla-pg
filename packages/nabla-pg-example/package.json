@@ -1,0 +1,9 @@
+{
+  "name": "nabla-pg-example",
+  "version": "0.0.1",
+  "dependencies": {
+    "express": "4.17.1",
+    "fastify": "3.1.1",
+    "pg": "8.3.0"
+  }
+}

@@ -1,8 +1,11 @@
 {
     "cSpell.words": [
         "Inflector",
+        "Queryable",
+        "fastify",
         "fkey",
         "graphile",
+        "nabla",
         "postgraphile",
         "postgres",
         "timestamptz"

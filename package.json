@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "A library that greatly controls data access and gives full control over types and queries.",
   "scripts": {
+    "test": "jest",
     "run:db": "docker rm -f nabla-pg ; docker run --name nabla-pg -d -p 5433:5432 -e POSTGRES_PASSWORD=nabla -e POSTGRES_USER=nabla -e POSTGRES_DB=nabla_db postgres:12.1"
   },
   "keywords": [
@@ -13,11 +14,18 @@
   "author": "Sergey Alexeev",
   "license": "ISC",
   "devDependencies": {
-    "jest": "26.1.0",
-    "lerna": "^3.20.2",
+    "jest": "26.2.2",
+    "@types/jest": "26.0.8",
+    "lerna": "3.22.1",
     "prettier": "2.0.5",
-    "ts-jest": "26.1.3",
-    "ts-node-dev": "1.0.0-pre.52",
-    "typescript": "3.9.7"
+    "ts-jest": "26.1.4",
+    "ts-node-dev": "1.0.0-pre.56",
+    "typescript": "3.9.7",
+    "@types/pluralize": "0.0.29",
+    "@types/lodash": "4.14.158"
+  },
+  "dependencies": {
+    "nabla-pg-core": "file:packages/nabla-pg-core",
+    "nabla-pg-example": "file:packages/nabla-pg-example"
   }
 }

@@ -2,7 +2,6 @@ import { camelCase, merge, snakeCase } from 'lodash';
 import pluralize from 'pluralize';
 import {
     ConnectionQuery,
-    ConnectionSelector,
     EntityBase,
     EntityConnection,
     EntityCreate,
@@ -71,16 +70,16 @@ export class EntityAccessor<E extends EntityBase> {
         return selector as any;
     }
 
-    public createQuery = <F extends FieldSelector<E, F>>(query: Query<E, F>): { selector: F } => {
+    public createQuery = <F extends FieldSelector<E, F>>(query: Query<E, F>): NominalType<F, E> => {
         this.applyOptTypes(query);
-        return query;
+        return query as any;
     };
 
-    public createConnectionQuery = <F extends ConnectionSelector<EntityConnection<E>, F>>(
+    public createConnectionQuery = <F extends FieldSelector<EntityConnection<E>, F>>(
         query: ConnectionQuery<E, F>,
-    ): { selector: F } => {
+    ): NominalType<F, EntityConnection<E>> => {
         this.applyOptTypes(query);
-        return query;
+        return query as any;
     };
 
     protected getPkArg = (pk: PrimaryKey<E>) => {

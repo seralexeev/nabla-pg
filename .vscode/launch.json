@@ -30,6 +30,21 @@
       "args": ["${fileBasenameNoExtension}"],
       "internalConsoleOptions": "neverOpen",
       "port": 9229
+    },
+    {
+      "name": "debug ts script",
+      "type": "node",
+      "request": "launch",
+      "protocol": "inspector",
+      "cwd": "${workspaceRoot}",
+      "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/ts-node-dev",
+      "args": ["--files", "${relativeFile}"],
+      "env": {
+        "TS_NODE_FILES": "true"
+      },
+      "restart": true,
+      "console": "integratedTerminal",
+      "outputCapture": "std"
     }
   ]
 }

@@ -9,14 +9,14 @@ export type EntityBase<TName extends string = any, TPkey extends Record<string, 
     __typename: ReadonlyValue<TName>;
     updatedAt: ReadonlyValue<Date>;
     createdAt: ReadonlyValue<Date>;
-};
+} & Queryable;
 
 export type ReadonlyValue<T> = NominalType<T, 'readonly'>;
 export type DefaultValue<T> = NominalType<T, 'default'>;
+export type EntityConnection<E> = { nodes: E[]; totalCount: number } & Queryable;
+export type Queryable = NominalType<{}, 'queryable'>;
 
-export type EntityConnection<Entity> = ReadonlyValue<{ nodes: Entity[]; totalCount: number }>;
-
-export type PrimaryKey<T> = T extends EntityBase<any, infer TPkey> ? TPkey : never;
+export type PrimaryKey<T> = T extends EntityBase<any, infer TPkey> ? UnwrapNominal<TPkey> : never;
 
 export type OriginInfer<T, F extends FieldSelector<T, F> | unknown> = F extends { selector: FieldSelector<T, F> }
     ? OriginInferImpl<T, F['selector']>
@@ -42,24 +42,14 @@ type SelectorWrapper<T, F> = {
     selector: FieldSelector<T, F>;
 };
 
-export type ConnectionSelector<C, S> = Array<PrimitiveEntityKeys<C>>;
-
-type ConnectionSelectorWrapper<T, F> = {
-    selector: ConnectionSelector<T, F>;
-};
-
 export type FieldSelector<E, S> =
     | Array<PrimitiveEntityKeys<E>>
     | {
           [P in keyof S]: P extends keyof E
-              ? NonNullable<E[P]> extends EntityConnection<EntityBase>
-                  ?
-                        | ConnectionSelector<EntityConnection<E[P]>, S[P]>
-                        | ConnectionSelectorWrapper<EntityConnection<E[P]>, S[P]>
-                  : NonNullable<E[P]> extends EntityBase
+              ? NonNullable<E[P]> extends Queryable
                   ? FieldSelector<NonNullable<E[P]>, S[P]> | SelectorWrapper<E[P], S[P]>
                   : E[P] extends Array<infer A>
-                  ? A extends EntityBase
+                  ? A extends Queryable
                       ? FieldSelector<A, S[P]> | SelectorWrapper<A, S[P]>
                       : true
                   : true
@@ -67,12 +57,14 @@ export type FieldSelector<E, S> =
       };
 
 export type EntityEntityKeys<T> = {
-    [K in keyof T]: NonNullable<T[K]> extends EntityBase ? K : NonNullable<T[K]> extends EntityBase[] ? K : never;
+    [K in keyof T]: NonNullable<T[K]> extends Queryable ? K : NonNullable<T[K]> extends Queryable[] ? K : never;
 }[keyof T];
 
 export type PrimitiveEntityKeys<T> = Exclude<keyof NonNullable<T>, EntityEntityKeys<T>>;
 
-export type EntityPatch<T, TPkey> = Partial<Omit<T, keyof TPkey | keyof EntityBase | EntityEntityKeys<T>>>;
+export type EntityPatch<T, TPkey> = UnwrapNominal<
+    Partial<Omit<T, keyof TPkey | keyof EntityBase | EntityEntityKeys<T>>>
+>;
 
 export type EntityReadonlyKeys<T> = {
     [K in keyof T]: NonNullable<T[K]> extends ReadonlyValue<unknown> ? K : never;
@@ -84,12 +76,14 @@ export type EntityDefaultKeys<T> = {
 
 export type EntityDefaults<T> = Pick<T, EntityDefaultKeys<T>>;
 
-export type EntityCreate<T> = Omit<
-    Pick<T, NonNullableKeys<T>>,
-    keyof EntityBase | EntityEntityKeys<T> | EntityReadonlyKeys<T> | EntityDefaultKeys<T>
-> &
-    OnlyNullableAsUndefined<T> &
-    Partial<EntityDefaults<T>>;
+export type EntityCreate<T> = UnwrapNominal<
+    Omit<
+        Pick<T, NonNullableKeys<T>>,
+        keyof EntityBase | EntityEntityKeys<T> | EntityReadonlyKeys<T> | EntityDefaultKeys<T>
+    > &
+        OnlyNullableAsUndefined<T> &
+        Partial<EntityDefaults<T>>
+>;
 
 type MaybeNominalScalar<T> =
     | { isNull: boolean }
@@ -130,6 +124,26 @@ type JsonFilter = { containsAllKeys: string[] } | { containsAnyKeys: string[] } 
 
 type ConnectionFilter<Entity> = { some: Filter<Entity> } | { none: Filter<Entity> } | { every: Filter<Entity> };
 
+type ArrayFilter<T> =
+    | { isNull: boolean }
+    | { equalTo: T[] }
+    | { notEqualTo: T[] }
+    | { distinctFrom: T[] }
+    | { notDistinctFrom: T[] }
+    | { lessThan: T[] }
+    | { lessThanOrEqualTo: T[] }
+    | { greaterThan: T[] }
+    | { greaterThanOrEqualTo: T[] }
+    | { contains: T[] }
+    | { containedBy: T[] }
+    | { overlaps: T[] }
+    | { anyEqualTo: T }
+    | { anyNotEqualTo: T }
+    | { anyLessThan: T }
+    | { anyLessThanOrEqualTo: T }
+    | { anyGreaterThan: T }
+    | { anyGreaterThanOrEqualTo: T };
+
 export type Filter<T> =
     | {
           [P in keyof T]?: NonNullable<T[P]> extends EntityBase
@@ -140,9 +154,14 @@ export type Filter<T> =
               ? JsonFilter | Scalar<T[P]>
               : T[P] extends string | null
               ? Scalar<T[P]> | StringFilter
+              : T[P] extends Array<infer A>
+              ? A extends EntityBase
+                  ? never
+                  : ArrayFilter<A>
               : Scalar<T[P]>;
       }
     | { or: Array<Filter<T>> }
+    | { and: Array<Filter<T>> }
     | { not: Filter<T> };
 
 export type FindOptions<E> = {
@@ -156,11 +175,9 @@ export type Query<E, F extends FieldSelector<E, F>> = {
     selector: F;
 } & FindOptions<E>;
 
-export type ConnectionQuery<E, F extends ConnectionSelector<EntityConnection<E>, F>> = {
+export type ConnectionQuery<E, F extends FieldSelector<EntityConnection<E>, F>> = {
     selector: F;
 } & FindOptions<E>;
-
-export type Argument<T, N extends number> = T extends (...args: infer P) => unknown ? P[N] : never;
 
 export type NullableKeys<T> = {
     [K in keyof T]: null extends T[K] ? K : never;
