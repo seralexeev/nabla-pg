@@ -22,7 +22,7 @@ describe('EntityAccessor tests', () => {
             id uuid PRIMARY KEY DEFAULT uuid_generate_v4()
           , first_name text
           , last_name text
-          , sex text
+          , gender text
           , updated_at timestamptz NOT NULL DEFAULT clock_timestamp()
           , created_at timestamptz NOT NULL DEFAULT clock_timestamp()
         )`;

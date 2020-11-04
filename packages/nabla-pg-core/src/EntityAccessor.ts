@@ -1,4 +1,4 @@
-import { camelCase, merge, snakeCase } from 'lodash';
+import { camelCase, merge, snakeCase, toUpper } from 'lodash';
 import pluralize from 'pluralize';
 import {
     ConnectionQuery,
@@ -37,17 +37,22 @@ type PrepareQueryContext = {
     level: number;
 };
 
+type OptTypes<E> = Record<VariableKeys, string> & {
+    defaultFilter?: Filter<E>;
+};
+
 export class EntityAccessor<E extends EntityBase> {
-    private optTypes: Record<VariableKeys, string>;
+    private optTypes: OptTypes<E>;
     private pkArgDef: string = '';
     private pkArgsAssign: string = '';
 
-    public constructor(private typeName: string) {
+    public constructor(private typeName: string, defaultFilter?: Filter<E>) {
         this.optTypes = {
             filter: `${this.typeName}Filter!`,
             first: 'Int!',
             offset: 'Int!',
             orderBy: `[${this.pluralTypeName}OrderBy!]`,
+            defaultFilter,
         };
     }
 
@@ -66,7 +71,7 @@ export class EntityAccessor<E extends EntityBase> {
         F2 extends FieldSelector<E, F2>,
         F3 extends FieldSelector<E, F3>
     >(s1?: F1, s2?: F2, s3?: F3): NominalType<F1 & F2 & F3, E> {
-        const selector = merge(s1, s2, s3);
+        const selector = merge({}, ensureSelector(s1), ensureSelector(s2), ensureSelector(s3));
         this.applyOptTypes(selector);
         return selector as any;
     }
@@ -105,12 +110,7 @@ export class EntityAccessor<E extends EntityBase> {
             return;
         }
 
-        Object.defineProperty(obj, OPT_TYPES, {
-            enumerable: false,
-            configurable: false,
-            writable: false,
-            value: this.optTypes,
-        });
+        obj[OPT_TYPES] = this.optTypes;
     };
 
     private get itemName() {
@@ -134,10 +134,10 @@ export class EntityAccessor<E extends EntityBase> {
             varsDeclaration: [],
         };
 
-        const varsAssign = prepareQueryVars(ctx, query);
+        const varsAssign = this.prepareQueryVars(ctx, query);
 
         return {
-            selector: printFieldSelector(ctx, query.selector),
+            selector: this.printFieldSelector(ctx, query.selector),
             varsDeclaration: ctx.varsDeclaration,
             varsAssign,
             variables: ctx.variables,
@@ -349,59 +349,78 @@ export class EntityAccessor<E extends EntityBase> {
 
         return res;
     };
-}
 
-const prepareQueryVars = (ctx: PrepareQueryContext, query: Partial<Query<any, any>>) => {
-    const varsAssign: string[] = [];
-    const optTypes = (query as any)[OPT_TYPES] as FindOptions<any>;
+    private prepareQueryVars = (ctx: PrepareQueryContext, query: Partial<Query<any, any>>) => {
+        const varsAssign: string[] = [];
+        const optTypes = (query as any)[OPT_TYPES] as OptTypes<any>;
 
-    for (const key of knownQueryOptions.filter((x) => query[x] !== undefined)) {
-        const name = key + '_' + ctx.level;
+        for (const key of knownQueryOptions.filter((x) => query[x] !== undefined)) {
+            const name = key + '_' + ctx.level;
 
-        ctx.varsDeclaration.push(`$${name}: ${optTypes[key]}`);
-        varsAssign.push(`${key}: $${name}`);
+            ctx.varsDeclaration.push(`$${name}: ${optTypes[key]}`);
+            varsAssign.push(`${key}: $${name}`);
 
-        if (key === 'orderBy') {
-            ctx.variables[name] = query.orderBy!.map(
-                ([field, direction]) => snakeCase(field as string).toUpperCase() + '_' + direction,
-            );
-        } else {
-            ctx.variables[name] = query[key];
-        }
-    }
-
-    if (varsAssign.length) {
-        ctx.level++;
-        return `(${varsAssign.join(', ')}) `;
-    }
-
-    return '';
-};
-
-const printFieldSelector = (ctx: PrepareQueryContext, query: any): string => {
-    if (!query) {
-        return '{ __typename }';
-    }
-
-    const varsAssign = !Array.isArray(query) && prepareQueryVars(ctx, query);
-    if (varsAssign || 'selector' in query) {
-        // query
-        return varsAssign + printFieldSelector(ctx, query['selector']);
-    } else {
-        // selector
-        let res = '{';
-        if (Array.isArray(query)) {
-            res += ' ' + query.join(', ') || '__typename';
-        } else {
-            for (const key in query) {
-                if (query[key] === true) {
-                    res += ' ' + key;
-                } else {
-                    res += ' ' + key + ' ' + printFieldSelector(ctx, query[key]);
-                }
+            if (key === 'orderBy') {
+                ctx.variables[name] = query.orderBy!.map(
+                    ([field, direction]) => toUpper(snakeCase(field as string)) + '_' + direction,
+                );
+            } else if (key === 'filter') {
+                ctx.variables[name] = optTypes.defaultFilter
+                    ? merge({}, optTypes.defaultFilter, query[key])
+                    : query[key];
+            } else {
+                ctx.variables[name] = query[key];
             }
         }
-        res += ' }';
-        return res;
+
+        if (varsAssign.length) {
+            ctx.level++;
+            return `(${varsAssign.join(', ')}) `;
+        }
+
+        return '';
+    };
+
+    private printFieldSelector = (ctx: PrepareQueryContext, query: any): string => {
+        if (!query) {
+            return '{ __typename }';
+        }
+
+        const varsAssign = !Array.isArray(query) && this.prepareQueryVars(ctx, query);
+        if (varsAssign || 'selector' in query) {
+            // query
+            return varsAssign + this.printFieldSelector(ctx, query['selector']);
+        } else {
+            // selector
+            let res = '{';
+            if (Array.isArray(query)) {
+                res += ' ' + query.join(', ') || '__typename';
+            } else {
+                for (const key in query) {
+                    if (key === OPT_TYPES) {
+                        continue;
+                    }
+
+                    if (query[key] === true) {
+                        res += ' ' + key;
+                    } else {
+                        res += ' ' + key + ' ' + this.printFieldSelector(ctx, query[key]);
+                    }
+                }
+            }
+            res += ' }';
+            return res;
+        }
+    };
+}
+
+const ensureSelector = (selector: any) => {
+    if (Array.isArray(selector)) {
+        return selector.reduce((acc, x) => {
+            acc[x] = true;
+            return acc;
+        }, {});
     }
+
+    return selector;
 };

@@ -201,8 +201,12 @@ class TypeTag<TType, T> {
 }
 
 export type NominalType<TType, TTag> = TType & TypeTag<TType, TTag>;
-export type UnwrapNominal<T> = T extends TypeTag<infer N, any> ? N : T;
 export type UnwrapNominalTag<T> = T extends TypeTag<any, infer N> ? N : T;
+export type UnwrapNominal<T> = T extends Record<string, unknown>
+    ? { [K in keyof T]: UnwrapNominal<T[K]> }
+    : T extends TypeTag<infer N, any>
+    ? N
+    : T;
 
 export type JsonObject = { [x: string]: Json };
 export type Json = string | number | boolean | null | JsonObject | Json[];
