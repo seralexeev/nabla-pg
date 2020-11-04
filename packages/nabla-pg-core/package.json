@@ -1,6 +1,6 @@
 {
   "name": "nabla-pg-core",
-  "version": "0.0.6-alpha.0",
+  "version": "0.0.7-alpha.0",
   "license": "ISC",
   "scripts": {
     "build": "tsc",
