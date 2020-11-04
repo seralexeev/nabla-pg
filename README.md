@@ -18,6 +18,28 @@ yarn add nabla-pg-core
 
 ### TLDR
 
+This library doesn't provide a migration functionality, you can use any migration tool you want
+
+```sql
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+CREATE TABLE IF NOT EXISTS users (
+    id uuid PRIMARY KEY DEFAULT uuid_generate_v4()
+    , first_name text
+    , last_name text
+    , sex text
+    , updated_at timestamptz NOT NULL DEFAULT clock_timestamp()
+    , created_at timestamptz NOT NULL DEFAULT clock_timestamp()
+)
+
+CREATE OR REPLACE FUNCTION users_full_name(u users) RETURNS text AS $$
+    SELECT concat_ws(' ', last_name, first_name) from users where id = u.id
+$$ LANGUAGE sql STABLE;
+
+```
+
+Then you can make queries using typescript and postgraphile:
+
 ```ts
 import { createSchema, Pg, EntityBase, IdPkey, ReadonlyValue, EntityAccessor } from 'nabla-pg-core';
 import { Pool } from 'pg';
