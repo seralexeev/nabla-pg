@@ -5,7 +5,7 @@
   "scripts": {
     "build": "tsc",
     "test": "jest",
-    "prepublish": "tsc"
+    "prepublish": "rm -rf dist && tsc && cp package.json dist/"
   },
   "files": [
     "dist/*"
