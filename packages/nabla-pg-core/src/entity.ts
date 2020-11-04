@@ -196,8 +196,8 @@ export type Nullable<T> = {
 };
 
 class TypeTag<TType, T> {
-    private __TYPE_TAG!: T;
-    private __TYPE!: TType;
+    protected __TYPE_TAG!: T;
+    protected __TYPE!: TType;
 }
 
 export type NominalType<TType, TTag> = TType & TypeTag<TType, TTag>;
