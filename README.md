@@ -6,6 +6,51 @@ When I first saw the [postgraphile](https://github.com/graphile/postgraphile) I 
 
 Generating code from .graphql files didn't suit me very well. I find this approach too lengthy to define requests and fields in advance, and in the company where I work the requirements change very often.
 
+### Installation
+
+```bash
+# npm
+npm i nabla-pg-core
+
+# yarn
+yarn add nabla-pg-core
+```
+
+### TLDR
+
+```ts
+import { createSchema, Pg, EntityBase, IdPkey, ReadonlyValue, EntityAccessor } from 'nabla-pg-core';
+import { Pool } from 'pg';
+
+type UserEntity = EntityBase<'User', IdPkey> & {
+    firstName: string | null;
+    middleName: string | null;
+    lastName: string | null;
+    fullName: ReadonlyValue<string>;
+};
+
+const Users = new EntityAccessor<UserEntity>('User');
+
+(async () => {
+    const connectionString = 'postgres://nabla:nabla@localhost:5433/nabla_db';
+    const pool = new Pool({ connectionString });
+
+    const { gql } = new Pg(pool, await createSchema(connectionString));
+
+    const data = await Users.find(gql, {
+        selector: ['id'],
+        first: 5,
+        filter: {
+            fullName: {
+                includesInsensitive: 'Nik',
+            },
+        },
+    });
+
+    console.log(data);
+})();
+```
+
 ### Queries
 
 The whole idea is quite simple. We define the database structure in a familiar way, through migrations. For example, we have a table with users (for working with sql in ts code I use [vscode-sql-tagged-template-literals](https://marketplace.visualstudio.com/items?itemName=frigus02.vscode-sql-tagged-template-literals)):
@@ -75,7 +120,7 @@ await sql`CREATE OR REPLACE FUNCTION users_full_name(u users) RETURNS text AS $$
 $$ LANGUAGE sql STABLE`;
 ```
 
-Добавим его в нашу сущность как `Readonly`:
+Then add the field to our entity declaration as `Readonly`:
 
 ```typescript
 export type UserEntity = EntityBase<'User', IdPkey> & {.
@@ -142,7 +187,7 @@ export type OrderEntity = EntityBase<'Order', IdPkey> & {
 export const Orders = new EntityAccessor<OrderEntity>('Order');
 ```
 
-Создадим миграцию для этой сущности:
+Let's create a migration for the entity:
 
 ```typescript
 await sql`CREATE SEQUENCE IF NOT EXISTS orders_human_readable_id START 100`;
