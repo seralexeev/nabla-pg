@@ -4,10 +4,11 @@
   "license": "ISC",
   "scripts": {
     "build": "tsc",
-    "test": "jest"
+    "test": "jest",
+    "prepublish": "tsc"
   },
   "files": [
-    "dist/"
+    "dist/*"
   ],
   "dependencies": {
     "@graphile-contrib/pg-many-to-many": "1.0.0",
