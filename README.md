@@ -16,6 +16,19 @@ npm i nabla-pg-core
 yarn add nabla-pg-core
 ```
 
+In order to get proper nullable type inference you have to enable `strict` mode in your `tsconfig.json`:
+
+```json
+{
+    "compilerOptions": {
+        ...
+        "strict": true
+        ...
+    }
+    ...
+}
+```
+
 ### TLDR
 
 This library doesn't provide a migration functionality, you can use any migration tool you want
