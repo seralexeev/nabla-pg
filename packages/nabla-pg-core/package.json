@@ -5,7 +5,7 @@
   "scripts": {
     "build": "tsc",
     "test": "jest",
-    "prepublish": "rm -rf build tsc && cp package.json dist/"
+    "prepublish": "rm -rf dist tsc && cp package.json dist/src"
   },
   "dependencies": {
     "@graphile-contrib/pg-many-to-many": "1.0.0",

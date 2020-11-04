@@ -218,6 +218,7 @@ describe('EntityAccessor tests', () => {
         const usersWithOrders = await Users.find(pg.gql, {
             selector: {
                 id: true,
+                firstName: true,
                 orders: Orders.createQuery({
                     selector: ['id', 'feedback', 'createdAt'],
                     filter: {

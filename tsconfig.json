@@ -1,8 +1,12 @@
 {
-  "references": [
-      {
-          "path": "./packages/nabla-pg-core"
-      },
-  ],
-  "files": []
+  "compilerOptions": {
+    "lib": ["es2019"],
+    "target": "es2019",
+    "module": "commonjs",
+    "declaration": true,
+    "resolveJsonModule": false,
+    "esModuleInterop": true,
+    "strict": true
+  },
+  "exclude": ["node_modules"]
 }

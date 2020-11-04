@@ -1,18 +1,7 @@
 {
-  "extends": "../../tsconfig.settings.json",
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "lib": ["es2019"],
-    "target": "es2019",
-    "module": "commonjs",
-    "declaration": true,
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "strict": true,
-    "composite": true,
-    "importHelpers": true,
-    "moduleResolution": "node",
-    "esModuleInterop": true
+    "outDir": "./dist"
   },
-  "include": ["src"],
-  "exclude": ["**/__tests__/*"]
+  "exclude": ["node_modules"]
 }
