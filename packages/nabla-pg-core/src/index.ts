@@ -13,4 +13,6 @@ export {
     OriginInfer,
     FindOptions,
     Filter,
+    EntityCreate,
+    EntityPatch,
 } from './entity';
