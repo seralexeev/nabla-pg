@@ -1,13 +1,29 @@
 {
   "name": "nabla-pg-core",
   "version": "0.0.1",
+  "license": "ISC",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest"
+  },
+  "files": [
+    "./dist"
+  ],
   "dependencies": {
-    "graphql": "15.3.0",
-    "pg": "8.3.0",
-    "@graphile-contrib/pg-simplify-inflector": "6.0.0",
-    "postgraphile": "4.7.0",
-    "postgraphile-plugin-connection-filter": "2.0.0",
-    "@graphile-contrib/pg-many-to-many": "1.0.0-beta.13",
-    "lodash": "4.17.19"
+    "graphql": "15.4.0",
+    "pg": "8.4.2",
+    "@graphile-contrib/pg-simplify-inflector": "6.1.0",
+    "postgraphile": "4.9.2",
+    "postgraphile-plugin-connection-filter": "2.1.0",
+    "@graphile-contrib/pg-many-to-many": "1.0.0",
+    "lodash": "4.17.20"
+  },
+  "devDependencies": {
+    "jest": "26.6.3",
+    "@types/jest": "26.0.15",
+    "ts-jest": "26.4.3",
+    "ts-node-dev": "1.0.0",
+    "@types/pluralize": "0.0.29",
+    "@types/lodash": "4.14.164"
   }
 }

@@ -12,8 +12,9 @@ import {
     NominalType,
     OriginInfer,
     PrimaryKey,
-    Query
+    Query,
 } from './entity';
+import { NotFoundError } from './errors';
 import { GqlInvoke } from './gql';
 
 const OPT_TYPES = 'OPT_TYPES';
@@ -150,11 +151,13 @@ export class EntityAccessor<E extends EntityBase> {
         const { selector, varsDeclaration, variables, varsAssign } = this.prepareQuery(query);
         const declStr = varsDeclaration.length ? `(${varsDeclaration.join(', ')})` : '';
 
-        return gql`
+        const queryString = `
             query${declStr} {
                 items: ${this.listName + varsAssign + selector}
-            }          
-        `({ variables }).then((x) => x.items as Array<OriginInfer<E, F>>);
+            }
+        `;
+
+        return gql(queryString, variables).then((x) => x.items as Array<OriginInfer<E, F>>);
     };
 
     public findAndCount = <F extends FieldSelector<E, F>>(
@@ -164,27 +167,31 @@ export class EntityAccessor<E extends EntityBase> {
         const { selector, varsDeclaration, variables, varsAssign } = this.prepareQuery(query);
         const declStr = varsDeclaration.length ? `(${varsDeclaration.join(', ')})` : '';
 
-        return gql`
+        const queryString = `
             query${declStr} {
                 result: ${this.listName}Connection${varsAssign} {
                     items: nodes ${selector}
                     total: totalCount
                 }
             }
-        `({ variables }).then((x) => x.result as FindAndCountResult<E, F>);
+        `;
+
+        return gql(queryString, variables).then((x) => x.result as FindAndCountResult<E, F>);
     };
 
     public count = (gql: GqlInvoke, query: FindOptions<E>): Promise<CountResult> => {
         const { varsDeclaration, variables, varsAssign } = this.prepareQuery(query);
         const declStr = varsDeclaration.length ? `(${varsDeclaration.join(', ')})` : '';
 
-        return gql`
+        const queryString = `
             query${declStr} {
                 result: ${this.listName}Connection${varsAssign} {
                     total: totalCount
                 }
             }
-        `({ variables }).then((x) => x.result as CountResult);
+        `;
+
+        return gql(queryString, variables).then((x) => x.result as CountResult);
     };
 
     public findOne = <F extends FieldSelector<E, F>>(
@@ -193,12 +200,13 @@ export class EntityAccessor<E extends EntityBase> {
     ): Promise<OriginInfer<E, F> | null> => {
         const { selector, varsDeclaration, variables, varsAssign } = this.prepareQuery(args);
         const declStr = varsDeclaration.length ? `(${varsDeclaration.join(', ')})` : '';
-
-        return gql`
+        const queryString = `
             query${declStr} {
                 items: ${this.listName + varsAssign + selector}
             }          
-        `({ variables }).then((x) => (x.items[0] ?? null) as OriginInfer<E, F> | null);
+        `;
+
+        return gql(queryString, variables).then((x) => (x.items[0] ?? null) as OriginInfer<E, F> | null);
     };
 
     public findOneOrError = async <F extends FieldSelector<E, F>>(
@@ -221,11 +229,16 @@ export class EntityAccessor<E extends EntityBase> {
         const { selector, varsDeclaration, variables } = this.prepareQuery(args);
         const declStr = `(${[this.getPkArgImpl(pk), ...varsDeclaration].join(', ')})`;
 
-        return gql`
+        const queryString = `
             query${declStr} {
                 item: ${this.itemName}(${this.pkArgsAssign}) ${selector}
             }
-        `({ variables: { ...pk, ...variables } }).then((x) => (x.item ?? null) as OriginInfer<E, F> | null);
+        `;
+
+        return gql(queryString, {
+            ...pk,
+            ...variables,
+        }).then((x) => (x.item ?? null) as OriginInfer<E, F> | null);
     };
 
     public findByPkOrError = async <F extends FieldSelector<E, F>>(
@@ -247,14 +260,18 @@ export class EntityAccessor<E extends EntityBase> {
         const { item } = args;
         const { selector, varsDeclaration, variables } = this.prepareQuery(args);
         const declStr = `(${[`$item: ${this.typeName}Input!`, ...varsDeclaration].join(', ')})`;
-
-        return gql`
+        const queryString = `
             mutation${declStr} {
                 result: create${this.typeName}(input: { ${this.itemName}: $item }) {
                     item: ${this.itemName} ${selector}
                 }
             }
-        `({ variables: { item, ...variables } }).then((x) => x.result.item as OriginInfer<E, F>);
+        `;
+
+        return gql(queryString, {
+            item,
+            ...variables,
+        }).then((x) => x.result.item as OriginInfer<E, F>);
     };
 
     public update = <F extends FieldSelector<E, F> = []>(
@@ -265,23 +282,21 @@ export class EntityAccessor<E extends EntityBase> {
         const { selector, varsDeclaration, variables } = this.prepareQuery(args);
         const declStr = `(${[`$input: Update${this.typeName}Input!`, ...varsDeclaration].join(', ')})`;
 
-        const vars = {
-            variables: {
-                input: {
-                    ...pk,
-                    patch: patch,
-                },
-                ...variables,
-            },
-        };
-
-        return gql`
+        const queryString = `
             mutation${declStr} {
                 result: update${this.typeName}(input: $input) {
                     item: ${this.itemName} ${selector}
                 }
             }
-        `(vars).then((x) => x.result.item as OriginInfer<E, F>);
+        `;
+
+        return gql(queryString, {
+            input: {
+                ...pk,
+                patch: { ...(patch as any), updatedAt: new Date() },
+            },
+            ...variables,
+        }).then((x) => x.result.item as OriginInfer<E, F>);
     };
 
     public delete = <F extends FieldSelector<E, F> = []>(
@@ -291,14 +306,15 @@ export class EntityAccessor<E extends EntityBase> {
         const { pk } = args;
         const { selector, varsDeclaration, variables } = this.prepareQuery(args);
         const declStr = `(${[`$input: Delete${this.typeName}Input!`, ...varsDeclaration].join(', ')})`;
-
-        return gql`
+        const queryString = `
             mutation${declStr} {
                 result: delete${this.typeName}(input: $input) {
                     item: ${this.itemName} ${selector}
                 }
             }
-        `({ variables: { input: pk, ...variables } }).then((x) => x.result.item as OriginInfer<E, F>);
+        `;
+
+        return gql(queryString, { input: pk, ...variables }).then((x) => x.result.item as OriginInfer<E, F>);
     };
 
     public findOneOrCreate = async <F extends FieldSelector<E, F>>(
@@ -389,9 +405,3 @@ const printFieldSelector = (ctx: PrepareQueryContext, query: any): string => {
         return res;
     }
 };
-
-export class NotFoundError extends Error {
-    constructor(message: string) {
-        super(message);
-    }
-}

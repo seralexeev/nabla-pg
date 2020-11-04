@@ -1,18 +1,8 @@
 {
-  "compilerOptions": {
-    "target": "es2019",
-    "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "strict": true,
-    "esModuleInterop": true,
-    "inlineSourceMap": true,
-    "inlineSources": true,
-    "forceConsistentCasingInFileNames": true,
-    "allowSyntheticDefaultImports": true,
-    "rootDir": ".",
-    "baseUrl": "."
-  },
-  "exclude": ["node_modules"],
-  "compileOnSave": true
+  "references": [
+      {
+          "path": "./packages/nabla-pg-core"
+      },
+  ],
+  "files": []
 }

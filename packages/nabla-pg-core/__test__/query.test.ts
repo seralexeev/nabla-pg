@@ -1,5 +1,5 @@
 import { Pool } from 'pg';
-import { createPg } from '../src';
+import { Pg } from '../src';
 import { createSchema } from '../src/gql';
 import { OrderActions } from './entities/OrderActionEntity';
 import { OrderFeedback, Orders } from './entities/OrderEntity';
@@ -11,9 +11,10 @@ const connectionString = 'postgres://nabla:nabla@localhost:5433/nabla_db';
 
 describe('EntityAccessor tests', () => {
     let pool!: Pool;
+
     beforeAll(async () => {
         pool = new Pool({ connectionString });
-        const { sql } = createPg(pool, await createSchema(connectionString));
+        const { sql } = new Pg(pool, await createSchema(connectionString));
 
         await sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
 
@@ -77,21 +78,24 @@ describe('EntityAccessor tests', () => {
     });
 
     afterAll(async () => {
-        const { sql } = createPg(pool, await createSchema(connectionString));
+        const { sql } = new Pg(pool, await createSchema(connectionString));
 
-        await sql`DROP TABLE user2roles`;
-        await sql`DROP TABLE roles`;
-        await sql`DROP FUNCTION users_full_name`;
-        await sql`DROP TABLE users`;
-        await sql`DROP TABLE order_actions`;
-        await sql`DROP TABLE orders`;
-        await sql`DROP SEQUENCE IF EXISTS orders_human_readable_id`;
-
-        await pool.end();
+        try {
+            await sql`DROP TABLE user2roles`;
+            await sql`DROP TABLE roles`;
+            await sql`DROP FUNCTION users_full_name`;
+            await sql`DROP TABLE order_actions`;
+            await sql`DROP TABLE orders`;
+            await sql`DROP SEQUENCE IF EXISTS orders_human_readable_id`;
+            await sql`DROP TABLE users`;
+            await pool.end();
+        } catch (e) {
+            console.error(e);
+        }
     });
 
     it('creates user role', async () => {
-        const pg = createPg(pool, await createSchema(connectionString));
+        const pg = new Pg(pool, await createSchema(connectionString));
 
         // explicit transaction
         const id = await pg.transaction(async (t) => {
@@ -142,7 +146,7 @@ describe('EntityAccessor tests', () => {
     });
 
     it('creates orders and gets them', async () => {
-        const pg = createPg(pool, await createSchema(connectionString));
+        const pg = new Pg(pool, await createSchema(connectionString));
 
         const userId = await Users.create(pg.gql, {
             item: {
@@ -225,7 +229,6 @@ describe('EntityAccessor tests', () => {
                 }),
             },
             first: 5,
-            offset: 2,
             filter: {
                 fullName: {
                     includesInsensitive: 'Nik',
@@ -233,7 +236,7 @@ describe('EntityAccessor tests', () => {
             },
         });
 
-        expect(usersWithOrders.length).toBe(2);
+        expect(usersWithOrders.length).toBe(1);
         expect(usersWithOrders.flatMap((x) => x.orders).length).toBe(1);
     });
 });
