@@ -1,8 +1,8 @@
 # ∇ nabla pg
 
-A library that greatly controls data access and gives full control over types and queries.
+This is a library that greatly simplifies data access and gives you complete control over types and queries.
 
-When I first saw the [postgraphile](https://github.com/graphile/postgraphile) I was amazed at how easy it is to make a graphical interface to a relational base crossed. With the right data structure and normalization, literally in a few lines, you can get all the benefits of the relational approach and simplicity of a non-relational database such as a mongodb. I have used the postgraphile in several of my projects and it was very convenient and simple. Eventually I switched to TypScript and wanted to get full control and type safety over the queries and the results. This is how this simple library was born, which can help with this.
+When I first saw the [postgraphile](https://github.com/graphile/postgraphile) I was amazed at how easy it is to make a graphical interface to a relational base crossed. With the right data structure and normalization, literally in a few lines, you can get all the benefits of the relational approach and simplicity of a non-relational database such as a mongodb. I have used the postgraphile in several of my projects and it was very convenient and simple. Eventually I switched to typescript and wanted to get full control and type safety over the queries and results. This is how this simple library was born, which can help with this.
 
 Generating code from .graphql files didn't suit me very well. I find this approach too lengthy to define requests and fields in advance, and in the company where I work the requirements change very often.
 
@@ -21,11 +21,8 @@ In order to get proper nullable type inference you have to enable `strict` mode 
 ```json
 {
     "compilerOptions": {
-        ...
         "strict": true
-        ...
     }
-    ...
 }
 ```
 
@@ -104,7 +101,7 @@ await sql`CREATE TABLE IF NOT EXISTS users (
 It's a very simple structure. Then we need to repeat it in terms of our entities:
 
 ```typescript
-export type UserEntity = EntityBase<'User', IdPkey> & {.
+export type UserEntity = EntityBase<'User', IdPkey> & {
     firstName: string | null;
     lastName: string | null;
 };
@@ -158,7 +155,7 @@ $$ LANGUAGE sql STABLE`;
 Then add the field to our entity declaration as `Readonly`:
 
 ```typescript
-export type UserEntity = EntityBase<'User', IdPkey> & {.
+export type UserEntity = EntityBase<'User', IdPkey> & {
     firstName: string | null;
     lastName: string | null;
     fullName: ReadonlyValue<string>;
@@ -258,7 +255,7 @@ await sql`CREATE TABLE IF NOT EXISTS order_actions (
 And add a list of orders to the user definition:
 
 ```typescript
-export type UserEntity = EntityBase<'User', IdPkey> & {
+export type UserEntity = EntityBase<IdPkey> & {
     firstName: string | null;
     lastName: string | null;
     fullName: ReadonlyValue<string>;
