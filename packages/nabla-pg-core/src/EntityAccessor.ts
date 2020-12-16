@@ -12,7 +12,7 @@ import {
     NominalType,
     OriginInfer,
     PrimaryKey,
-    Query,
+    Query
 } from './entity';
 import { NotFoundError } from './errors';
 import { GqlInvoke } from './gql';
@@ -46,13 +46,19 @@ export class EntityAccessor<E extends EntityBase> {
     private pkArgDef: string = '';
     private pkArgsAssign: string = '';
 
-    public constructor(private typeName: string, defaultFilter?: Filter<E>) {
+    public constructor(
+        private typeName: string,
+        private params: {
+            defaultFilter?: Filter<E>;
+            pkDef?: Record<keyof PrimaryKey<E>, 'UUID!' | 'String!' | 'Int!'>;
+        } = {},
+    ) {
         this.optTypes = {
             filter: `${this.typeName}Filter!`,
             first: 'Int!',
             offset: 'Int!',
             orderBy: `[${this.pluralTypeName}OrderBy!]`,
-            defaultFilter,
+            defaultFilter: params.defaultFilter,
         };
     }
 
@@ -89,6 +95,12 @@ export class EntityAccessor<E extends EntityBase> {
     };
 
     protected getPkArg = (pk: PrimaryKey<E>) => {
+        if (this.params?.pkDef) {
+            return Object.entries(this.params.pkDef)
+                .map(([name, type]) => `$${name}: ${type}`)
+                .join(', ');
+        }
+
         return Object.keys(pk)
             .map((x) => `$${x}: UUID!`)
             .join(', ');
@@ -117,11 +129,11 @@ export class EntityAccessor<E extends EntityBase> {
         return camelCase(this.typeName);
     }
 
-    private get listName() {
+    protected get listName() {
         return pluralize(this.itemName);
     }
 
-    private get pluralTypeName() {
+    protected get pluralTypeName() {
         return pluralize(this.typeName);
     }
 
@@ -149,10 +161,8 @@ export class EntityAccessor<E extends EntityBase> {
         query: Query<E, F>,
     ): Promise<Array<OriginInfer<E, F>>> => {
         const { selector, varsDeclaration, variables, varsAssign } = this.prepareQuery(query);
-        const declStr = varsDeclaration.length ? `(${varsDeclaration.join(', ')})` : '';
-
         const queryString = `
-            query${declStr} {
+            query${joinWithParentheses(varsDeclaration)} {
                 items: ${this.listName + varsAssign + selector}
             }
         `;
@@ -165,10 +175,8 @@ export class EntityAccessor<E extends EntityBase> {
         query: Query<E, F>,
     ): Promise<FindAndCountResult<E, F>> => {
         const { selector, varsDeclaration, variables, varsAssign } = this.prepareQuery(query);
-        const declStr = varsDeclaration.length ? `(${varsDeclaration.join(', ')})` : '';
-
         const queryString = `
-            query${declStr} {
+            query${joinWithParentheses(varsDeclaration)} {
                 result: ${this.listName}Connection${varsAssign} {
                     items: nodes ${selector}
                     total: totalCount
@@ -181,10 +189,8 @@ export class EntityAccessor<E extends EntityBase> {
 
     public count = (gql: GqlInvoke, query: FindOptions<E>): Promise<CountResult> => {
         const { varsDeclaration, variables, varsAssign } = this.prepareQuery(query);
-        const declStr = varsDeclaration.length ? `(${varsDeclaration.join(', ')})` : '';
-
         const queryString = `
-            query${declStr} {
+            query${joinWithParentheses(varsDeclaration)} {
                 result: ${this.listName}Connection${varsAssign} {
                     total: totalCount
                 }
@@ -199,9 +205,8 @@ export class EntityAccessor<E extends EntityBase> {
         args: { selector: F; filter: Filter<E> },
     ): Promise<OriginInfer<E, F> | null> => {
         const { selector, varsDeclaration, variables, varsAssign } = this.prepareQuery(args);
-        const declStr = varsDeclaration.length ? `(${varsDeclaration.join(', ')})` : '';
         const queryString = `
-            query${declStr} {
+            query${joinWithParentheses(varsDeclaration)} {
                 items: ${this.listName + varsAssign + selector}
             }          
         `;
@@ -215,7 +220,7 @@ export class EntityAccessor<E extends EntityBase> {
     ): Promise<OriginInfer<E, F>> => {
         const res = await this.findOne(gql, args);
         if (!res) {
-            throw new NotFoundError(`${this.typeName} not found`);
+            throw new Error('Not found');
         }
 
         return res;
@@ -227,10 +232,8 @@ export class EntityAccessor<E extends EntityBase> {
     ): Promise<OriginInfer<E, F> | null> => {
         const { pk } = args;
         const { selector, varsDeclaration, variables } = this.prepareQuery(args);
-        const declStr = `(${[this.getPkArgImpl(pk), ...varsDeclaration].join(', ')})`;
-
         const queryString = `
-            query${declStr} {
+            query${joinWithParentheses(varsDeclaration, this.getPkArgImpl(pk))} {
                 item: ${this.itemName}(${this.pkArgsAssign}) ${selector}
             }
         `;
@@ -259,9 +262,8 @@ export class EntityAccessor<E extends EntityBase> {
     ): Promise<OriginInfer<E, F>> => {
         const { item } = args;
         const { selector, varsDeclaration, variables } = this.prepareQuery(args);
-        const declStr = `(${[`$item: ${this.typeName}Input!`, ...varsDeclaration].join(', ')})`;
         const queryString = `
-            mutation${declStr} {
+            mutation${joinWithParentheses(varsDeclaration, `$item: ${this.typeName}Input!`)} {
                 result: create${this.typeName}(input: { ${this.itemName}: $item }) {
                     item: ${this.itemName} ${selector}
                 }
@@ -280,10 +282,8 @@ export class EntityAccessor<E extends EntityBase> {
     ): Promise<OriginInfer<E, F>> => {
         const { pk, patch } = args;
         const { selector, varsDeclaration, variables } = this.prepareQuery(args);
-        const declStr = `(${[`$input: Update${this.typeName}Input!`, ...varsDeclaration].join(', ')})`;
-
         const queryString = `
-            mutation${declStr} {
+            mutation${joinWithParentheses(varsDeclaration, `$input: Update${this.typeName}Input!`)} {
                 result: update${this.typeName}(input: $input) {
                     item: ${this.itemName} ${selector}
                 }
@@ -305,9 +305,8 @@ export class EntityAccessor<E extends EntityBase> {
     ): Promise<OriginInfer<E, F>> => {
         const { pk } = args;
         const { selector, varsDeclaration, variables } = this.prepareQuery(args);
-        const declStr = `(${[`$input: Delete${this.typeName}Input!`, ...varsDeclaration].join(', ')})`;
         const queryString = `
-            mutation${declStr} {
+            mutation${joinWithParentheses(varsDeclaration, `$input: Delete${this.typeName}Input!`)} {
                 result: delete${this.typeName}(input: $input) {
                     item: ${this.itemName} ${selector}
                 }
@@ -327,28 +326,25 @@ export class EntityAccessor<E extends EntityBase> {
             return res;
         }
 
-        return await this.create(gql, { item, selector });
+        return this.create(gql, { item, selector });
     };
 
-    public updateOrCreate = async <F extends FieldSelector<E, F> = []>(
+    public async updateOrCreate<F extends FieldSelector<E, F> = []>(
         gql: GqlInvoke,
         args: {
             pk: PrimaryKey<E>;
             selector?: F;
-            item: EntityCreate<E>;
+            item: Omit<EntityCreate<E>, keyof PrimaryKey<E>>;
             patch?: EntityPatch<E, PrimaryKey<E>>;
         },
-    ): Promise<OriginInfer<E, F>> => {
-        const { patch, ...rest } = args;
-        let res = await this.findByPk(gql, rest);
-        if (!res) {
-            res = await this.create(gql, rest);
-        } else if (patch) {
-            res = await this.update(gql, { ...rest, patch });
-        }
+    ): Promise<OriginInfer<E, F>> {
+        const { patch, pk, selector, item } = args;
+        const res = await this.findByPk(gql, { pk, selector });
 
-        return res;
-    };
+        return res
+            ? this.update(gql, { pk, patch: (patch ?? item) as any, selector })
+            : this.create(gql, { item: { ...item, ...pk } as any, selector });
+    }
 
     private prepareQueryVars = (ctx: PrepareQueryContext, query: Partial<Query<any, any>>) => {
         const varsAssign: string[] = [];
@@ -413,6 +409,14 @@ export class EntityAccessor<E extends EntityBase> {
         }
     };
 }
+
+const joinWithParentheses = (ar: string[], rest?: string) => {
+    if (rest) {
+        ar.push(rest);
+    }
+
+    return ar.length ? `(${ar.join(', ')})` : '';
+};
 
 const ensureSelector = (selector: any) => {
     if (Array.isArray(selector)) {

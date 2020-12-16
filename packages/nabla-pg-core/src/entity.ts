@@ -2,11 +2,8 @@ export type IdPkey = {
     id: DefaultValue<string>;
 };
 
-export type EntityBase<TName extends string = any, TPkey extends Record<string, unknown> = {}> = NominalType<
-    TPkey,
-    TPkey
-> & {
-    __typename: ReadonlyValue<TName>;
+export type EntityBase<TPkey extends Record<string, unknown> = {}> = NominalType<TPkey, TPkey> & {
+    __typename: ReadonlyValue<string>;
     updatedAt: ReadonlyValue<Date>;
     createdAt: ReadonlyValue<Date>;
 } & Queryable;
@@ -16,7 +13,7 @@ export type DefaultValue<T> = NominalType<T, 'default'>;
 export type EntityConnection<E> = { nodes: E[]; totalCount: number } & Queryable;
 export type Queryable = NominalType<{}, 'queryable'>;
 
-export type PrimaryKey<T> = T extends EntityBase<any, infer TPkey> ? UnwrapNominal<TPkey> : never;
+export type PrimaryKey<T> = T extends EntityBase<infer TPkey> ? UnwrapNominal<TPkey> : never;
 
 export type OriginInfer<T, F extends FieldSelector<T, F> | unknown> = F extends { selector: FieldSelector<T, F> }
     ? OriginInferImpl<T, F['selector']>

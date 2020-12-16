@@ -5,7 +5,7 @@ import { UserEntity } from './UserEntity';
 export const orderActions = ['CREATE', 'CHANGE', 'FEEDBACK'] as const;
 export type OrderActionType = typeof orderActions[number];
 
-export type OrderActionEntity = EntityBase<'OrderAction', IdPkey> & {
+export type OrderActionEntity = EntityBase<IdPkey> & {
     orderId: string;
     initiatorId: string;
     initiator: UserEntity;

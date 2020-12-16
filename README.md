@@ -54,7 +54,7 @@ Then you can make queries using typescript and postgraphile:
 import { createSchema, Pg, EntityBase, IdPkey, ReadonlyValue, EntityAccessor } from 'nabla-pg-core';
 import { Pool } from 'pg';
 
-type UserEntity = EntityBase<'User', IdPkey> & {
+type UserEntity = EntityBase<IdPkey> & {
     firstName: string | null;
     middleName: string | null;
     lastName: string | null;
@@ -101,7 +101,7 @@ await sql`CREATE TABLE IF NOT EXISTS users (
 It's a very simple structure. Then we need to repeat it in terms of our entities:
 
 ```typescript
-export type UserEntity = EntityBase<'User', IdPkey> & {
+export type UserEntity = EntityBase<IdPkey> & {
     firstName: string | null;
     lastName: string | null;
 };
@@ -155,7 +155,7 @@ $$ LANGUAGE sql STABLE`;
 Then add the field to our entity declaration as `Readonly`:
 
 ```typescript
-export type UserEntity = EntityBase<'User', IdPkey> & {
+export type UserEntity = EntityBase<IdPkey> & {
     firstName: string | null;
     lastName: string | null;
     fullName: ReadonlyValue<string>;
@@ -207,7 +207,7 @@ export type OrderFeedback = {
     comment: string | null;
 };
 
-export type OrderEntity = EntityBase<'Order', IdPkey> & {
+export type OrderEntity = EntityBase<IdPkey> & {
     status: OrderStatus;
     humanReadableId: DefaultValue<string>;
     userId: string;

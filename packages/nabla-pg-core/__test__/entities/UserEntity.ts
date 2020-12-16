@@ -6,7 +6,7 @@ import { RoleEntity } from './RoleEntity';
 const genders = ['male', 'female'] as const;
 export type Gender = typeof genders[number];
 
-export type UserEntity = EntityBase<'User', IdPkey> & {
+export type UserEntity = EntityBase<IdPkey> & {
     firstName: string | null;
     middleName: string | null;
     lastName: string | null;

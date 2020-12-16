@@ -12,7 +12,7 @@ export type OrderFeedback = {
     comment: string | null;
 };
 
-export type OrderEntity = EntityBase<'Order', IdPkey> & {
+export type OrderEntity = EntityBase<IdPkey> & {
     status: OrderStatus;
     humanReadableId: DefaultValue<string>;
     userId: string;
