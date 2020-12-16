@@ -3,9 +3,17 @@
   "version": "0.0.1",
   "private": true,
   "description": "A library that greatly controls data access and gives full control over types and queries.",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:seralexeev/nabla-pg.git"
+  },
   "scripts": {
     "nabla-pg-core": "yarn workspace nabla-pg-core",
     "db:run": "docker rm -f nabla-pg ; docker run --name nabla-pg -d -p 5433:5432 -e POSTGRES_PASSWORD=nabla -e POSTGRES_USER=nabla -e POSTGRES_DB=nabla_db postgres:12.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.com:ludwig-dev/ludwig-mono.git"
   },
   "keywords": [
     "postgraphile",
