@@ -13,6 +13,9 @@
   },
   "keywords": [
     "postgraphile",
+    "postgres",
+    "orm",
+    "pg",
     "graphql",
     "typescript"
   ],
