@@ -1,4 +1,6 @@
-import { camelCase, merge, snakeCase, toUpper } from 'lodash';
+import { camelCase } from 'camel-case';
+import { constantCase } from 'constant-case';
+import deepmerge from 'deepmerge';
 import pluralize from 'pluralize';
 import {
     ConnectionQuery,
@@ -12,12 +14,12 @@ import {
     NominalType,
     OriginInfer,
     PrimaryKey,
-    Query
+    Query,
 } from './entity';
 import { NotFoundError } from './errors';
 import { GqlInvoke } from './gql';
 
-const OPT_TYPES = 'OPT_TYPES';
+const OPT_TYPES = '__OPT_TYPES';
 
 export type FindAndCountResult<E extends EntityBase, F extends FieldSelector<E, F>> = {
     items: Array<OriginInfer<E, F>>;
@@ -77,7 +79,7 @@ export class EntityAccessor<E extends EntityBase> {
         F2 extends FieldSelector<E, F2>,
         F3 extends FieldSelector<E, F3>
     >(s1?: F1, s2?: F2, s3?: F3): NominalType<F1 & F2 & F3, E> {
-        const selector = merge({}, ensureSelector(s1), ensureSelector(s2), ensureSelector(s3));
+        const selector = deepmerge.all([ensureSelector(s1), ensureSelector(s2), ensureSelector(s3)]);
         this.applyOptTypes(selector);
         return selector as any;
     }
@@ -358,11 +360,11 @@ export class EntityAccessor<E extends EntityBase> {
 
             if (key === 'orderBy') {
                 ctx.variables[name] = query.orderBy!.map(
-                    ([field, direction]) => toUpper(snakeCase(field as string)) + '_' + direction,
+                    ([field, direction]) => constantCase(field as string) + '_' + direction,
                 );
             } else if (key === 'filter') {
                 ctx.variables[name] = optTypes.defaultFilter
-                    ? merge({}, optTypes.defaultFilter, query[key])
+                    ? deepmerge(optTypes.defaultFilter, query[key] as any)
                     : query[key];
             } else {
                 ctx.variables[name] = query[key];
