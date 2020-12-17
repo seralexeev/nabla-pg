@@ -11,6 +11,14 @@
     "type": "git",
     "url": "git@github.com:seralexeev/nabla-pg.git"
   },
+  "keywords": [
+    "postgraphile",
+    "postgres",
+    "orm",
+    "pg",
+    "graphql",
+    "typescript"
+  ],
   "dependencies": {
     "@graphile-contrib/pg-many-to-many": "1.0.0",
     "@graphile-contrib/pg-simplify-inflector": "6.1.0",
