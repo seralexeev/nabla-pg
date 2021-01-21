@@ -99,7 +99,7 @@ describe('EntityAccessor tests', () => {
 
         // explicit transaction
         const id = await pg.transaction(async (t) => {
-            const { id } = await Users.create(t.gql, {
+            const { id } = await Users.create(t, {
                 item: {
                     firstName: 'Alex',
                     lastName: 'Ivanov',
@@ -108,7 +108,7 @@ describe('EntityAccessor tests', () => {
             });
 
             // we're selecting readonly field defied by `users_full_name` function
-            const { fullName } = await Users.findByPkOrError(t.gql, {
+            const { fullName } = await Users.findByPkOrError(t, {
                 pk: { id },
                 selector: ['fullName'],
             });
@@ -119,12 +119,12 @@ describe('EntityAccessor tests', () => {
         });
 
         await pg.transaction(async (t) => {
-            const roleName = await Roles.create(t.gql, {
+            const roleName = await Roles.create(t, {
                 item: { permissions: ['orders.create', 'orders.view'], name: 'client' },
                 selector: ['name'],
             }).then((x) => x.name);
 
-            await User2Roles.create(t.gql, {
+            await User2Roles.create(t, {
                 item: {
                     roleName,
                     userId: id,
@@ -133,7 +133,7 @@ describe('EntityAccessor tests', () => {
         });
 
         const users = await pg.transaction(async (t) => {
-            return Users.find(t.gql, {
+            return Users.find(t, {
                 selector: {
                     id: true,
                     fullName: true,
@@ -148,7 +148,7 @@ describe('EntityAccessor tests', () => {
     it('creates orders and gets them', async () => {
         const pg = new Pg(pool, await createSchema(connectionString));
 
-        const userId = await Users.create(pg.gql, {
+        const userId = await Users.create(pg, {
             item: {
                 firstName: 'Nikita',
                 lastName: 'Petrov',
@@ -158,12 +158,12 @@ describe('EntityAccessor tests', () => {
 
         // create order with action in single transaction
         const order = await pg.transaction(async (t) => {
-            const order = await Orders.create(t.gql, {
+            const order = await Orders.create(t, {
                 item: { status: 'NEW', userId },
                 selector: ['id', 'humanReadableId'],
             });
 
-            await OrderActions.create(t.gql, {
+            await OrderActions.create(t, {
                 item: {
                     initiatorId: userId,
                     orderId: order.id,
@@ -176,12 +176,12 @@ describe('EntityAccessor tests', () => {
 
         // create another order with action in single transaction
         await pg.transaction(async (t) => {
-            const order = await Orders.create(t.gql, {
+            const order = await Orders.create(t, {
                 item: { status: 'NEW', userId },
                 selector: ['id', 'humanReadableId'],
             });
 
-            await OrderActions.create(t.gql, {
+            await OrderActions.create(t, {
                 item: {
                     initiatorId: userId,
                     orderId: order.id,
@@ -200,12 +200,12 @@ describe('EntityAccessor tests', () => {
                 tags: ['In time', 'Polite'],
             };
 
-            await Orders.update(t.gql, {
+            await Orders.update(t, {
                 pk: { id: order.id },
                 patch: { feedback },
             });
 
-            await OrderActions.create(t.gql, {
+            await OrderActions.create(t, {
                 item: {
                     initiatorId: userId,
                     orderId: order.id,
@@ -215,7 +215,7 @@ describe('EntityAccessor tests', () => {
             });
         });
 
-        const usersWithOrders = await Users.find(pg.gql, {
+        const usersWithOrders = await Users.find(pg, {
             selector: {
                 id: true,
                 firstName: true,

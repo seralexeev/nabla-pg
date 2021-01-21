@@ -17,17 +17,13 @@ import {
     Query,
 } from './entity';
 import { NotFoundError } from './errors';
-import { GqlInvoke } from './gql';
+import { GqlClient } from './gql';
 
 const OPT_TYPES = '__OPT_TYPES';
 
-export type FindAndCountResult<E extends EntityBase, F extends FieldSelector<E, F>> = {
+export type CountResult = { total: number };
+export type FindAndCountResult<E extends EntityBase, F extends FieldSelector<E, F>> = CountResult & {
     items: Array<OriginInfer<E, F>>;
-    total: number;
-};
-
-export type CountResult = {
-    total: number;
 };
 
 const knownQueryOptions = ['filter', 'first', 'offset', 'orderBy'] as const;
@@ -159,7 +155,7 @@ export class EntityAccessor<E extends EntityBase> {
     };
 
     public find = <F extends FieldSelector<E, F>>(
-        gql: GqlInvoke,
+        { gql }: GqlClient,
         query: Query<E, F>,
     ): Promise<Array<OriginInfer<E, F>>> => {
         const { selector, varsDeclaration, variables, varsAssign } = this.prepareQuery(query);
@@ -173,7 +169,7 @@ export class EntityAccessor<E extends EntityBase> {
     };
 
     public findAndCount = <F extends FieldSelector<E, F>>(
-        gql: GqlInvoke,
+        { gql }: GqlClient,
         query: Query<E, F>,
     ): Promise<FindAndCountResult<E, F>> => {
         const { selector, varsDeclaration, variables, varsAssign } = this.prepareQuery(query);
@@ -189,7 +185,7 @@ export class EntityAccessor<E extends EntityBase> {
         return gql(queryString, variables).then((x) => x.result as FindAndCountResult<E, F>);
     };
 
-    public count = (gql: GqlInvoke, query: FindOptions<E>): Promise<CountResult> => {
+    public count = ({ gql }: GqlClient, query: FindOptions<E>): Promise<CountResult> => {
         const { varsDeclaration, variables, varsAssign } = this.prepareQuery(query);
         const queryString = `
             query${joinWithParentheses(varsDeclaration)} {
@@ -203,7 +199,7 @@ export class EntityAccessor<E extends EntityBase> {
     };
 
     public findOne = <F extends FieldSelector<E, F>>(
-        gql: GqlInvoke,
+        { gql }: GqlClient,
         args: { selector: F; filter: Filter<E> },
     ): Promise<OriginInfer<E, F> | null> => {
         const { selector, varsDeclaration, variables, varsAssign } = this.prepareQuery(args);
@@ -217,10 +213,10 @@ export class EntityAccessor<E extends EntityBase> {
     };
 
     public findOneOrError = async <F extends FieldSelector<E, F>>(
-        gql: GqlInvoke,
+        client: GqlClient,
         args: { filter: Filter<E>; selector: F },
     ): Promise<OriginInfer<E, F>> => {
-        const res = await this.findOne(gql, args);
+        const res = await this.findOne(client, args);
         if (!res) {
             throw new Error('Not found');
         }
@@ -229,7 +225,7 @@ export class EntityAccessor<E extends EntityBase> {
     };
 
     public findByPk = <F extends FieldSelector<E, F> = []>(
-        gql: GqlInvoke,
+        { gql }: GqlClient,
         args: { pk: PrimaryKey<E>; selector?: F },
     ): Promise<OriginInfer<E, F> | null> => {
         const { pk } = args;
@@ -247,10 +243,10 @@ export class EntityAccessor<E extends EntityBase> {
     };
 
     public findByPkOrError = async <F extends FieldSelector<E, F>>(
-        gql: GqlInvoke,
+        client: GqlClient,
         args: { pk: PrimaryKey<E>; selector: F },
     ): Promise<OriginInfer<E, F>> => {
-        const res = await this.findByPk(gql, args);
+        const res = await this.findByPk(client, args);
         if (!res) {
             throw new NotFoundError(`${this.typeName} not found`);
         }
@@ -259,7 +255,7 @@ export class EntityAccessor<E extends EntityBase> {
     };
 
     public create = <F extends FieldSelector<E, F> = []>(
-        gql: GqlInvoke,
+        { gql }: GqlClient,
         args: { item: EntityCreate<E>; selector?: F },
     ): Promise<OriginInfer<E, F>> => {
         const { item } = args;
@@ -279,7 +275,7 @@ export class EntityAccessor<E extends EntityBase> {
     };
 
     public update = <F extends FieldSelector<E, F> = []>(
-        gql: GqlInvoke,
+        { gql }: GqlClient,
         args: { pk: PrimaryKey<E>; patch: EntityPatch<E, PrimaryKey<E>>; selector?: F },
     ): Promise<OriginInfer<E, F>> => {
         const { pk, patch } = args;
@@ -302,7 +298,7 @@ export class EntityAccessor<E extends EntityBase> {
     };
 
     public delete = <F extends FieldSelector<E, F> = []>(
-        gql: GqlInvoke,
+        { gql }: GqlClient,
         args: { pk: PrimaryKey<E>; selector?: F },
     ): Promise<OriginInfer<E, F>> => {
         const { pk } = args;
@@ -319,20 +315,20 @@ export class EntityAccessor<E extends EntityBase> {
     };
 
     public findOneOrCreate = async <F extends FieldSelector<E, F>>(
-        gql: GqlInvoke,
+        client: GqlClient,
         args: { filter: Filter<E>; selector: F; item: EntityCreate<E> },
     ): Promise<OriginInfer<E, F>> => {
         const { filter, selector, item } = args;
-        const res = await this.findOne(gql, { filter, selector });
+        const res = await this.findOne(client, { filter, selector });
         if (res) {
             return res;
         }
 
-        return this.create(gql, { item, selector });
+        return this.create(client, { item, selector });
     };
 
     public async updateOrCreate<F extends FieldSelector<E, F> = []>(
-        gql: GqlInvoke,
+        client: GqlClient,
         args: {
             pk: PrimaryKey<E>;
             selector?: F;
@@ -341,11 +337,11 @@ export class EntityAccessor<E extends EntityBase> {
         },
     ): Promise<OriginInfer<E, F>> {
         const { patch, pk, selector, item } = args;
-        const res = await this.findByPk(gql, { pk, selector });
+        const res = await this.findByPk(client, { pk, selector });
 
         return res
-            ? this.update(gql, { pk, patch: (patch ?? item) as any, selector })
-            : this.create(gql, { item: { ...item, ...pk } as any, selector });
+            ? this.update(client, { pk, patch: (patch ?? item) as any, selector })
+            : this.create(client, { item: { ...item, ...pk } as any, selector });
     }
 
     private prepareQueryVars = (ctx: PrepareQueryContext, query: Partial<Query<any, any>>) => {

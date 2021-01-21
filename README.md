@@ -67,9 +67,9 @@ const Users = new EntityAccessor<UserEntity>('User');
     const connectionString = 'postgres://nabla:nabla@localhost:5433/nabla_db';
     const pool = new Pool({ connectionString });
 
-    const { gql } = new Pg(pool, await createSchema(connectionString));
+    const pg = new Pg(pool, await createSchema(connectionString));
 
-    const data = await Users.find(gql, {
+    const data = await Users.find(pg, {
         selector: ['id'],
         first: 5,
         filter: {
@@ -118,7 +118,7 @@ export const Users = new EntityAccessor<UserEntity>('User');
 And that's it! Now we can work with this entity using the full power of typescript:
 
 ```typescript
-const users = await Users.find(t.gql, {
+const users = await Users.find(pg, {
     selector: ['id', 'firstName'],
 });
 
@@ -131,7 +131,7 @@ const users = await Users.find(t.gql, {
 The selectors can be of 2 types: `Arrays of primitive keys` and `object shapes`. Use arrays if you want to select a flat structure. For more complex things, such as subqueries, use object literals. The request above is equivalent to the request below:
 
 ```typescript
-const users = await Users.find(t.gql, {
+const users = await Users.find(pg, {
     selector: {
         id: true,
         firstName: true,
@@ -171,7 +171,7 @@ There are special methods for creating objects in `EntityAccessor`:
 ```typescript
 // explicit transaction
 const id = await pg.transaction(async (t) => {
-    const { id } = await Users.create(t.gql, {
+    const { id } = await Users.create(t, {
         item: {
             firstName: 'Alex',
             lastName: 'Ivanov',
@@ -180,7 +180,7 @@ const id = await pg.transaction(async (t) => {
     });
 
     // we're selecting readonly field defied by `users_full_name` function
-    const { fullName } = await Users.findByPkOrError(t.gql, {
+    const { fullName } = await Users.findByPkOrError(t, {
         pk: { id },
         selector: ['fullName'],
     });
@@ -268,7 +268,7 @@ export type UserEntity = EntityBase<IdPkey> & {
 Now we can choose the users we are interested in, only with those order fields that we are interested in:
 
 ```typescript
-const usersWithOrders = await Users.find(pg.gql, {
+const usersWithOrders = await Users.find(pg, {
     selector: {
         id: true,
         orders: Orders.createQuery({
@@ -299,7 +299,7 @@ const usersWithOrders = await Users.find(pg.gql, {
 As can be seen, despite the fact that orders are an array, the selector understands this and allows you to specify the structures of an element of an array and not the field of the array itself. You must have noticed the call of the `Orders.createQuery` method. It's one of the helpers that helps make subqueries. But if we want to select all the orders, we can omit it and just write the selector:
 
 ```typescript
-const usersWithOrders = await Users.find(pg.gql, {
+const usersWithOrders = await Users.find(pg, {
     selector: {
         id: true,
         orders: ['id', 'feedback', 'createdAt'],
@@ -330,71 +330,18 @@ EntityAccessor.createConnectionQuery;
 
 For the time `EntityAccessor` has methods:
 
-```typescript
-find = <F extends FieldSelector<E, F>>(
-    gql: GqlInvoke,
-    query: Query<E, F>,
-): Promise<Array<OriginInfer<E, F>>>
-
-findAndCount = <F extends FieldSelector<E, F>>(
-    gql: GqlInvoke,
-    query: Query<E, F>,
-): Promise<FindAndCountResult<E, F>>
-
-count = (
-    gql: GqlInvoke, query: FindOptions<E>
-): Promise<CountResult>
-
-findOne = <F extends FieldSelector<E, F>>(
-    gql: GqlInvoke,
-    args: { selector: F; filter: Filter<E> },
-): Promise<OriginInfer<E, F> | null>
-
-findOneOrError = async <F extends FieldSelector<E, F>>(
-    gql: GqlInvoke,
-    args: { filter: Filter<E>; selector: F },
-): Promise<OriginInfer<E, F>>
-
-findByPk = <F extends FieldSelector<E, F> = []>(
-    gql: GqlInvoke,
-    args: { pk: PrimaryKey<E>; selector?: F },
-): Promise<OriginInfer<E, F> | null>
-
-findByPkOrError = async <F extends FieldSelector<E, F>>(
-    gql: GqlInvoke,
-    args: { pk: PrimaryKey<E>; selector: F },
-): Promise<OriginInfer<E, F>>
-
-create = <F extends FieldSelector<E, F> = []>(
-    gql: GqlInvoke,
-    args: { item: EntityCreate<E>; selector?: F },
-): Promise<OriginInfer<E, F>>
-
-update = <F extends FieldSelector<E, F> = []>(
-    gql: GqlInvoke,
-    args: { pk: PrimaryKey<E>; patch: EntityPatch<E, PrimaryKey<E>>; selector?: F },
-): Promise<OriginInfer<E, F>>
-
-delete = <F extends FieldSelector<E, F> = []>(
-    gql: GqlInvoke,
-    args: { pk: PrimaryKey<E>; selector?: F },
-): Promise<OriginInfer<E, F>>
-
-findOneOrCreate = async <F extends FieldSelector<E, F>>(
-    gql: GqlInvoke,
-    args: { filter: Filter<E>; selector: F; item: EntityCreate<E> },
-): Promise<OriginInfer<E, F>>
-
-updateOrCreate = async <F extends FieldSelector<E, F> = []>(
-    gql: GqlInvoke,
-    args: {
-        pk: PrimaryKey<E>;
-        selector?: F;
-        item: EntityCreate<E>;
-        patch?: EntityPatch<E, PrimaryKey<E>>;
-    },
-): Promise<OriginInfer<E, F>>
-```
+-   `find`,
+-   `findAndCount`,
+-   `count`,
+-   `findOne`,
+-   `findOneOrError`,
+-   `findByPk`,
+-   `findByPkOrError`,
+-   `create`,
+-   `update`,
+-   `delete`,
+-   `findOneOrCreate`,
+-   `updateOrCreate`
 
 ### Client usage:
 
