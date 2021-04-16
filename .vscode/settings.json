@@ -3,6 +3,8 @@
         "Datetime",
         "Inflector",
         "Queryable",
+        "SAVEPOINT",
+        "deepmerge",
         "fastify",
         "fkey",
         "graphile",

@@ -1,24 +1,25 @@
 import { Pool } from 'pg';
 import { Pg } from '../src';
-import { createSchema } from '../src/gql';
 import { OrderActions } from './entities/OrderActionEntity';
 import { OrderFeedback, Orders } from './entities/OrderEntity';
 import { Roles } from './entities/RoleEntity';
 import { User2Roles } from './entities/User2RoleEntity';
 import { Users } from './entities/UserEntity';
+// import { enableExplain } from '../../nabla-pg-explain/src';
 
 const connectionString = 'postgres://nabla:nabla@localhost:5433/nabla_db';
 
+// enableExplain();
+
 describe('EntityAccessor tests', () => {
-    let pool!: Pool;
+    let pg: Pg;
 
     beforeAll(async () => {
-        pool = new Pool({ connectionString });
-        const { sql } = new Pg(pool, await createSchema(connectionString));
+        pg = new Pg(new Pool({ connectionString }));
 
-        await sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+        await pg.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
 
-        await sql`CREATE TABLE IF NOT EXISTS users (
+        await pg.sql`CREATE TABLE IF NOT EXISTS users (
             id uuid PRIMARY KEY DEFAULT uuid_generate_v4()
           , first_name text
           , last_name text
@@ -27,18 +28,18 @@ describe('EntityAccessor tests', () => {
           , created_at timestamptz NOT NULL DEFAULT clock_timestamp()
         )`;
 
-        await sql`CREATE OR REPLACE FUNCTION users_full_name(u users) RETURNS text AS $$
+        await pg.sql`CREATE OR REPLACE FUNCTION users_full_name(u users) RETURNS text AS $$
             SELECT concat_ws(' ', last_name, first_name) from users where id = u.id
         $$ LANGUAGE sql STABLE`;
 
-        await sql`CREATE TABLE IF NOT EXISTS roles (
+        await pg.sql`CREATE TABLE IF NOT EXISTS roles (
             name text PRIMARY KEY
           , permissions text[] NOT NULL DEFAULT '{}'
           , updated_at timestamptz NOT NULL DEFAULT clock_timestamp()
           , created_at timestamptz NOT NULL DEFAULT clock_timestamp()
         )`;
 
-        await sql`CREATE TABLE IF NOT EXISTS user2roles (
+        await pg.sql`CREATE TABLE IF NOT EXISTS user2roles (
             user_id uuid NOT NULL CONSTRAINT user2roles_user_id_fkey REFERENCES users(id)
           , role_name text NOT NULL CONSTRAINT user2roles_role_name_fkey REFERENCES roles(name)
           , updated_at timestamptz NOT NULL DEFAULT clock_timestamp()
@@ -46,17 +47,17 @@ describe('EntityAccessor tests', () => {
           , PRIMARY KEY (user_id, role_name)
         )`;
 
-        await sql`comment on constraint user2roles_user_id_fkey on user2roles is E'@manyToManyFieldName users\n@manyToManySimpleFieldName usersList'`;
-        await sql`comment on constraint user2roles_role_name_fkey on user2roles is E'@manyToManyFieldName roles\n@manyToManySimpleFieldName rolesList'`;
+        await pg.sql`comment on constraint user2roles_user_id_fkey on user2roles is E'@manyToManyFieldName users\n@manyToManySimpleFieldName usersList'`;
+        await pg.sql`comment on constraint user2roles_role_name_fkey on user2roles is E'@manyToManyFieldName roles\n@manyToManySimpleFieldName rolesList'`;
 
-        await sql`CREATE SEQUENCE IF NOT EXISTS orders_human_readable_id START 100`;
-        await sql`
+        await pg.sql`CREATE SEQUENCE IF NOT EXISTS orders_human_readable_id START 100`;
+        await pg.sql`
             CREATE OR REPLACE FUNCTION get_next_order_id() RETURNS TEXT AS $$ 
                 SELECT LPAD(nextval('orders_human_readable_id')::text, 6, '0');
             $$ LANGUAGE SQL;
         `;
 
-        await sql`CREATE TABLE IF NOT EXISTS orders (
+        await pg.sql`CREATE TABLE IF NOT EXISTS orders (
             id uuid PRIMARY KEY DEFAULT uuid_generate_v4()
           , human_readable_id text NOT NULL DEFAULT get_next_order_id()
           , user_id uuid NOT NULL REFERENCES users(id)
@@ -66,7 +67,7 @@ describe('EntityAccessor tests', () => {
           , created_at timestamptz NOT NULL DEFAULT clock_timestamp()
         )`;
 
-        await sql`CREATE TABLE IF NOT EXISTS order_actions (
+        await pg.sql`CREATE TABLE IF NOT EXISTS order_actions (
             id uuid PRIMARY KEY DEFAULT uuid_generate_v4()
           , order_id uuid NOT NULL REFERENCES orders(id)
           , initiator_id uuid NOT NULL REFERENCES users(id)
@@ -78,24 +79,22 @@ describe('EntityAccessor tests', () => {
     });
 
     afterAll(async () => {
-        const { sql } = new Pg(pool, await createSchema(connectionString));
-
         try {
-            await sql`DROP TABLE user2roles`;
-            await sql`DROP TABLE roles`;
-            await sql`DROP FUNCTION users_full_name`;
-            await sql`DROP TABLE order_actions`;
-            await sql`DROP TABLE orders`;
-            await sql`DROP SEQUENCE IF EXISTS orders_human_readable_id`;
-            await sql`DROP TABLE users`;
-            await pool.end();
+            await pg.sql`DROP TABLE user2roles`;
+            await pg.sql`DROP TABLE roles`;
+            await pg.sql`DROP FUNCTION users_full_name`;
+            await pg.sql`DROP TABLE order_actions`;
+            await pg.sql`DROP TABLE orders`;
+            await pg.sql`DROP SEQUENCE IF EXISTS orders_human_readable_id`;
+            await pg.sql`DROP TABLE users`;
+            await pg.pool.end();
         } catch (e) {
             console.error(e);
         }
     });
 
     it('creates user role', async () => {
-        const pg = new Pg(pool, await createSchema(connectionString));
+        const pg = new Pg(new Pool({ connectionString }));
 
         // explicit transaction
         const id = await pg.transaction(async (t) => {
@@ -146,7 +145,7 @@ describe('EntityAccessor tests', () => {
     });
 
     it('creates orders and gets them', async () => {
-        const pg = new Pg(pool, await createSchema(connectionString));
+        const pg = new Pg(new Pool({ connectionString }));
 
         const userId = await Users.create(pg, {
             item: {

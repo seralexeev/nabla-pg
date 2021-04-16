@@ -1,5 +1,4 @@
-import { EntityBase, IdPkey, JsonObject } from '../../src/entity';
-import { EntityAccessor } from '../../src/EntityAccessor';
+import { EntityAccessor, EntityBase, IdPkey, JsonObject } from '../../src';
 import { UserEntity } from './UserEntity';
 
 export const orderActions = ['CREATE', 'CHANGE', 'FEEDBACK'] as const;

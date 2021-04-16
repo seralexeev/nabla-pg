@@ -1,5 +1,4 @@
-import { EntityBase, IdPkey, ReadonlyValue } from '../../src/entity';
-import { EntityAccessor } from '../../src/EntityAccessor';
+import { DefaultValue, EntityAccessor, EntityBase, IdPkey, ReadonlyValue } from '../../src';
 import { OrderEntity } from './OrderEntity';
 import { RoleEntity } from './RoleEntity';
 
@@ -15,6 +14,9 @@ export type UserEntity = EntityBase<IdPkey> & {
     gender: string | null;
     rolesList: RoleEntity[];
     orders: OrderEntity[];
+    mainOrder: OrderEntity | null;
+
+    roles: DefaultValue<string[]>;
 };
 
 export const Users = new EntityAccessor<UserEntity>('User');

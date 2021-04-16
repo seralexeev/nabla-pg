@@ -1,5 +1,4 @@
-import { DefaultValue, EntityBase, IdPkey } from '../../src/entity';
-import { EntityAccessor } from '../../src/EntityAccessor';
+import { DefaultValue, EntityAccessor, EntityBase, IdPkey } from '../../src';
 import { OrderActionEntity } from './OrderActionEntity';
 import { UserEntity } from './UserEntity';
 

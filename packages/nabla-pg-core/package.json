@@ -22,21 +22,21 @@
   "dependencies": {
     "@graphile-contrib/pg-many-to-many": "1.0.0",
     "@graphile-contrib/pg-simplify-inflector": "6.1.0",
-    "camel-case": "^4.1.2",
-    "constant-case": "^3.0.4",
-    "deepmerge": "^4.2.2",
-    "graphql": "15.4.0",
-    "pg": "8.5.1",
-    "postgraphile": "4.10.0",
-    "postgraphile-plugin-connection-filter": "2.1.1"
+    "camel-case": "4.1.2",
+    "constant-case": "3.0.4",
+    "deepmerge": "4.2.2",
+    "graphql": "15.5.0",
+    "pg": "8.6.0",
+    "postgraphile": "4.11.0",
+    "postgraphile-plugin-connection-filter": "2.2.0"
   },
   "devDependencies": {
-    "@types/jest": "26.0.20",
+    "@types/jest": "26.0.22",
     "@types/pluralize": "0.0.29",
     "jest": "26.6.3",
-    "ts-jest": "26.4.4",
-    "ts-node-dev": "1.1.1",
-    "typescript": "4.1.3"
+    "ts-jest": "26.5.5",
+    "ts-node-dev": "1.1.6",
+    "typescript": "4.2.4"
   },
   "gitHead": "e3ad5c6de27243d4fa427687d06ad7c0ae77edc5"
 }

@@ -2,29 +2,25 @@ import { camelCase } from 'camel-case';
 import { constantCase } from 'constant-case';
 import deepmerge from 'deepmerge';
 import pluralize from 'pluralize';
+import { EntityBase, EntityConnection, EntityCreate, EntityPatch, InferPrimaryKey } from './entity';
+import { Filter } from './filter';
 import {
+    ByPkQuery,
     ConnectionQuery,
-    EntityBase,
-    EntityConnection,
-    EntityCreate,
-    EntityPatch,
-    FieldSelector,
-    Filter,
-    FindOptions,
-    NominalType,
-    OriginInfer,
-    PrimaryKey,
+    CountResult,
+    CreateMutation,
+    DeleteMutation,
+    FindAndCountResult,
+    FindOneQuery,
+    GqlClient,
     Query,
-} from './entity';
-import { NotFoundError } from './errors';
-import { GqlClient } from './gql';
+    SelectQuery,
+    UpdateMutation,
+} from './query';
+import { FieldSelector, OriginInfer } from './selector';
+import { NominalType } from './types';
 
 const OPT_TYPES = '__OPT_TYPES';
-
-export type CountResult = { total: number };
-export type FindAndCountResult<E extends EntityBase, F extends FieldSelector<E, F>> = CountResult & {
-    items: Array<OriginInfer<E, F>>;
-};
 
 const knownQueryOptions = ['filter', 'first', 'offset', 'orderBy'] as const;
 type VariableKeys = typeof knownQueryOptions[number];
@@ -48,7 +44,7 @@ export class EntityAccessor<E extends EntityBase> {
         private typeName: string,
         private params: {
             defaultFilter?: Filter<E>;
-            pkDef?: Record<keyof PrimaryKey<E>, 'UUID!' | 'String!' | 'Int!'>;
+            pkDef?: Record<keyof InferPrimaryKey<E>, 'UUID!' | 'String!' | 'Int!'>;
         } = {},
     ) {
         this.optTypes = {
@@ -60,27 +56,27 @@ export class EntityAccessor<E extends EntityBase> {
         };
     }
 
-    public createSelector<F1 extends FieldSelector<E, F1>>(s1: F1): NominalType<F1, E>;
-    public createSelector<F1 extends FieldSelector<E, F1>, F2 extends FieldSelector<E, F2>>(
-        s1: F1,
+    public createSelector<S1 extends FieldSelector<E, S1>>(s1: S1): NominalType<S1, E>;
+    public createSelector<S1 extends FieldSelector<E, S1>, F2 extends FieldSelector<E, S1>>(
+        s1: S1,
         s2: F2,
-    ): NominalType<F1 & F2, E>;
+    ): NominalType<S1 & F2, E>;
     public createSelector<
-        F1 extends FieldSelector<E, F1>,
-        F2 extends FieldSelector<E, F2>,
-        F3 extends FieldSelector<E, F3>
-    >(s1: F1, s2: F2, s3: F3): NominalType<F1 & F2 & F3, E>;
+        S1 extends FieldSelector<E, S1>,
+        S2 extends FieldSelector<E, S2>,
+        S3 extends FieldSelector<E, S3>
+    >(s1: S1, s2: S2, s3: S3): NominalType<S1 & S2 & S3, E>;
     public createSelector<
         F1 extends FieldSelector<E, F1>,
         F2 extends FieldSelector<E, F2>,
         F3 extends FieldSelector<E, F3>
     >(s1?: F1, s2?: F2, s3?: F3): NominalType<F1 & F2 & F3, E> {
-        const selector = deepmerge.all([ensureSelector(s1), ensureSelector(s2), ensureSelector(s3)]);
+        const selector = deepmerge(ensureSelector(s1), ensureSelector(s2), ensureSelector(s3));
         this.applyOptTypes(selector);
         return selector as any;
     }
 
-    public createQuery = <F extends FieldSelector<E, F>>(query: Query<E, F>): NominalType<F, E> => {
+    public createQuery = <F extends FieldSelector<E, F>>(query: SelectQuery<E, F>): NominalType<F, E> => {
         this.applyOptTypes(query);
         return query as any;
     };
@@ -92,7 +88,7 @@ export class EntityAccessor<E extends EntityBase> {
         return query as any;
     };
 
-    protected getPkArg = (pk: PrimaryKey<E>) => {
+    protected getPkArg = (pk: InferPrimaryKey<E>) => {
         if (this.params?.pkDef) {
             return Object.entries(this.params.pkDef)
                 .map(([name, type]) => `$${name}: ${type}`)
@@ -104,7 +100,7 @@ export class EntityAccessor<E extends EntityBase> {
             .join(', ');
     };
 
-    private getPkArgImpl = (pk: PrimaryKey<E>) => {
+    private getPkArgImpl = (pk: InferPrimaryKey<E>) => {
         if (!this.pkArgDef) {
             this.pkArgDef = this.getPkArg(pk);
             this.pkArgsAssign = Object.keys(pk)
@@ -135,7 +131,7 @@ export class EntityAccessor<E extends EntityBase> {
         return pluralize(this.typeName);
     }
 
-    private prepareQuery = (query: Partial<Query<any, any>>) => {
+    private prepareQuery = (query: Partial<SelectQuery<E, any>>) => {
         this.applyOptTypes(query);
 
         const ctx: PrepareQueryContext = {
@@ -154,10 +150,10 @@ export class EntityAccessor<E extends EntityBase> {
         };
     };
 
-    public find = <F extends FieldSelector<E, F>>(
+    public find = <S extends FieldSelector<E, S>>(
         { gql }: GqlClient,
-        query: Query<E, F>,
-    ): Promise<Array<OriginInfer<E, F>>> => {
+        query: SelectQuery<E, S>,
+    ): Promise<Array<OriginInfer<E, S>>> => {
         const { selector, varsDeclaration, variables, varsAssign } = this.prepareQuery(query);
         const queryString = `
             query${joinWithParentheses(varsDeclaration)} {
@@ -165,12 +161,12 @@ export class EntityAccessor<E extends EntityBase> {
             }
         `;
 
-        return gql(queryString, variables).then((x) => x.items as Array<OriginInfer<E, F>>);
+        return gql(queryString, variables).then((x) => x.items as Array<OriginInfer<E, S>>);
     };
 
     public findAndCount = <F extends FieldSelector<E, F>>(
         { gql }: GqlClient,
-        query: Query<E, F>,
+        query: SelectQuery<E, F>,
     ): Promise<FindAndCountResult<E, F>> => {
         const { selector, varsDeclaration, variables, varsAssign } = this.prepareQuery(query);
         const queryString = `
@@ -185,7 +181,7 @@ export class EntityAccessor<E extends EntityBase> {
         return gql(queryString, variables).then((x) => x.result as FindAndCountResult<E, F>);
     };
 
-    public count = ({ gql }: GqlClient, query: FindOptions<E>): Promise<CountResult> => {
+    public count = ({ gql }: GqlClient, query: Query<E> = {}): Promise<CountResult> => {
         const { varsDeclaration, variables, varsAssign } = this.prepareQuery(query);
         const queryString = `
             query${joinWithParentheses(varsDeclaration)} {
@@ -200,9 +196,9 @@ export class EntityAccessor<E extends EntityBase> {
 
     public findOne = <F extends FieldSelector<E, F>>(
         { gql }: GqlClient,
-        args: { selector: F; filter: Filter<E> },
+        query: FindOneQuery<E, F>,
     ): Promise<OriginInfer<E, F> | null> => {
-        const { selector, varsDeclaration, variables, varsAssign } = this.prepareQuery(args);
+        const { selector, varsDeclaration, variables, varsAssign } = this.prepareQuery({ ...query, first: 1 });
         const queryString = `
             query${joinWithParentheses(varsDeclaration)} {
                 items: ${this.listName + varsAssign + selector}
@@ -214,9 +210,9 @@ export class EntityAccessor<E extends EntityBase> {
 
     public findOneOrError = async <F extends FieldSelector<E, F>>(
         client: GqlClient,
-        args: { filter: Filter<E>; selector: F },
+        query: FindOneQuery<E, F>,
     ): Promise<OriginInfer<E, F>> => {
-        const res = await this.findOne(client, args);
+        const res = await this.findOne(client, query);
         if (!res) {
             throw new Error('Not found');
         }
@@ -226,10 +222,10 @@ export class EntityAccessor<E extends EntityBase> {
 
     public findByPk = <F extends FieldSelector<E, F> = []>(
         { gql }: GqlClient,
-        args: { pk: PrimaryKey<E>; selector?: F },
+        query: ByPkQuery<E, F>,
     ): Promise<OriginInfer<E, F> | null> => {
-        const { pk } = args;
-        const { selector, varsDeclaration, variables } = this.prepareQuery(args);
+        const { pk } = query;
+        const { selector, varsDeclaration, variables } = this.prepareQuery(query);
         const queryString = `
             query${joinWithParentheses(varsDeclaration, this.getPkArgImpl(pk))} {
                 item: ${this.itemName}(${this.pkArgsAssign}) ${selector}
@@ -244,11 +240,11 @@ export class EntityAccessor<E extends EntityBase> {
 
     public findByPkOrError = async <F extends FieldSelector<E, F>>(
         client: GqlClient,
-        args: { pk: PrimaryKey<E>; selector: F },
+        query: ByPkQuery<E, F>,
     ): Promise<OriginInfer<E, F>> => {
-        const res = await this.findByPk(client, args);
+        const res = await this.findByPk(client, query);
         if (!res) {
-            throw new NotFoundError(`${this.typeName} not found`);
+            throw new Error(`${this.typeName} not found`);
         }
 
         return res;
@@ -256,7 +252,7 @@ export class EntityAccessor<E extends EntityBase> {
 
     public create = <F extends FieldSelector<E, F> = []>(
         { gql }: GqlClient,
-        args: { item: EntityCreate<E>; selector?: F },
+        args: CreateMutation<E, F>,
     ): Promise<OriginInfer<E, F>> => {
         const { item } = args;
         const { selector, varsDeclaration, variables } = this.prepareQuery(args);
@@ -276,7 +272,7 @@ export class EntityAccessor<E extends EntityBase> {
 
     public update = <F extends FieldSelector<E, F> = []>(
         { gql }: GqlClient,
-        args: { pk: PrimaryKey<E>; patch: EntityPatch<E, PrimaryKey<E>>; selector?: F },
+        args: UpdateMutation<E, F>,
     ): Promise<OriginInfer<E, F>> => {
         const { pk, patch } = args;
         const { selector, varsDeclaration, variables } = this.prepareQuery(args);
@@ -299,7 +295,7 @@ export class EntityAccessor<E extends EntityBase> {
 
     public delete = <F extends FieldSelector<E, F> = []>(
         { gql }: GqlClient,
-        args: { pk: PrimaryKey<E>; selector?: F },
+        args: DeleteMutation<E, F>,
     ): Promise<OriginInfer<E, F>> => {
         const { pk } = args;
         const { selector, varsDeclaration, variables } = this.prepareQuery(args);
@@ -330,10 +326,10 @@ export class EntityAccessor<E extends EntityBase> {
     public async updateOrCreate<F extends FieldSelector<E, F> = []>(
         client: GqlClient,
         args: {
-            pk: PrimaryKey<E>;
+            pk: InferPrimaryKey<E>;
             selector?: F;
-            item: Omit<EntityCreate<E>, keyof PrimaryKey<E>>;
-            patch?: EntityPatch<E, PrimaryKey<E>>;
+            item: Omit<EntityCreate<E>, keyof InferPrimaryKey<E>>;
+            patch?: EntityPatch<E>;
         },
     ): Promise<OriginInfer<E, F>> {
         const { patch, pk, selector, item } = args;
@@ -344,7 +340,7 @@ export class EntityAccessor<E extends EntityBase> {
             : this.create(client, { item: { ...item, ...pk } as any, selector });
     }
 
-    private prepareQueryVars = (ctx: PrepareQueryContext, query: Partial<Query<any, any>>) => {
+    private prepareQueryVars = (ctx: PrepareQueryContext, query: Partial<SelectQuery<E, any>>) => {
         const varsAssign: string[] = [];
         const optTypes = (query as any)[OPT_TYPES] as OptTypes<any>;
 
@@ -360,7 +356,7 @@ export class EntityAccessor<E extends EntityBase> {
                 );
             } else if (key === 'filter') {
                 ctx.variables[name] = optTypes.defaultFilter
-                    ? deepmerge(optTypes.defaultFilter, query[key] as any)
+                    ? deepmerge(optTypes.defaultFilter as any, query[key] as any)
                     : query[key];
             } else {
                 ctx.variables[name] = query[key];
