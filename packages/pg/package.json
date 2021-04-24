@@ -1,6 +1,6 @@
 {
   "name": "@flstk/pg",
-  "version": "0.0.11",
+  "version": "0.1.0",
   "license": "MIT",
   "scripts": {
     "compile": "tsc --noEmit --skipLibCheck",
@@ -26,5 +26,5 @@
   "devDependencies": {
     "@types/pluralize": "0.0.29"
   },
-  "gitHead": "840a7a4a0b06cc0aa893202cbc179bea6b3c2a36"
+  "gitHead": "ec9601e2720460fd88e7a284fcd0d0b4c4ee1019"
 }
