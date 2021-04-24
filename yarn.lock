@@ -46,6 +46,26 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@nabla/result@workspace:packages/result":
+  version: 0.0.0-use.local
+  resolution: "@nabla/result@workspace:packages/result"
+  languageName: unknown
+  linkType: soft
+
+"@nabla/use-api@workspace:packages/use-api":
+  version: 0.0.0-use.local
+  resolution: "@nabla/use-api@workspace:packages/use-api"
+  dependencies:
+    "@types/object-hash": 2.1.0
+    "@types/react": 17.0.3
+    axios: 0.21.1
+    axios-auth-refresh: 3.1.0
+    jwt-decode: 3.1.2
+    object-hash: 2.1.1
+    react: 17.0.2
+  languageName: unknown
+  linkType: soft
+
 "@npmcli/move-file@npm:^1.0.1":
   version: 1.1.2
   resolution: "@npmcli/move-file@npm:1.1.2"
@@ -2593,12 +2613,6 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"result@workspace:packages/result":
-  version: 0.0.0-use.local
-  resolution: "result@workspace:packages/result"
-  languageName: unknown
-  linkType: soft
-
 "retry@npm:^0.12.0":
   version: 0.12.0
   resolution: "retry@npm:0.12.0"
@@ -3201,20 +3215,6 @@ typescript@4.2.4:
   checksum: db9adfeca3ba0ca98f197d8cbf5b97f424c30ac2bb5e672e68033cf2ea747e66d1e2ebc3921e947dad672869c65c6cb5257fe703142bca9c3aeefe802a0bc2e8
   languageName: node
   linkType: hard
-
-"use-api@workspace:packages/use-api":
-  version: 0.0.0-use.local
-  resolution: "use-api@workspace:packages/use-api"
-  dependencies:
-    "@types/object-hash": 2.1.0
-    "@types/react": 17.0.3
-    axios: 0.21.1
-    axios-auth-refresh: 3.1.0
-    jwt-decode: 3.1.2
-    object-hash: 2.1.1
-    react: 17.0.2
-  languageName: unknown
-  linkType: soft
 
 "util-deprecate@npm:^1.0.1, util-deprecate@npm:~1.0.1":
   version: 1.0.2
