@@ -2942,7 +2942,7 @@ __metadata:
   resolution: "flstk@workspace:."
   dependencies:
     "@zerollup/ts-transform-paths": 1.7.18
-    lerna: ^4.0.0
+    lerna: 4.0.0
     rollup: 2.45.2
     rollup-plugin-typescript2: 0.30.0
     ts-node-dev: 1.1.6
@@ -4148,7 +4148,7 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"lerna@npm:^4.0.0":
+"lerna@npm:4.0.0":
   version: 4.0.0
   resolution: "lerna@npm:4.0.0"
   dependencies:
