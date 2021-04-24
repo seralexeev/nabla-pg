@@ -1,6 +1,6 @@
 {
-  "name": "utils",
-  "version": "0.0.1",
+  "name": "@flstk/utils",
+  "version": "0.0.2",
   "license": "MIT",
   "scripts": {
     "compile": "tsc --noEmit"
@@ -10,5 +10,6 @@
   },
   "devDependencies": {
     "@types/lodash": "4.14.168"
-  }
+  },
+  "gitHead": "8e04feea4aa96e9187355373da42445f81894ede"
 }

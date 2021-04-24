@@ -1,8 +1,9 @@
 {
   "name": "@flstk/result",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "license": "MIT",
   "scripts": {
     "compile": "tsc --noEmit"
-  }
+  },
+  "gitHead": "8e04feea4aa96e9187355373da42445f81894ede"
 }
