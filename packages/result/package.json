@@ -1,6 +1,6 @@
 {
   "name": "@flstk/result",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "license": "MIT",
   "scripts": {
     "compile": "tsc --noEmit"
