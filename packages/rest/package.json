@@ -1,6 +1,6 @@
 {
   "name": "@flstk/rest",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "license": "MIT",
   "dependencies": {
     "express": "4.17.1"
