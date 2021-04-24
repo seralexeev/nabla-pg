@@ -5,7 +5,7 @@
   "scripts": {
     "compile": "tsc --noEmit --skipLibCheck",
     "build": "rollup -c",
-    "prepublish": "npm build"
+    "prepublish": "npm run build"
   },
   "main": "dist/flstk-pg.js",
   "module": "dist/flstk-pg.mjs",
@@ -25,5 +25,5 @@
   "devDependencies": {
     "@types/pluralize": "0.0.29"
   },
-  "gitHead": "8e04feea4aa96e9187355373da42445f81894ede"
+  "gitHead": "54456e40b52f7f429357af7d0113c0a59694e676"
 }
