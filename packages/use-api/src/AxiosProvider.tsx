@@ -1,5 +1,5 @@
-import { ifSuccess, isError, makeError, Result, ResultError } from '@nabla/result';
-import { RequestOptions, useRequest } from '@nabla/use-api/useRequest';
+import { ifSuccess, isError, makeError, Result, ResultError } from '@flstk/result';
+import { RequestOptions, useRequest } from '@flstk/use-api/useRequest';
 import Axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import createAuthRefreshInterceptor from 'axios-auth-refresh';
 import jwtDecode from 'jwt-decode';

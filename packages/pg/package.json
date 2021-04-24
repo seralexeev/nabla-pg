@@ -1,5 +1,5 @@
 {
-  "name": "@nabla/pg",
+  "name": "@flstk/pg",
   "version": "0.0.1",
   "license": "MIT",
   "scripts": {
@@ -7,9 +7,9 @@
     "build": "rollup -c",
     "prepublish": "build"
   },
-  "main": "dist/nabla-pg.js",
-  "module": "dist/nabla-pg.mjs",
-  "typings": "dist/nabla-pg.d.ts",
+  "main": "dist/flstk-pg.js",
+  "module": "dist/flstk-pg.mjs",
+  "typings": "dist/flstk-pg.d.ts",
   "dependencies": {
     "@graphile-contrib/pg-many-to-many": "1.0.1",
     "@graphile-contrib/pg-simplify-inflector": "6.1.0",

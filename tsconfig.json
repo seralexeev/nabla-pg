@@ -46,20 +46,20 @@
     // "moduleResolution": "node",                  /* Specify module resolution strategy: 'node' (Node.js) or 'classic' (TypeScript pre-1.6). */
     "baseUrl": "./" /* Base directory to resolve non-absolute module names. */,
     "paths": {
-      // "@nabla/result": ["packages/result/src"],
-      "@nabla/result/*": ["packages/result/src/*"],
+      // "@flstk/result": ["packages/result/src"],
+      "@flstk/result/*": ["packages/result/src/*"],
 
-      // "@nabla/use-api": ["packages/use-api/src"],
-      "@nabla/use-api/*": ["packages/use-api/src/*"],
+      // "@flstk/use-api": ["packages/use-api/src"],
+      "@flstk/use-api/*": ["packages/use-api/src/*"],
 
-      // "@nabla/utils": ["packages/utils/src"],
-      "@nabla/utils/*": ["packages/utils/src/*"],
+      // "@flstk/utils": ["packages/utils/src"],
+      "@flstk/utils/*": ["packages/utils/src/*"],
 
-      // "@nabla/pg": ["packages/pg/src"],
-      "@nabla/pg/*": ["packages/pg/src/*"], 
+      // "@flstk/pg": ["packages/pg/src"],
+      "@flstk/pg/*": ["packages/pg/src/*"], 
 
-      // "@nabla/rest": ["packages/rest/src"],
-      "@nabla/rest/*": ["packages/rest/src/*"]
+      // "@flstk/rest": ["packages/rest/src"],
+      "@flstk/rest/*": ["packages/rest/src/*"]
     } /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */,
     // "rootDirs": [],                              /* List of root folders whose combined content represents the structure of the project at runtime. */
     // "typeRoots": [],                             /* List of folders to include type definitions from. */

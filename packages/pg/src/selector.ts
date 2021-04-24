@@ -1,6 +1,6 @@
-import { EntityConnection, NonQueryableKeys, Queryable } from '@nabla/pg/entity';
-import { SelectQuery } from '@nabla/pg/query';
-import { ArrayElement, UnwrapNominal, UnwrapNominalTag } from '@nabla/utils/types';
+import { EntityConnection, NonQueryableKeys, Queryable } from '@flstk/pg/entity';
+import { SelectQuery } from '@flstk/pg/query';
+import { ArrayElement, UnwrapNominal, UnwrapNominalTag } from '@flstk/utils/types';
 
 export type OriginInfer<E, S extends FieldSelector<E, S> | unknown> = S extends { selector: FieldSelector<E, S> }
     ? OriginInferImpl<E, S['selector']>

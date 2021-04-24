@@ -1,5 +1,5 @@
-import { EntityBase, EntityConnection, EntityCreate, EntityPatch, InferPrimaryKey } from '@nabla/pg/entity';
-import { Filter } from '@nabla/pg/filter';
+import { EntityBase, EntityConnection, EntityCreate, EntityPatch, InferPrimaryKey } from '@flstk/pg/entity';
+import { Filter } from '@flstk/pg/filter';
 import {
     ByPkQuery,
     ConnectionQuery,
@@ -12,9 +12,9 @@ import {
     Query,
     SelectQuery,
     UpdateMutation,
-} from '@nabla/pg/query';
-import { FieldSelector, OriginInfer } from '@nabla/pg/selector';
-import { NominalType } from '@nabla/utils/types';
+} from '@flstk/pg/query';
+import { FieldSelector, OriginInfer } from '@flstk/pg/selector';
+import { NominalType } from '@flstk/utils/types';
 import { camelCase } from 'camel-case';
 import { constantCase } from 'constant-case';
 import deepmerge from 'deepmerge';

@@ -1,4 +1,4 @@
-import { FilterKeys, InverseFilterKeys, NominalType, NullableKeys, UnwrapNominal } from '@nabla/utils/types';
+import { FilterKeys, InverseFilterKeys, NominalType, NullableKeys, UnwrapNominal } from '@flstk/utils/types';
 
 export type IdPkey = { id: DefaultValue<string> };
 

@@ -1,4 +1,4 @@
-import type { PgConfig } from '@nabla/pg/db';
+import type { PgConfig } from '@flstk/pg/db';
 import { graphql, GraphQLError, GraphQLSchema } from 'graphql';
 import { PoolClient } from 'pg';
 import util from 'util';

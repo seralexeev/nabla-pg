@@ -1,4 +1,4 @@
-import { UnwrapNominal } from '@nabla/utils/types';
+import { UnwrapNominal } from '@flstk/utils/types';
 import { EntityBase, EntityConnection, JsonObject } from './entity';
 
 type MaybeNominalScalar<T> =

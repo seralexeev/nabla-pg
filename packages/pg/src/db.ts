@@ -1,8 +1,8 @@
 import PgManyToManyPlugin from '@graphile-contrib/pg-many-to-many';
 import PgSimplifyInflectorPlugin from '@graphile-contrib/pg-simplify-inflector';
-import { createGqlClient } from '@nabla/pg/gql';
-import { GqlInvoke } from '@nabla/pg/query';
-import { createSqlClient, SqlInvoke } from '@nabla/pg/sql';
+import { createGqlClient } from '@flstk/pg/gql';
+import { GqlInvoke } from '@flstk/pg/query';
+import { createSqlClient, SqlInvoke } from '@flstk/pg/sql';
 import { GraphQLScalarType, GraphQLSchema } from 'graphql';
 import { Pool, PoolClient } from 'pg';
 import { PostGraphileCoreOptions } from 'postgraphile-core';

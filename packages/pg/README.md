@@ -1,4 +1,4 @@
-# ∇ nabla pg
+# ∇ flstk pg
 
 This is a library that greatly simplifies data access and gives you complete control over types and queries.
 
@@ -10,10 +10,10 @@ Generating code from .graphql files didn't suit me very well. I find this approa
 
 ```bash
 # npm
-npm i nabla-pg-core
+npm i flstk-pg-core
 
 # yarn
-yarn add nabla-pg-core
+yarn add flstk-pg-core
 ```
 
 In order to get proper nullable type inference you have to enable `strict` mode in your `tsconfig.json`:
@@ -51,7 +51,7 @@ $$ LANGUAGE sql STABLE;
 Then you can make queries using typescript and postgraphile:
 
 ```ts
-import { createSchema, Pg, EntityBase, IdPkey, ReadonlyValue, EntityAccessor } from 'nabla-pg-core';
+import { createSchema, Pg, EntityBase, IdPkey, ReadonlyValue, EntityAccessor } from 'flstk-pg-core';
 import { Pool } from 'pg';
 
 type UserEntity = EntityBase<IdPkey> & {
@@ -64,7 +64,7 @@ type UserEntity = EntityBase<IdPkey> & {
 const Users = new EntityAccessor<UserEntity>('User');
 
 (async () => {
-    const connectionString = 'postgres://nabla:nabla@localhost:5433/nabla_db';
+    const connectionString = 'postgres://flstk:flstk@localhost:5433/flstk_db';
     const pool = new Pool({ connectionString });
 
     const pg = new Pg(pool, await createSchema(connectionString));

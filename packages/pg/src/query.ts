@@ -1,6 +1,6 @@
-import { EntityConnection, EntityCreate, EntityPatch, InferPrimaryKey, NonQueryableKeys } from '@nabla/pg/entity';
-import { Filter } from '@nabla/pg/filter';
-import { FieldSelector, OriginInfer } from '@nabla/pg/selector';
+import { EntityConnection, EntityCreate, EntityPatch, InferPrimaryKey, NonQueryableKeys } from '@flstk/pg/entity';
+import { Filter } from '@flstk/pg/filter';
+import { FieldSelector, OriginInfer } from '@flstk/pg/selector';
 
 export type OrderBy<E> = Array<[NonQueryableKeys<E>, 'ASC' | 'DESC']>;
 

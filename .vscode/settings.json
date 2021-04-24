@@ -9,7 +9,7 @@
     "deepmerge",
     "esbuild",
     "inflector",
-    "nabla",
+    "flstk",
     "postgraphile",
     "refetching",
     "ttypescript"

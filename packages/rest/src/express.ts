@@ -1,5 +1,5 @@
 import { RequestHandler } from 'express';
-import { reduceByKey } from '@nabla/utils';
+import { reduceByKey } from '@flstk/utils';
 
 type UseControllersConfig = {
     controllers: any[];

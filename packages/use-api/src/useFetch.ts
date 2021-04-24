@@ -1,6 +1,6 @@
 import hash from 'object-hash';
 import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from 'react';
-import { AsyncResult, isError, ResultError } from '@nabla/result';
+import { AsyncResult, isError, ResultError } from '@flstk/result';
 
 type FetchResultExtra<R, E, S> = {
     loading: boolean;

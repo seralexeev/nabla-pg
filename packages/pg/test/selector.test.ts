@@ -1,5 +1,5 @@
-import { EntityBase, EntityConnection, IdPkey } from '@nabla/pg/entity';
-import { EntityAccessor } from '@nabla/pg/EntityAccessor';
+import { EntityBase, EntityConnection, IdPkey } from '@flstk/pg/entity';
+import { EntityAccessor } from '@flstk/pg/EntityAccessor';
 
 type Entity = EntityBase<IdPkey> & {
     string: string;

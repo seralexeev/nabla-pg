@@ -1,4 +1,4 @@
-import { FilterKeys } from '@nabla/utils/types';
+import { FilterKeys } from '@flstk/utils/types';
 import lodash from 'lodash';
 
 export const pick = <T, K extends keyof T>(value: T, keys: readonly K[]): Pick<T, K> => {

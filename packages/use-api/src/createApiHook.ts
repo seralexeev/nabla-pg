@@ -1,4 +1,4 @@
-import { AsyncResult } from '@nabla/result';
+import { AsyncResult } from '@flstk/result';
 import {
     AxiosRequest,
     FetchResult,
@@ -7,7 +7,7 @@ import {
     useFetch,
     UseFetchOptions,
     useRequest,
-} from '@nabla/use-api';
+} from '@flstk/use-api';
 import { useCallback } from 'react';
 
 type Caller<R, P extends any[]> = (

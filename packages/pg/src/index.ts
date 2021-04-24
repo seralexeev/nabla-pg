@@ -1,4 +1,4 @@
-export { Pg, QueryClient, Transaction } from '@nabla/pg/db';
+export { Pg, QueryClient, Transaction } from '@flstk/pg/db';
 export {
     DefaultKeys,
     DefaultValue,
@@ -17,8 +17,8 @@ export {
     QueryableKeys,
     ReadonlyKeys,
     ReadonlyValue,
-} from '@nabla/pg/entity';
-export { EntityAccessor, NotFoundError } from '@nabla/pg/EntityAccessor';
+} from '@flstk/pg/entity';
+export { EntityAccessor, NotFoundError } from '@flstk/pg/EntityAccessor';
 export {
     ByPkQuery,
     ConnectionQuery,
@@ -33,6 +33,6 @@ export {
     Query,
     SelectQuery,
     UpdateMutation,
-} from '@nabla/pg/query';
-export { FieldSelector, OriginInfer, SelectorShape } from '@nabla/pg/selector';
-export { createSqlClient, literal, SqlInvoke } from '@nabla/pg/sql';
+} from '@flstk/pg/query';
+export { FieldSelector, OriginInfer, SelectorShape } from '@flstk/pg/selector';
+export { createSqlClient, literal, SqlInvoke } from '@flstk/pg/sql';

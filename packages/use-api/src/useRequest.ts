@@ -1,4 +1,4 @@
-import { AsyncResult, ifSuccess } from '@nabla/result';
+import { AsyncResult, ifSuccess } from '@flstk/result';
 import Axios, { AxiosInstance, AxiosRequestConfig, CancelTokenSource } from 'axios';
 import { MutableRefObject, useCallback, useEffect, useMemo, useRef } from 'react';
 
