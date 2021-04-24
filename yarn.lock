@@ -79,6 +79,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@flstk/utils@workspace:packages/utils":
+  version: 0.0.0-use.local
+  resolution: "@flstk/utils@workspace:packages/utils"
+  dependencies:
+    "@types/lodash": 4.14.168
+    lodash: 4.17.21
+  languageName: unknown
+  linkType: soft
+
 "@graphile-contrib/pg-many-to-many@npm:1.0.1":
   version: 1.0.1
   resolution: "@graphile-contrib/pg-many-to-many@npm:1.0.1"
@@ -2933,7 +2942,7 @@ __metadata:
   resolution: "flstk@workspace:."
   dependencies:
     "@zerollup/ts-transform-paths": 1.7.18
-    lerna: 4.0.0
+    lerna: ^4.0.0
     rollup: 2.45.2
     rollup-plugin-typescript2: 0.30.0
     ts-node-dev: 1.1.6
@@ -4139,7 +4148,7 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"lerna@npm:4.0.0":
+"lerna@npm:^4.0.0":
   version: 4.0.0
   resolution: "lerna@npm:4.0.0"
   dependencies:
@@ -7338,15 +7347,6 @@ typescript@4.2.4:
   checksum: a457956ebc09efbda05da8bf213ab89140bb9dffa3c42b3315dd8fc3c45d67a1b802741f58b7bba4872113201fc275fc86470289d8bd32b74297b5e5b5980705
   languageName: node
   linkType: hard
-
-"utils@workspace:packages/utils":
-  version: 0.0.0-use.local
-  resolution: "utils@workspace:packages/utils"
-  dependencies:
-    "@types/lodash": 4.14.168
-    lodash: 4.17.21
-  languageName: unknown
-  linkType: soft
 
 "uuid@npm:^3.3.2":
   version: 3.4.0
