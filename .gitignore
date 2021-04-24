@@ -1,4 +1,3 @@
-
 # Created by https://www.gitignore.io/api/node
 # Edit at https://www.gitignore.io/?templates=node
 
@@ -181,3 +180,11 @@ Pods
 *dSYM.zip
 *.mobileprovision
 fastlane/report.xml
+
+.yarn/*
+!.yarn/patches
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+.pnp.*

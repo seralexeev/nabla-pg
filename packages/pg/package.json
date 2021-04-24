@@ -1,0 +1,28 @@
+{
+  "name": "@nabla/pg",
+  "version": "0.0.1",
+  "license": "MIT",
+  "scripts": {
+    "compile": "tsc --noEmit --skipLibCheck",
+    "build": "rollup -c",
+    "prepublish": "build"
+  },
+  "main": "dist/nabla-pg.js",
+  "module": "dist/nabla-pg.mjs",
+  "typings": "dist/nabla-pg.d.ts",
+  "dependencies": {
+    "@graphile-contrib/pg-many-to-many": "1.0.1",
+    "@graphile-contrib/pg-simplify-inflector": "6.1.0",
+    "camel-case": "4.1.2",
+    "constant-case": "3.0.4",
+    "deepmerge": "4.2.2",
+    "graphql": "15.5.0",
+    "pg": "8.6.0",
+    "postgraphile": "4.11.0",
+    "postgraphile-core": "4.11.2",
+    "postgraphile-plugin-connection-filter": "2.2.0"
+  },
+  "devDependencies": {
+    "@types/pluralize": "0.0.29"
+  }
+}

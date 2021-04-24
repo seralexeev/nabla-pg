@@ -1,0 +1,20 @@
+{
+  "name": "use-api",
+  "version": "0.0.1",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "compile": "tsc --noEmit"
+  },
+  "dependencies": {
+    "axios": "0.21.1",
+    "axios-auth-refresh": "3.1.0",
+    "jwt-decode": "3.1.2",
+    "object-hash": "2.1.1",
+    "react": "17.0.2"
+  },
+  "devDependencies": {
+    "@types/object-hash": "2.1.0",
+    "@types/react": "17.0.3"
+  }
+}

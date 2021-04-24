@@ -1,16 +1,17 @@
 {
-    "cSpell.words": [
-        "Datetime",
-        "Inflector",
-        "Queryable",
-        "SAVEPOINT",
-        "deepmerge",
-        "fastify",
-        "fkey",
-        "graphile",
-        "nabla",
-        "postgraphile",
-        "postgres",
-        "timestamptz"
-    ]
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+  "cSpell.words": [
+    "Datetime",
+    "Graphile",
+    "Queryable",
+    "Unmount",
+    "deepmerge",
+    "esbuild",
+    "inflector",
+    "nabla",
+    "postgraphile",
+    "refetching",
+    "ttypescript"
+  ]
 }
