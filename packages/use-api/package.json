@@ -2,6 +2,7 @@
   "name": "@flstk/use-api",
   "version": "0.0.5",
   "license": "MIT",
+  "private": true,
   "scripts": {
     "compile": "tsc --noEmit"
   },
@@ -16,5 +17,5 @@
     "@types/object-hash": "2.1.0",
     "@types/react": "17.0.3"
   },
-  "gitHead": "29f29d62f04004d177657ddb5c7b7181b0f952db"
+  "gitHead": "1a45c09dc8f014ba7a6b86188c8e2bb6dba7bce9"
 }

@@ -2,11 +2,12 @@
   "name": "@flstk/rest",
   "version": "0.0.5",
   "license": "MIT",
+  "private": true,
   "dependencies": {
     "express": "4.17.1"
   },
   "devDependencies": {
     "@types/express": "4.17.11"
   },
-  "gitHead": "29f29d62f04004d177657ddb5c7b7181b0f952db"
+  "gitHead": "1a45c09dc8f014ba7a6b86188c8e2bb6dba7bce9"
 }
