@@ -11,8 +11,10 @@ __metadata:
   dependencies:
     "@graphile-contrib/pg-many-to-many": 1.0.1
     "@graphile-contrib/pg-simplify-inflector": 6.1.0
+    "@types/big.js": ^6
     "@types/dedent": ^0
     "@types/pluralize": 0.0.29
+    big.js: 6.0.3
     camel-case: 4.1.2
     constant-case: 3.0.4
     dedent: 0.7.0
@@ -22,6 +24,7 @@ __metadata:
     postgraphile: 4.11.0
     postgraphile-core: 4.11.2
     postgraphile-plugin-connection-filter: 2.2.0
+    sql-formatter: 4.0.2
   languageName: unknown
   linkType: soft
 
@@ -100,6 +103,13 @@ __metadata:
   version: 1.1.2
   resolution: "@tootallnate/once@npm:1.1.2"
   checksum: d030f3fb14e0373dbf5005d8f696ff34fda87bf56744bea611fc737449bfc0687ebcb28ee8ba4c6624877f51b18d701c0d417d793f406006a192f4721911d048
+  languageName: node
+  linkType: hard
+
+"@types/big.js@npm:^6":
+  version: 6.0.2
+  resolution: "@types/big.js@npm:6.0.2"
+  checksum: d6bfcf0d0a5f24ff0e0c53495a88ad4abfecc774135c2ed91f7adcd9cb6003efdfa7f0678c695354d9f069b6d390ec7586383117108425cbdcb14d07e7ea4fc4
   languageName: node
   linkType: hard
 
@@ -397,6 +407,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"argparse@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "argparse@npm:2.0.1"
+  checksum: 160b7a25d2a7097fd5fdf25eb8a99e037340078f70e6c7cfdef305837ed14d54570b2b13261bcae26c8cd44ad6e9a7136a0110d815ac65a7891c69c7bf2f4afd
+  languageName: node
+  linkType: hard
+
 "array-find-index@npm:^1.0.1":
   version: 1.0.2
   resolution: "array-find-index@npm:1.0.2"
@@ -447,6 +464,13 @@ __metadata:
   version: 1.0.2
   resolution: "balanced-match@npm:1.0.2"
   checksum: 690643f3009a04289ac401079de5a780aae452f7625fb2884051cc847b231e6521ee15dd6430b066d3cf4bd8bb00bb7ff55b7d134f34b8f0b8c043806796f94e
+  languageName: node
+  linkType: hard
+
+"big.js@npm:6.0.3":
+  version: 6.0.3
+  resolution: "big.js@npm:6.0.3"
+  checksum: 9c913208308acc60b10499d7deca50c9facf52cc664bee203b112e9e98daa1244470648e7da1f632d904808cdb863f2b303df9b447ed5b5bf4934988e3f3c307
   languageName: node
   linkType: hard
 
@@ -2728,6 +2752,17 @@ fsevents@~2.3.1:
   dependencies:
     readable-stream: ^3.0.0
   checksum: 04bf20af25bfe917edbb7f719cc9dbd2ca16633e4e6a5e343a8c834310aafd802c74b3aceb96acf3571545b0340d55d2d3273dbee8f9bc6a811371dcfbe0c8a7
+  languageName: node
+  linkType: hard
+
+"sql-formatter@npm:4.0.2":
+  version: 4.0.2
+  resolution: "sql-formatter@npm:4.0.2"
+  dependencies:
+    argparse: ^2.0.1
+  bin:
+    sql-formatter: bin/sqlfmt.js
+  checksum: 68693f3221d01bbcd0477e693f091873f3262e88cc77aa9d78eb2bc1f788286985c85330ab8415ee6a08b1be4a82b35f721e4cea818553af2062415907e6015f
   languageName: node
   linkType: hard
 

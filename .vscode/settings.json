@@ -5,6 +5,7 @@
     "Datetime",
     "Graphile",
     "Queryable",
+    "SAVEPOINT",
     "Unmount",
     "deepmerge",
     "esbuild",

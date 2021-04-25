@@ -1,13 +1,24 @@
+import { enableExplain } from '@flstk/pg/explain';
 import { createGqlClient } from '@flstk/pg/gql';
+import { NonNullRelationsPlugin } from '@flstk/pg/plugins/NonNullRelationsPlugin';
+import { PgNumericToBigJsPlugin } from '@flstk/pg/plugins/PgNumericToBigJsPlugin';
 import { GqlInvoke } from '@flstk/pg/query';
 import { createSqlClient, SqlInvoke } from '@flstk/pg/sql';
 import PgManyToManyPlugin from '@graphile-contrib/pg-many-to-many';
 import PgSimplifyInflectorPlugin from '@graphile-contrib/pg-simplify-inflector';
+import Big from 'big.js';
 import { GraphQLScalarType, GraphQLSchema } from 'graphql';
-import { Pool, PoolClient } from 'pg';
+import { Pool, PoolClient, types } from 'pg';
 import { PostGraphileCoreOptions } from 'postgraphile-core';
 import ConnectionFilterPlugin from 'postgraphile-plugin-connection-filter';
 import { watchPostGraphileSchema } from 'postgraphile/build/postgraphile';
+
+Big.prototype.toPostgres = function () {
+    // TODO: proper serialization
+    return this.toFixed(2);
+};
+
+types.setTypeParser(1700, (val) => new Big(val));
 
 export type QueryClient = { gql: GqlInvoke; sql: SqlInvoke; client: PoolClient };
 export type Transaction = QueryClient & {
@@ -19,7 +30,8 @@ export type PgConfig = {
     explain?: {
         enabled: boolean;
         logger?: (message?: any, ...optionalParams: any[]) => any;
-        format?: (source: string) => string;
+        gqlFormat?: (source: string) => string;
+        sqlFormat?: (source: string) => string;
     };
     postgraphile?: PostGraphileCoreOptions;
 };
@@ -29,7 +41,11 @@ export class Pg {
     private readonlySchema!: GraphQLSchema;
     private initPromise?: Promise<Pg>;
 
-    public constructor(public readonly pool: Pool, private config: PgConfig = {}) {}
+    public constructor(public readonly pool: Pool, private config: PgConfig = {}) {
+        if (config.explain) {
+            enableExplain(config.explain);
+        }
+    }
 
     private get schemaName() {
         return this.config.schema ?? 'public';
@@ -126,6 +142,8 @@ export class Pg {
         return {
             appendPlugins: [
                 ...(this.config.postgraphile?.appendPlugins ?? []),
+                NonNullRelationsPlugin,
+                PgNumericToBigJsPlugin,
                 ConnectionFilterPlugin,
                 PgManyToManyPlugin,
                 PgSimplifyInflectorPlugin,
