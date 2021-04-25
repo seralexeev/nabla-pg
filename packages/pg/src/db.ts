@@ -1,8 +1,8 @@
-import PgManyToManyPlugin from '@graphile-contrib/pg-many-to-many';
-import PgSimplifyInflectorPlugin from '@graphile-contrib/pg-simplify-inflector';
 import { createGqlClient } from '@flstk/pg/gql';
 import { GqlInvoke } from '@flstk/pg/query';
 import { createSqlClient, SqlInvoke } from '@flstk/pg/sql';
+import PgManyToManyPlugin from '@graphile-contrib/pg-many-to-many';
+import PgSimplifyInflectorPlugin from '@graphile-contrib/pg-simplify-inflector';
 import { GraphQLScalarType, GraphQLSchema } from 'graphql';
 import { Pool, PoolClient } from 'pg';
 import { PostGraphileCoreOptions } from 'postgraphile-core';
@@ -34,6 +34,8 @@ export class Pg {
     private get schemaName() {
         return this.config.schema ?? 'public';
     }
+
+    public getSchema = async () => this.init().then(() => this.schema);
 
     public init = () => {
         if (!this.initPromise) {

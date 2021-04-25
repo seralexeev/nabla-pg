@@ -363,10 +363,7 @@ export class EntityAccessor<E extends EntityBase> extends ReadonlyEntityAccessor
         `;
 
         return gql(queryString, {
-            input: {
-                ...pk,
-                patch: { ...(patch as any), updatedAt: new Date() },
-            },
+            input: { ...pk, patch },
             ...variables,
         }).then((x) => x.result.item as OriginInfer<E, S>);
     };

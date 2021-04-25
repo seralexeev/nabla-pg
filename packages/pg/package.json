@@ -3,7 +3,8 @@
   "version": "0.1.1",
   "license": "MIT",
   "scripts": {
-    "compile": "tsc --noEmit --skipLibCheck"
+    "compile": "tsc --noEmit --skipLibCheck",
+    "intro": "npx ts-node --transpile-only --files -r tsconfig-paths/register src/intro.ts"
   },
   "main": "dist/flstk-pg.js",
   "module": "dist/flstk-pg.mjs",
@@ -13,6 +14,7 @@
     "@graphile-contrib/pg-simplify-inflector": "6.1.0",
     "camel-case": "4.1.2",
     "constant-case": "3.0.4",
+    "dedent": "0.7.0",
     "deepmerge": "4.2.2",
     "graphql": "15.5.0",
     "pg": "8.6.0",
@@ -21,6 +23,7 @@
     "postgraphile-plugin-connection-filter": "2.2.0"
   },
   "devDependencies": {
+    "@types/dedent": "^0",
     "@types/pluralize": "0.0.29"
   }
 }

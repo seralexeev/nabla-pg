@@ -10,7 +10,11 @@
     "compile": "yarn workspaces foreach run compile"
   },
   "devDependencies": {
-    "ts-node-dev": "1.1.6",
-    "ttypescript": "1.5.12"
+    "ts-node": "9.1.1",
+    "tsconfig-paths": "3.9.0",
+    "typescript": "4.2.4"
+  },
+  "dependencies": {
+    "ts-node-dev": "1.1.6"
   }
 }

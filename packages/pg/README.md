@@ -107,7 +107,7 @@ export type UserEntity = EntityBase<IdPkey> & {
 };
 ```
 
-`EntityBase` will complement our type with common fields such as primary key and `__typename` and `updatedAt`, `createdAt`.
+`EntityBase` will complement our type with common fields such as primary key and `__typename`.
 
 To access this structure, we define the `EntityAccessor` special object as follows:
 

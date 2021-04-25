@@ -8,9 +8,10 @@
     "Unmount",
     "deepmerge",
     "esbuild",
-    "inflector",
     "flstk",
+    "inflector",
     "postgraphile",
+    "postgres",
     "refetching",
     "ttypescript"
   ]

@@ -1,16 +1,10 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "target": "esnext",
+    "target": "ESNext",
     "lib": ["ES2017"],
-    "module": "esnext",
+    "module": "CommonJS",
     "moduleResolution": "node",
-    "outDir": "dist",
-    "plugins": [
-      {
-        "transform": "@zerollup/ts-transform-paths",
-        "exclude": ["*"]
-      }
-    ]
+    "outDir": "dist"
   }
 }

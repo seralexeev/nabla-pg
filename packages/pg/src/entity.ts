@@ -14,11 +14,7 @@ export type QueryableKeys<E> = FilterKeys<E, MayBeQueryable>;
 export type ReadonlyKeys<E> = FilterKeys<E, ReadonlyValue<unknown>>;
 export type DefaultKeys<E> = FilterKeys<E, DefaultValue<unknown>>;
 
-export type EntityBase<TPkey extends Record<string, unknown> = {}> = NominalType<TPkey, TPkey> & {
-    updatedAt: ReadonlyValue<Date>;
-    createdAt: ReadonlyValue<Date>;
-    selector: never;
-} & Queryable;
+export type EntityBase<TPkey extends Record<string, unknown> = {}> = NominalType<TPkey, TPkey> & Queryable;
 
 export type Many2Many<TExtend> = TExtend &
     EntityBase<{ [TKey in keyof TExtend as TKey extends string ? `${TKey}Id` : never]: string }>;
