@@ -1,4 +1,4 @@
-import { EntityConnection, NonQueryableKeys, Queryable } from '@flstk/pg/entity';
+import { EntityConnection, MayBeQueryable, NonQueryableKeys, Queryable } from '@flstk/pg/entity';
 import { SelectQuery } from '@flstk/pg/query';
 import { ArrayElement, UnwrapNominal, UnwrapNominalTag } from '@flstk/utils/types';
 
@@ -24,18 +24,15 @@ type OriginInferImpl<E, S extends FieldSelector<E, S> | unknown> = S extends key
               : never;
       };
 
-type NonArrayQueryable = EntityConnection<any> | Queryable | (Queryable | null);
+type NormalizeQueryable<T> = NonNullable<T extends Array<infer A> ? A : T>;
 
-// prettier-ignore
 export type FieldSelector<E, S> =
     | NonQueryableKeys<E>
     | Array<NonQueryableKeys<E>>
     | {
           [K in keyof E]?: keyof S extends keyof E
-              ? E[K] extends Queryable[]                             // @ts-expect-error
-                  ? SelectQuery<E, FieldSelector<ArrayElement<E[K]>, S[K]>>
-                  : E[K] extends NonArrayQueryable   // @ts-expect-error
-                  ? FieldSelector<NonNullable<E[K]>, S[K]>
+              ? E[K] extends MayBeQueryable // @ts-expect-error
+                  ? FieldSelector<NormalizeQueryable<E[K]>, S[K]>
                   : true
               : never;
       };

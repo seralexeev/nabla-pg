@@ -18,7 +18,7 @@ export {
     ReadonlyKeys,
     ReadonlyValue,
 } from '@flstk/pg/entity';
-export { EntityAccessor, NotFoundError } from '@flstk/pg/EntityAccessor';
+export { ReadonlyEntityAccessor, EntityAccessor, NotFoundError } from '@flstk/pg/EntityAccessor';
 export {
     ByPkQuery,
     ConnectionQuery,
