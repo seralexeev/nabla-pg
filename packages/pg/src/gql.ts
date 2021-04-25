@@ -5,7 +5,7 @@ import util from 'util';
 
 export const createGqlClient = (pgClient: PoolClient, schema: GraphQLSchema, config: PgConfig) => {
     const logger = config.explain?.logger ?? console.log;
-    const format = config.explain?.format ?? ((s: string) => s);
+    const format = config.explain?.gqlFormat ?? ((s: string) => s);
 
     return <T = any>(query: string, variables?: Record<string, any>) => {
         if (config.explain?.enabled) {

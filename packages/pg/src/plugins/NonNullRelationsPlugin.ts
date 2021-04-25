@@ -2,7 +2,7 @@ import { getNullableType, GraphQLNonNull } from 'graphql';
 import { SchemaBuilder } from 'postgraphile';
 
 export const NonNullRelationsPlugin = (builder: SchemaBuilder) => {
-    builder.hook('GraphQLObjectType:fields:field', (field, build, context) => {
+    builder.hook('GraphQLObjectType:fields:field', (field, _, context) => {
         const { isPgForwardRelationField, pgFieldIntrospection } = context.scope;
         if (isPgForwardRelationField && pgFieldIntrospection) {
             const linkedAttributeNums = pgFieldIntrospection.keyAttributeNums;
