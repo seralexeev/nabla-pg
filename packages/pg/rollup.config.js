@@ -6,6 +6,6 @@ const name = require('./package.json').main.replace(/\.js$/, '');
 export default {
     input: 'src/index.ts',
     external: (id) => !/^[./]/.test(id),
-    output: [{ name }],
+    output: [{ file: `${name}.js`, name, sourcemap: true }],
     plugins: [tsPlugin({ typescript: ttypescript })],
 };

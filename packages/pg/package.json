@@ -3,10 +3,7 @@
   "version": "0.1.1",
   "license": "MIT",
   "scripts": {
-    "compile": "tsc --noEmit --skipLibCheck",
-    "build": "rm -rf dist && ../../node_modules/.bin/ttsc && cp package.json dist/pg/src",
-    "publish": "npm publish dist/pg/src",
-    "prepublish": "yarn build"
+    "compile": "tsc --noEmit --skipLibCheck"
   },
   "main": "dist/flstk-pg.js",
   "module": "dist/flstk-pg.mjs",
@@ -25,6 +22,5 @@
   },
   "devDependencies": {
     "@types/pluralize": "0.0.29"
-  },
-  "gitHead": "ec9601e2720460fd88e7a284fcd0d0b4c4ee1019"
+  }
 }
