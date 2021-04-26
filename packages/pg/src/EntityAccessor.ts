@@ -78,7 +78,7 @@ export class ReadonlyEntityAccessor<E extends EntityBase> {
         S2 extends FieldSelector<E, S2>,
         S3 extends FieldSelector<E, S3>
     >(s1?: S1, s2?: S2, s3?: S3): NominalType<S1 & S2 & S3, E> {
-        const selector = deepmerge(this.ensureSelector(s1), this.ensureSelector(s2), this.ensureSelector(s3));
+        const selector = deepmerge.all([this.ensureSelector(s1), this.ensureSelector(s2), this.ensureSelector(s3)]);
         return this.applyQueryMeta(selector);
     }
 
@@ -281,7 +281,7 @@ export class ReadonlyEntityAccessor<E extends EntityBase> {
         }
 
         const varsAssign = !Array.isArray(query) && this.prepareQueryVars(ctx, query);
-        if (varsAssign || 'selector' in query) {
+        if (varsAssign || (typeof query === 'object' && 'selector' in query)) {
             // query
             return varsAssign + this.printFieldSelector(ctx, query['selector']);
         } else {
@@ -289,7 +289,7 @@ export class ReadonlyEntityAccessor<E extends EntityBase> {
             let res = '{';
             if (Array.isArray(query)) {
                 res += ' ' + query.join(', ') || '__typename';
-            } else {
+            } else if (typeof query === 'object') {
                 for (const key in query) {
                     if (query[key] === true) {
                         res += ' ' + key;
@@ -297,6 +297,8 @@ export class ReadonlyEntityAccessor<E extends EntityBase> {
                         res += ' ' + key + ' ' + this.printFieldSelector(ctx, query[key]);
                     }
                 }
+            } else {
+                res += ' ' + query;
             }
             res += ' }';
             return res;
@@ -313,13 +315,14 @@ export class ReadonlyEntityAccessor<E extends EntityBase> {
 
     protected ensureSelector = (selector: any) => {
         if (Array.isArray(selector)) {
-            return selector.reduce((acc, x) => {
-                acc[x] = true;
-                return acc;
-            }, {});
+            return reduceByKey(
+                selector,
+                (x) => x,
+                () => true,
+            );
         }
 
-        return selector;
+        return selector ?? {};
     };
 }
 
@@ -423,4 +426,7 @@ export class NotFoundError extends Error {
     public constructor(message: string) {
         super(message);
     }
+}
+function reduceByKey(selector: any[], arg1: (x: any) => any, arg2: () => boolean) {
+    throw new Error('Function not implemented.');
 }
