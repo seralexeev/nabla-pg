@@ -1,6 +1,6 @@
 {
   "name": "@flstk/pg-example",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "dependencies": {
     "@flstk/pg": "^0.1.7",
