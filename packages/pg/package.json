@@ -7,10 +7,8 @@
     "build": "./build.sh",
     "prepublish": "./build.sh"
   },
-  "bin": "./bin/gen",
-  "main": "dist/flstk-pg.js",
-  "module": "dist/flstk-pg.mjs",
-  "typings": "dist/flstk-pg.d.ts",
+  "bin": "./cli",
+  "types": "build/index.d.ts",
   "dependencies": {
     "@graphile-contrib/pg-many-to-many": "1.0.1",
     "@graphile-contrib/pg-simplify-inflector": "6.1.0",
