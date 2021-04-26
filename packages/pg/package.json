@@ -5,7 +5,7 @@
   "scripts": {
     "compile": "tsc --noEmit --skipLibCheck",
     "build": "./build.sh",
-    "prepublish": "build"
+    "prepublish": "./build.sh"
   },
   "main": "dist/flstk-pg.js",
   "module": "dist/flstk-pg.mjs",
@@ -29,5 +29,6 @@
     "@types/big.js": "^6",
     "@types/dedent": "^0",
     "@types/pluralize": "0.0.29"
-  }
+  },
+  "gitHead": "5493fd29bc3f70835232290048d13617ce51632d"
 }
