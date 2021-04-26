@@ -1,6 +1,6 @@
 {
   "name": "@flstk/pg",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "license": "MIT",
   "scripts": {
     "compile": "tsc --noEmit --skipLibCheck",
