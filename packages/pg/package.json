@@ -7,9 +7,7 @@
     "build": "./build.sh",
     "prepublish": "./build.sh"
   },
-  "bin": {
-    "gen": "./bin/gen.js"
-  },
+  "bin": "./bin/gen",
   "main": "dist/flstk-pg.js",
   "module": "dist/flstk-pg.mjs",
   "typings": "dist/flstk-pg.d.ts",
