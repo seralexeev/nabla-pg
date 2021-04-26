@@ -1,0 +1,8 @@
+{
+    "name": "@flstk/pg-example",
+    "version": "1.0.0",
+    "dependencies": {
+        "@flstk/pg": "0.1.6",
+        "ts-node": "9.1.1"
+    }
+}

@@ -1,4 +1,4 @@
-# ∇ flstk pg
+# @flstk/pg
 
 This is a library that greatly simplifies data access and gives you complete control over types and queries.
 
@@ -6,14 +6,16 @@ When I first saw the [postgraphile](https://github.com/graphile/postgraphile) I 
 
 Generating code from .graphql files didn't suit me very well. I find this approach too lengthy to define requests and fields in advance, and in the company where I work the requirements change very often.
 
+![Pg example](../../images/pg-example.png)
+
 ### Installation
 
 ```bash
 # npm
-npm i flstk-pg-core
+npm i @flstk/pg
 
 # yarn
-yarn add flstk-pg-core
+yarn add @flstk/pg
 ```
 
 In order to get proper nullable type inference you have to enable `strict` mode in your `tsconfig.json`:
@@ -26,60 +28,62 @@ In order to get proper nullable type inference you have to enable `strict` mode 
 }
 ```
 
-### TLDR
+### TLDR;
+
+## [Full example](../pg-example)
 
 This library doesn't provide a migration functionality, you can use any migration tool you want
 
-```sql
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-
-CREATE TABLE IF NOT EXISTS users (
-    id uuid PRIMARY KEY DEFAULT uuid_generate_v4()
-    , first_name text
-    , last_name text
-    , gender text
-    , updated_at timestamptz NOT NULL DEFAULT clock_timestamp()
-    , created_at timestamptz NOT NULL DEFAULT clock_timestamp()
-)
-
-CREATE OR REPLACE FUNCTION users_full_name(u users) RETURNS text AS $$
-    SELECT concat_ws(' ', last_name, first_name) from users where id = u.id
-$$ LANGUAGE sql STABLE;
-
-```
-
-Then you can make queries using typescript and postgraphile:
-
 ```ts
-import { createSchema, Pg, EntityBase, IdPkey, ReadonlyValue, EntityAccessor } from 'flstk-pg-core';
-import { Pool } from 'pg';
-
-type UserEntity = EntityBase<IdPkey> & {
-    firstName: string | null;
-    middleName: string | null;
-    lastName: string | null;
-    fullName: ReadonlyValue<string>;
-};
-
-const Users = new EntityAccessor<UserEntity>('User');
+import { Pg, generateEntityFiles } from '@flstk/pg';
+import { Orders } from './entities/OrderEntity';
+import { Users } from './entities/UserEntity';
+import { generate } from './generate';
 
 (async () => {
-    const connectionString = 'postgres://flstk:flstk@localhost:5433/flstk_db';
-    const pool = new Pool({ connectionString });
+    const pg = new Pg('postgres://flstk:flstk@localhost:5432/flstk');
 
-    const pg = new Pg(pool, await createSchema(connectionString));
+    await pg.sql`DROP TABLE IF EXISTS orders`;
+    await pg.sql`DROP TABLE IF EXISTS users`;
+    await pg.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
 
-    const data = await Users.find(pg, {
-        selector: ['id'],
-        first: 5,
-        filter: {
-            fullName: {
-                includesInsensitive: 'Nik',
-            },
-        },
+    await pg.sql`CREATE TABLE IF NOT EXISTS users(
+          id uuid PRIMARY KEY DEFAULT uuid_generate_v4()
+        , name text NOT NULL
+    )`;
+
+    await pg.sql`CREATE TABLE IF NOT EXISTS orders(
+          id uuid PRIMARY KEY DEFAULT uuid_generate_v4()
+        , user_id uuid NOT NULL REFERENCES users(id)
+        , comment text
+    )`;
+
+    generateEntityFiles(await pg.getSchema(), {
+        prefix: 'Entity',
+        entityImportPath: '.',
+        entityDir: './entities',
     });
 
-    console.log(data);
+    const { id: userId } = await Users.create(pg, {
+        item: { name: 'Nick' },
+        selector: ['id', 'name'],
+    });
+
+    await Orders.create(pg, {
+        item: { userId, comment: 'Order #1' },
+    });
+
+    const users = await pg.transaction(async (t) => {
+        return await Users.find(t, {
+            selector: {
+                id: true,
+                name: true,
+                orders: { id: true, comment: true },
+            },
+        });
+    });
+
+    console.log(JSON.stringify(users, null, 2));
 })();
 ```
 

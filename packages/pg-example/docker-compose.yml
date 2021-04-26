@@ -1,0 +1,11 @@
+version: '3.7'
+services:
+    sharply-db:
+        hostname: flstk
+        image: postgres:13.2
+        environment:
+            POSTGRES_DB: flstk
+            POSTGRES_USER: flstk
+            POSTGRES_PASSWORD: flstk
+        ports:
+            - 5432:5432
