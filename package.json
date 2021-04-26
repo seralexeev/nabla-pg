@@ -8,7 +8,8 @@
   "scripts": {
     "clean": "git clean -fdx && yarn",
     "compile": "yarn workspaces foreach run compile",
-    "lerna": "lerna"
+    "lerna": "lerna",
+    "publish": "lerna publish --contents dist"
   },
   "devDependencies": {
     "@types/rimraf": "^3",
