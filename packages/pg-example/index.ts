@@ -1,11 +1,8 @@
 import { Pg } from '@flstk/pg';
 import { Orders } from './entities/OrderEntity';
 import { Users } from './entities/UserEntity';
-import { generate } from './generate';
 
 (async () => {
-    await generate();
-
     const pg = new Pg('postgres://flstk:flstk@localhost:5432/flstk');
     const { id: userId } = await Users.create(pg, {
         item: { name: 'Nick' },

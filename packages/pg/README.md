@@ -38,7 +38,6 @@ This library doesn't provide a migration functionality, you can use any migratio
 import { Pg, generateEntityFiles } from '@flstk/pg';
 import { Orders } from './entities/OrderEntity';
 import { Users } from './entities/UserEntity';
-import { generate } from './generate';
 
 (async () => {
     const pg = new Pg('postgres://flstk:flstk@localhost:5432/flstk');
@@ -58,6 +57,7 @@ import { generate } from './generate';
         , comment text
     )`;
 
+    // or you can use flstk-pg from command line (flstk-pg -d ./entities -c postgres://flstk:flstk@localhost:5432/flstk)
     generateEntityFiles(await pg.getSchema(), {
         prefix: 'Entity',
         entityImportPath: '.',
