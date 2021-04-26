@@ -40,11 +40,7 @@ const Entities = new EntityAccessor<Entity>('User');
 async () => {
     const [res] = await Entities.find(null!, {
         selector: {
-            entityConnection: {
-                nodes: {
-                    selector: ['id'],
-                },
-            },
+            id: true,
         },
     });
 };

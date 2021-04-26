@@ -18,7 +18,8 @@ export {
     ReadonlyKeys,
     ReadonlyValue,
 } from '@flstk/pg/entity';
-export { ReadonlyEntityAccessor, EntityAccessor, NotFoundError } from '@flstk/pg/EntityAccessor';
+export { EntityAccessor, NotFoundError, ReadonlyEntityAccessor } from '@flstk/pg/EntityAccessor';
+export { generateEntities, generateEntityFiles, GenerateEntityConfig, MappingConfig } from '@flstk/pg/generator';
 export {
     ByPkQuery,
     ConnectionQuery,

@@ -37,11 +37,13 @@ export type PgConfig = {
 };
 
 export class Pg {
+    private pool: Pool;
     private schema!: GraphQLSchema;
     private readonlySchema!: GraphQLSchema;
     private initPromise?: Promise<Pg>;
 
-    public constructor(public readonly pool: Pool, private config: PgConfig = {}) {
+    public constructor(pool: Pool | string, private config: PgConfig = {}) {
+        this.pool = typeof pool === 'string' ? new Pool({ connectionString: pool }) : pool;
         if (config.explain) {
             enableExplain(config.explain);
         }

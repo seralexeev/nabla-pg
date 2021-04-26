@@ -5,7 +5,7 @@ export const pick = <T, K extends keyof T>(value: T, keys: readonly K[]): Pick<T
     return lodash.pick(value, keys) as Pick<T, K>;
 };
 
-export const reduceByKey = <T, R = T>(
+export const reduceBy = <T, R = T>(
     arr: T[],
     keySelector: ((t: T, index: number) => string) | FilterKeys<T, string | number>,
     map: (t: T, index: number) => R = (t) => t as any,

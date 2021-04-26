@@ -4,7 +4,8 @@
   "license": "MIT",
   "scripts": {
     "compile": "tsc --noEmit --skipLibCheck",
-    "intro": "npx ts-node --transpile-only --files -r tsconfig-paths/register src/intro.ts"
+    "build": "./build.sh",
+    "prepublish": "build"
   },
   "main": "dist/flstk-pg.js",
   "module": "dist/flstk-pg.mjs",

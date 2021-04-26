@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import dedent from 'dedent';
+import fs from 'fs';
 import { GraphQLObjectType, GraphQLSchema, isListType, isNonNullType, isObjectType, isScalarType } from 'graphql';
 import pluralize from 'pluralize';
 
@@ -221,4 +222,18 @@ const getFieldInfo = (field: any): FieldInfo => {
     }
 
     return info;
+};
+
+export const generateEntityFiles = (schema: GraphQLSchema, config: GenerateEntityConfig & { entityDir: string }) => {
+    const { entityDir, ...generatorConfig } = config;
+
+    if (fs.existsSync(entityDir)) {
+        fs.rmdirSync(entityDir, { recursive: true });
+    }
+
+    fs.mkdirSync(entityDir, { recursive: true });
+
+    for (const [name, def] of Object.entries(generateEntities(schema, generatorConfig))) {
+        fs.writeFileSync(`${entityDir}/${name}.ts`, def, { flag: 'w' });
+    }
 };

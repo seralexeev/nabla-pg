@@ -14,6 +14,7 @@ import {
     UpdateMutation,
 } from '@flstk/pg/query';
 import { FieldSelector, OriginInfer } from '@flstk/pg/selector';
+import { reduceBy } from '@flstk/utils/index';
 import { NominalType } from '@flstk/utils/types';
 import { camelCase } from 'camel-case';
 import { constantCase } from 'constant-case';
@@ -315,7 +316,7 @@ export class ReadonlyEntityAccessor<E extends EntityBase> {
 
     protected ensureSelector = (selector: any) => {
         if (Array.isArray(selector)) {
-            return reduceByKey(
+            return reduceBy(
                 selector,
                 (x) => x,
                 () => true,
@@ -426,7 +427,4 @@ export class NotFoundError extends Error {
     public constructor(message: string) {
         super(message);
     }
-}
-function reduceByKey(selector: any[], arg1: (x: any) => any, arg2: () => boolean) {
-    throw new Error('Function not implemented.');
 }
