@@ -3,11 +3,12 @@
   "version": "1.0.6",
   "private": true,
   "scripts": {
-    "run": "ts-node index.ts",
+    "start": "ts-node index.ts",
     "gen": "flstk-pg -d entities -c postgres://flstk:flstk@localhost:5432/flstk"
   },
   "dependencies": {
     "@flstk/pg": "0.1.12",
-    "ts-node": "9.1.1"
+    "ts-node": "9.1.1",
+    "typescript": "4.2.4"
   }
 }
