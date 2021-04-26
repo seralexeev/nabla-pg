@@ -7,6 +7,9 @@
     "build": "./build.sh",
     "prepublish": "./build.sh"
   },
+  "bin": {
+    "gen": "./bin/gen.js"
+  },
   "main": "dist/flstk-pg.js",
   "module": "dist/flstk-pg.mjs",
   "typings": "dist/flstk-pg.d.ts",
@@ -23,12 +26,14 @@
     "postgraphile": "4.11.0",
     "postgraphile-core": "4.11.2",
     "postgraphile-plugin-connection-filter": "2.2.0",
-    "sql-formatter": "4.0.2"
+    "sql-formatter": "4.0.2",
+    "yargs": "16.2.0"
   },
   "devDependencies": {
     "@types/big.js": "^6",
     "@types/dedent": "^0",
-    "@types/pluralize": "0.0.29"
+    "@types/pluralize": "0.0.29",
+    "@types/yargs": "^16"
   },
   "gitHead": "5493fd29bc3f70835232290048d13617ce51632d"
 }

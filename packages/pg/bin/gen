@@ -1,0 +1,47 @@
+#!/usr/bin/env node
+
+const { generateEntityFiles, Pg } = require('../');
+const yargs = require('yargs/yargs');
+const { hideBin } = require('yargs/helpers');
+const argv = yargs(hideBin(process.argv))
+    .option('suffix', {
+        alias: 's',
+        default: 'Entity',
+        describe: 'Suffix for entity name',
+    })
+    .option('connection', {
+        alias: 'c',
+        describe: 'Connection string',
+    })
+    .option('dir', {
+        alias: 'd',
+        describe: 'Entity directory',
+    })
+    .option('import', {
+        alias: 'i',
+        default: '.',
+        describe: 'Entity import path (can be alias)',
+    })
+    .demandOption(
+        ['suffix', 'dir', 'import', 'connection'],
+        'Please provide both run and path arguments to work with this tool',
+    )
+    .help().argv;
+
+new Pg(argv.connection)
+    .getSchema()
+    .then((schema) =>
+        generateEntityFiles(schema, {
+            prefix: argv.suffix,
+            entityImportPath: argv.import,
+            entityDir: argv.dir,
+        }),
+    )
+    .then(() => {
+        console.log('Entities has been successfully generated');
+        process.exit(0);
+    })
+    .catch((e) => {
+        console.error(e);
+        process.exit(1);
+    });
