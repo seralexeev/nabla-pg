@@ -10,7 +10,12 @@
   "bin": {
     "flstk-pg": "./bin/cli"
   },
-  "types": "build/index.d.ts",
+  "types": "index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/seralexeev/flstk.git",
+    "directory": "packages/pg"
+  },
   "dependencies": {
     "@graphile-contrib/pg-many-to-many": "1.0.1",
     "@graphile-contrib/pg-simplify-inflector": "6.1.0",
