@@ -36,12 +36,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@flstk/pg-example@workspace:packages/pg-example"
   dependencies:
-    "@flstk/pg": 0.1.6
+    "@flstk/pg": ^0.1.13
     ts-node: 9.1.1
+    typescript: 4.2.4
   languageName: unknown
   linkType: soft
 
-"@flstk/pg@0.1.6, @flstk/pg@workspace:packages/pg":
+"@flstk/pg@^0.1.13, @flstk/pg@workspace:packages/pg":
   version: 0.0.0-use.local
   resolution: "@flstk/pg@workspace:packages/pg"
   dependencies:
@@ -63,6 +64,8 @@ __metadata:
     postgraphile-plugin-connection-filter: 2.2.0
     sql-formatter: 4.0.2
     yargs: 16.2.0
+  bin:
+    flstk-pg: ./bin/cli
   languageName: unknown
   linkType: soft
 
