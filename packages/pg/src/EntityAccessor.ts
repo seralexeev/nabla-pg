@@ -1,4 +1,5 @@
 import { EntityBase, EntityConnection, EntityCreate, EntityPatch, InferPrimaryKey } from '@flstk/pg/entity';
+import { NotFoundError } from '@flstk/pg/errors';
 import { Filter } from '@flstk/pg/filter';
 import {
     ByPkQuery,
@@ -11,6 +12,7 @@ import {
     GqlClient,
     Query,
     SelectQuery,
+    TransactionalGqlClient,
     UpdateMutation,
 } from '@flstk/pg/query';
 import { FieldSelector, OriginInfer } from '@flstk/pg/selector';
@@ -393,38 +395,34 @@ export class EntityAccessor<E extends EntityBase> extends ReadonlyEntityAccessor
     };
 
     public findOneOrCreate = async <S extends FieldSelector<E, S>>(
-        client: GqlClient,
+        client: TransactionalGqlClient,
         args: { filter: Filter<E>; selector: S; item: EntityCreate<E> },
-    ): Promise<OriginInfer<E, S>> => {
+    ): Promise<[slice: OriginInfer<E, S>, created: boolean]> => {
         const { filter, selector, item } = args;
-        const res = await this.findOne(client, { filter, selector });
-        if (res) {
-            return res;
-        }
 
-        return this.create(client, { item, selector });
+        return client.transaction(async (t) => {
+            const res = await this.findOne(t, { filter, selector });
+            return res ? [res, false] : [await this.create(t, { item, selector }), true];
+        });
     };
 
     public async updateOrCreate<S extends FieldSelector<E, S> = []>(
-        client: GqlClient,
+        client: TransactionalGqlClient,
         args: {
             pk: InferPrimaryKey<E>;
             selector?: S;
             item: Omit<EntityCreate<E>, keyof InferPrimaryKey<E>>;
             patch?: EntityPatch<E>;
         },
-    ): Promise<OriginInfer<E, S>> {
+    ): Promise<[slice: OriginInfer<E, S>, created: boolean]> {
         const { patch, pk, selector, item } = args;
-        const res = await this.findByPk(client, { pk, selector });
 
-        return res
-            ? this.update(client, { pk, patch: (patch ?? item) as any, selector })
-            : this.create(client, { item: { ...item, ...pk } as any, selector });
-    }
-}
+        return client.transaction(async (t) => {
+            const res = await this.findByPk(t, { pk, selector });
 
-export class NotFoundError extends Error {
-    public constructor(message: string) {
-        super(message);
+            return res
+                ? [await this.update(t, { pk, patch: (patch ?? item) as any, selector }), false]
+                : [await this.create(t, { item: { ...item, ...pk } as any, selector }), true];
+        });
     }
 }

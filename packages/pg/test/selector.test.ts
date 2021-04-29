@@ -1,3 +1,4 @@
+import { Pg } from '@flstk/pg/db';
 import { EntityBase, EntityConnection, IdPkey } from '@flstk/pg/entity';
 import { EntityAccessor } from '@flstk/pg/EntityAccessor';
 
@@ -38,6 +39,14 @@ type Entity = EntityBase<IdPkey> & {
 const Entities = new EntityAccessor<Entity>('User');
 
 async () => {
+    const pg: Pg = null!;
+
+    const ss = pg.transaction(async (t) => {
+        return t.transaction(async (t) => {
+            return 2;
+        });
+    });
+
     const [res] = await Entities.find(null!, {
         selector: {
             id: true,

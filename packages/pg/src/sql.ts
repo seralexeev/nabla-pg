@@ -1,10 +1,17 @@
+import { SqlError } from '@flstk/pg/errors';
+import { Literal } from '@flstk/pg/literal';
 import { PoolClient } from 'pg';
 
 export type SqlInvoke = ReturnType<typeof createSqlClient>;
 export const createSqlClient = (client: PoolClient) => {
-    return <R>(strings: TemplateStringsArray, ...chunks: unknown[]) => {
+    return async <R>(strings: TemplateStringsArray, ...chunks: unknown[]) => {
         const { query, values } = prepareSql(strings, ...chunks);
-        return client.query<R>(query, values);
+        
+        try {
+            return client.query<R>(query, values);
+        } catch (error) {
+            throw new SqlError(error, query, values);
+        }
     };
 };
 
@@ -17,8 +24,8 @@ const prepareSql = (strings: TemplateStringsArray, ...values: unknown[]) => {
     let index = 1;
     for (let i = 0; i < values.length; i++) {
         const value = values[i];
-        if (isLiteralWrapper(value)) {
-            result.query += String(value.value);
+        if (Literal.isLiteral(value)) {
+            result.query += value.toString();
         } else {
             result.values.push(value);
             result.query += '$' + index;
@@ -30,12 +37,3 @@ const prepareSql = (strings: TemplateStringsArray, ...values: unknown[]) => {
 
     return result;
 };
-
-const symbol = Symbol('literal');
-type LiteralWrapper = { [symbol]: true; value: unknown };
-
-const isLiteralWrapper = (value: unknown): value is LiteralWrapper => {
-    return typeof value === 'object' && value !== null && symbol in value;
-};
-
-export const literal = (value: string | number | null): LiteralWrapper => ({ [symbol]: true, value });

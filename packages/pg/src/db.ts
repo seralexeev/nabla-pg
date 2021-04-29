@@ -4,6 +4,7 @@ import { NonNullRelationsPlugin } from '@flstk/pg/plugins/NonNullRelationsPlugin
 import { PgNumericToBigJsPlugin } from '@flstk/pg/plugins/PgNumericToBigJsPlugin';
 import { GqlInvoke } from '@flstk/pg/query';
 import { createSqlClient, SqlInvoke } from '@flstk/pg/sql';
+import { Transaction, TransactionCallback, TransactionFactory } from '@flstk/pg/transaction';
 import PgManyToManyPlugin from '@graphile-contrib/pg-many-to-many';
 import PgSimplifyInflectorPlugin from '@graphile-contrib/pg-simplify-inflector';
 import Big from 'big.js';
@@ -20,9 +21,19 @@ Big.prototype.toPostgres = function () {
 
 types.setTypeParser(1700, (val) => new Big(val));
 
-export type QueryClient = { gql: GqlInvoke; sql: SqlInvoke; client: PoolClient };
-export type Transaction = QueryClient & {
-    isTransaction: true;
+type ServerTransaction = Transaction<ReadyQueryClient>;
+type ServerTransactionCallback<R> = TransactionCallback<ReadyQueryClient, R>;
+
+export type ServerQueryClient = {
+    gql: GqlInvoke;
+    sql: SqlInvoke;
+    client: () => Promise<PoolClient>;
+} & TransactionFactory<ServerTransaction>;
+
+export type ReadyQueryClient = {
+    gql: GqlInvoke;
+    sql: SqlInvoke;
+    client: PoolClient;
 };
 
 export type PgConfig = {
@@ -36,7 +47,7 @@ export type PgConfig = {
     postgraphile?: PostGraphileCoreOptions;
 };
 
-export class Pg {
+export class Pg implements ServerQueryClient {
     private pool: Pool;
     private schema!: GraphQLSchema;
     private readonlySchema!: GraphQLSchema;
@@ -54,6 +65,7 @@ export class Pg {
     }
 
     public getSchema = async () => this.init().then(() => this.schema);
+    public client = () => this.pool.connect();
 
     public init = () => {
         if (!this.initPromise) {
@@ -83,19 +95,23 @@ export class Pg {
         return this;
     };
 
-    public transaction = async <T>(fn: (t: Transaction) => Promise<T>, config: { readonly?: boolean } = {}) => {
+    public transaction = async <T>(
+        fn: ServerTransactionCallback<T>,
+        config: { readonly?: boolean } = {},
+    ): Promise<T> => {
         await this.init();
 
         const schema = config?.readonly ? this.readonlySchema : this.schema;
         const client = await this.pool.connect();
-        await client.query('BEGIN');
         try {
-            const res = await fn({
-                gql: createGqlClient(client, schema, this.config),
-                sql: createSqlClient(client),
-                isTransaction: true,
+            const queryClient: ReadyQueryClient = {
                 client,
-            });
+                sql: createSqlClient(client),
+                gql: createGqlClient(client, schema, this.config),
+            };
+
+            await client.query('BEGIN');
+            const res = this.performInTransaction(queryClient, fn, 0);
             await client.query('COMMIT');
             return res;
         } catch (error) {
@@ -103,6 +119,33 @@ export class Pg {
             throw error;
         } finally {
             client.release();
+        }
+    };
+
+    private performInTransaction = async <T>(
+        queryClient: ReadyQueryClient,
+        fn: ServerTransactionCallback<T>,
+        level: number,
+    ): Promise<T> => {
+        const isRootTransaction = level > 0;
+        if (!isRootTransaction) {
+            await queryClient.client.query(`SAVEPOINT sp_${level}`);
+        }
+
+        try {
+            return fn({
+                ...queryClient,
+                transaction: <R>(fn: ServerTransactionCallback<R>) => {
+                    return this.performInTransaction(queryClient, fn, level + 1);
+                },
+                isTransaction: true,
+            });
+        } catch (error) {
+            if (!isRootTransaction) {
+                await queryClient.client.query(`ROLLBACK TO SAVEPOINT sp_${level}`);
+            }
+
+            throw error;
         }
     };
 

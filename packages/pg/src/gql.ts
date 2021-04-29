@@ -1,5 +1,6 @@
 import type { PgConfig } from '@flstk/pg/db';
-import { graphql, GraphQLError, GraphQLSchema } from 'graphql';
+import { GqlError } from '@flstk/pg/errors';
+import { graphql, GraphQLSchema } from 'graphql';
 import { PoolClient } from 'pg';
 import util from 'util';
 
@@ -19,16 +20,10 @@ export const createGqlClient = (pgClient: PoolClient, schema: GraphQLSchema, con
         return graphql(schema, query, null, { pgClient }, variables).then((x) => {
             if (x.errors?.length) {
                 logger(JSON.stringify(x.errors));
-                throw new GqlError('Gql error occurred', x.errors);
+                throw new GqlError(x.errors);
             }
 
             return x.data as T;
         });
     };
 };
-
-export class GqlError extends Error {
-    constructor(message: string, public errors: readonly GraphQLError[]) {
-        super(message);
-    }
-}

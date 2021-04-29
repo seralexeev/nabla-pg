@@ -1,4 +1,4 @@
-export { Pg, QueryClient, Transaction } from '@flstk/pg/db';
+export { Pg, PgConfig, ReadyQueryClient, ServerQueryClient } from '@flstk/pg/db';
 export {
     DefaultKeys,
     DefaultValue,
@@ -16,10 +16,12 @@ export {
     Queryable,
     QueryableKeys,
     ReadonlyKeys,
-    ReadonlyValue,
+    ReadonlyValue
 } from '@flstk/pg/entity';
-export { EntityAccessor, NotFoundError, ReadonlyEntityAccessor } from '@flstk/pg/EntityAccessor';
-export { generateEntities, generateEntityFiles, GenerateEntityConfig, MappingConfig } from '@flstk/pg/generator';
+export { EntityAccessor, ReadonlyEntityAccessor } from '@flstk/pg/EntityAccessor';
+export { GqlError, NotFoundError, SqlError } from '@flstk/pg/errors';
+export { generateEntities, GenerateEntityConfig, generateEntityFiles, MappingConfig } from '@flstk/pg/generator';
+export { Literal, literal, LiteralValueType } from '@flstk/pg/literal';
 export {
     ByPkQuery,
     ConnectionQuery,
@@ -33,7 +35,9 @@ export {
     OrderBy,
     Query,
     SelectQuery,
-    UpdateMutation,
+    UpdateMutation
 } from '@flstk/pg/query';
 export { FieldSelector, OriginInfer, SelectorShape } from '@flstk/pg/selector';
-export { createSqlClient, literal, SqlInvoke } from '@flstk/pg/sql';
+export { createSqlClient, SqlInvoke } from '@flstk/pg/sql';
+export { Transaction, TransactionCallback, TransactionFactory } from '@flstk/pg/transaction';
+
