@@ -7,7 +7,7 @@ describe('transactions', () => {
         type Row = { a: number };
 
         try {
-            const ss = await pg.transaction(async (t) => {
+            await pg.transaction(async (t) => {
                 await t.sql`CREATE TABLE test1(a int)`;
                 await t.sql`INSERT INTO test1(a) VALUES (1)`;
                 await t.sql<Row>`SELECT * FROM test1`.then(({ rowCount }) => expect(rowCount).toEqual(1));
@@ -16,8 +16,7 @@ describe('transactions', () => {
                     const a = await t.savepoint(async (s) => {
                         await s.sql`INSERT INTO test1(a) VALUES (1)`;
                         await s.sql<Row>`SELECT * FROM test1`.then(({ rowCount }) => expect(rowCount).toEqual(2));
-                        return 1;
-                        // throw new Error();
+                        throw new Error();
                     });
                 } catch {
                     await t.sql<Row>`SELECT * FROM test1`.then(({ rowCount }) => expect(rowCount).toEqual(1));

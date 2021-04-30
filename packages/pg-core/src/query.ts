@@ -1,6 +1,6 @@
 import { EntityCreate, EntityPatch, InferPrimaryKey, NonQueryableKeys } from '@flstk/pg-core/entity';
 import { Filter } from '@flstk/pg-core/filter';
-import { OriginInfer } from 'packages/pg-core/src/selector';
+import { OriginInfer } from '@flstk/pg-core/selector';
 
 export type OrderBy<E> = Array<[NonQueryableKeys<E>, 'ASC' | 'DESC']>;
 

@@ -1,11 +1,10 @@
-import { PgConfig } from '@flstk/pg/db';
+import { Pg, PgConfig } from '@flstk/pg/db';
 import { NonNullRelationsPlugin } from '@flstk/pg/plugins/NonNullRelationsPlugin';
 import { PgNumericToBigJsPlugin } from '@flstk/pg/plugins/PgNumericToBigJsPlugin';
 import PgManyToManyPlugin from '@graphile-contrib/pg-many-to-many';
 import PgSimplifyInflectorPlugin from '@graphile-contrib/pg-simplify-inflector';
 import Big from 'big.js';
 import { GraphQLScalarType, GraphQLSchema } from 'graphql';
-import { Pg } from 'packages/pg';
 import { Pool, types } from 'pg';
 import ConnectionFilterPlugin from 'postgraphile-plugin-connection-filter';
 

@@ -1,14 +1,7 @@
 import { EntityBase, EntityConnection, EntityCreate, EntityPatch, InferPrimaryKey } from '@flstk/pg-core/entity';
 import { NotFoundError } from '@flstk/pg-core/errors';
 import { Filter } from '@flstk/pg-core/filter';
-import { FieldSelector, OriginInfer } from '@flstk/pg-core/selector';
-import { SavepointScope } from '@flstk/pg-core/transaction';
-import { reduceBy } from '@flstk/utils/index';
-import { NominalType } from '@flstk/utils/types';
-import { camelCase } from 'camel-case';
-import { constantCase } from 'constant-case';
-import deepmerge from 'deepmerge';
-import { GqlClient } from 'packages/pg-core/src/gql';
+import { GqlClient } from '@flstk/pg-core/gql';
 import {
     ByPkQuery,
     ConnectionQuery,
@@ -19,8 +12,15 @@ import {
     FindOneQuery,
     Query,
     SelectQuery,
-    UpdateMutation
-} from 'packages/pg-core/src/query';
+    UpdateMutation,
+} from '@flstk/pg-core/query';
+import { FieldSelector, OriginInfer } from '@flstk/pg-core/selector';
+import { SavepointScope } from '@flstk/pg-core/transaction';
+import { reduceBy } from '@flstk/utils/index';
+import { NominalType } from '@flstk/utils/types';
+import { camelCase } from 'camel-case';
+import { constantCase } from 'constant-case';
+import deepmerge from 'deepmerge';
 import pluralize from 'pluralize';
 
 const symbol = Symbol('meta');
