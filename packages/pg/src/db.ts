@@ -1,38 +1,18 @@
+import { GqlClient, GqlInvoke } from '@flstk/pg-core/gql';
+import { SavepointCallback, SavepointScope } from '@flstk/pg-core/transaction';
 import { enableExplain } from '@flstk/pg/explain';
-import { createGqlClient } from '@flstk/pg/gql';
-import { NonNullRelationsPlugin } from '@flstk/pg/plugins/NonNullRelationsPlugin';
-import { PgNumericToBigJsPlugin } from '@flstk/pg/plugins/PgNumericToBigJsPlugin';
-import { GqlInvoke } from '@flstk/pg/query';
-import { createSqlClient, SqlInvoke } from '@flstk/pg/sql';
-import { Transaction, TransactionCallback, TransactionFactory } from '@flstk/pg/transaction';
-import PgManyToManyPlugin from '@graphile-contrib/pg-many-to-many';
-import PgSimplifyInflectorPlugin from '@graphile-contrib/pg-simplify-inflector';
-import Big from 'big.js';
-import { GraphQLScalarType, GraphQLSchema } from 'graphql';
-import { Pool, PoolClient, types } from 'pg';
+import { GqlClientImpl } from '@flstk/pg/gql';
+import { SqlClient, SqlClientImpl, SqlInvoke } from '@flstk/pg/sql';
+import { GraphQLSchema } from 'graphql';
+import { Pool, PoolClient } from 'pg';
 import { PostGraphileCoreOptions } from 'postgraphile-core';
-import ConnectionFilterPlugin from 'postgraphile-plugin-connection-filter';
 import { watchPostGraphileSchema } from 'postgraphile/build/postgraphile';
 
-Big.prototype.toPostgres = function () {
-    // TODO: proper serialization
-    return this.toFixed(2);
-};
+export type ServerClient = GqlClient & SqlClient;
+export type ServerSavepointScope = SavepointScope<ServerClient>;
+export type ServerSavepointCallback<T> = SavepointCallback<ServerClient, T>;
 
-types.setTypeParser(1700, (val) => new Big(val));
-
-type ServerTransaction = Transaction<ReadyQueryClient>;
-type ServerTransactionCallback<R> = TransactionCallback<ReadyQueryClient, R>;
-
-export type ServerQueryClient = {
-    gql: GqlInvoke;
-    sql: SqlInvoke;
-    client: () => Promise<PoolClient>;
-} & TransactionFactory<ServerTransaction>;
-
-export type ReadyQueryClient = {
-    gql: GqlInvoke;
-    sql: SqlInvoke;
+export type ReadyQueryClient = ServerClient & {
     client: PoolClient;
 };
 
@@ -44,17 +24,23 @@ export type PgConfig = {
         gqlFormat?: (source: string) => string;
         sqlFormat?: (source: string) => string;
     };
-    postgraphile?: PostGraphileCoreOptions;
+    postgraphile?: {
+        options?: PostGraphileCoreOptions;
+        onSchema?: (schema: GraphQLSchema) => void;
+    };
 };
 
-export class Pg implements ServerQueryClient {
+export class Pg implements ServerSavepointScope {
     private pool: Pool;
     private schema!: GraphQLSchema;
-    private readonlySchema!: GraphQLSchema;
     private initPromise?: Promise<Pg>;
+    private isPoolExternal: boolean;
+    private releaseSchema?: () => Promise<void>;
 
-    public constructor(pool: Pool | string, private config: PgConfig = {}) {
+    public constructor(pool: Pool | string, private config: PgConfig) {
         this.pool = typeof pool === 'string' ? new Pool({ connectionString: pool }) : pool;
+        this.isPoolExternal = typeof pool !== 'string';
+
         if (config.explain) {
             enableExplain(config.explain);
         }
@@ -75,78 +61,55 @@ export class Pg implements ServerQueryClient {
         return this.initPromise;
     };
 
-    private initImpl = async () => {
-        const postgraphileOptions = this.createPostgraphileOptions();
+    public close = async () => {
+        if (this.isPoolExternal) {
+            throw new Error('Pool was created outside of this instance, call pool.end() explicitly');
+        }
 
-        await Promise.all([
-            watchPostGraphileSchema(this.pool, this.schemaName, postgraphileOptions, (schema) => {
-                this.schema = this.applyTypeWorkarounds(schema);
-            }),
-            watchPostGraphileSchema(
-                this.pool,
-                this.schemaName,
-                { ...postgraphileOptions, disableDefaultMutations: true },
-                (schema) => {
-                    this.readonlySchema = this.applyTypeWorkarounds(schema);
-                },
-            ),
-        ]);
+        await this.releaseSchema?.();
+        await this.pool.end();
+    };
+
+    private initImpl = async () => {
+        this.releaseSchema = await watchPostGraphileSchema(
+            this.pool,
+            this.schemaName,
+            this.config.postgraphile?.options,
+            (schema) => {
+                this.config.postgraphile?.onSchema?.(schema);
+                this.schema = schema;
+            },
+        );
 
         return this;
     };
 
-    public transaction = async <T>(
-        fn: ServerTransactionCallback<T>,
-        config: { readonly?: boolean } = {},
-    ): Promise<T> => {
+    public transaction = async <T>(fn: ServerSavepointCallback<T>): Promise<T> => {
         await this.init();
 
-        const schema = config?.readonly ? this.readonlySchema : this.schema;
         const client = await this.pool.connect();
         try {
             const queryClient: ReadyQueryClient = {
                 client,
-                sql: createSqlClient(client),
-                gql: createGqlClient(client, schema, this.config),
+                sql: new SqlClientImpl(client).sql,
+                gql: new GqlClientImpl(client, this.schema, this.config).gql,
             };
 
             await client.query('BEGIN');
-            const res = this.performInTransaction(queryClient, fn, 0);
+            const res = await fn(new SavepointScopeImpl(queryClient, 1));
             await client.query('COMMIT');
             return res;
         } catch (error) {
             await client.query('ROLLBACK');
             throw error;
         } finally {
+            // should we call client.release(true) to destroy client or just release it to pool?
             client.release();
         }
     };
 
-    private performInTransaction = async <T>(
-        queryClient: ReadyQueryClient,
-        fn: ServerTransactionCallback<T>,
-        level: number,
-    ): Promise<T> => {
-        const isRootTransaction = level > 0;
-        if (!isRootTransaction) {
-            await queryClient.client.query(`SAVEPOINT sp_${level}`);
-        }
-
-        try {
-            return fn({
-                ...queryClient,
-                transaction: <R>(fn: ServerTransactionCallback<R>) => {
-                    return this.performInTransaction(queryClient, fn, level + 1);
-                },
-                isTransaction: true,
-            });
-        } catch (error) {
-            if (!isRootTransaction) {
-                await queryClient.client.query(`ROLLBACK TO SAVEPOINT sp_${level}`);
-            }
-
-            throw error;
-        }
+    public savepoint = async <T>(fn: ServerSavepointCallback<T>): Promise<T> => {
+        return this.transaction(fn);
     };
 
     public sql: SqlInvoke = (strings, ...chunks) => {
@@ -156,56 +119,24 @@ export class Pg implements ServerQueryClient {
     public gql: GqlInvoke = (query, variables) => {
         return this.transaction((t) => t.gql(query, variables));
     };
+}
 
-    public readonlyGql: GqlInvoke = (query, variables) => {
-        return this.transaction((t) => t.gql(query, variables), { readonly: true });
-    };
+class SavepointScopeImpl implements ServerSavepointScope {
+    public readonly gql;
+    public readonly sql;
 
-    private applyTypeWorkarounds = (schema: GraphQLSchema) => {
-        const dateType = schema.getType('Datetime') as GraphQLScalarType;
-        if (dateType) {
-            dateType.parseValue = (val: unknown) => {
-                if (val instanceof Date) {
-                    return val.toISOString();
-                }
+    public constructor(public readonly client: ReadyQueryClient, public readonly level: number) {
+        this.sql = client.sql;
+        this.gql = client.gql;
+    }
 
-                return val;
-            };
-            dateType.serialize = (val: unknown) => {
-                if (typeof val === 'string') {
-                    return new Date(val);
-                }
-
-                return val;
-            };
+    public savepoint = async <R>(fn: ServerSavepointCallback<R>): Promise<R> => {
+        await this.client.client.query(`SAVEPOINT sp_${this.level}`);
+        try {
+            return await fn(new SavepointScopeImpl(this.client, this.level + 1));
+        } catch (error) {
+            await this.client.client.query(`ROLLBACK TO SAVEPOINT sp_${this.level}`);
+            throw error;
         }
-
-        return schema;
-    };
-
-    protected createPostgraphileOptions = () => {
-        return {
-            appendPlugins: [
-                ...(this.config.postgraphile?.appendPlugins ?? []),
-                NonNullRelationsPlugin,
-                PgNumericToBigJsPlugin,
-                ConnectionFilterPlugin,
-                PgManyToManyPlugin,
-                PgSimplifyInflectorPlugin,
-            ],
-            graphileBuildOptions: {
-                connectionFilterRelations: true,
-                pgOmitListSuffix: true,
-                pgSimplifyPatch: true,
-                pgSimplifyAllRows: true,
-                pgShortPk: true,
-                ...this.config.postgraphile?.graphileBuildOptions,
-            },
-            dynamicJson: true,
-            enableQueryBatching: true,
-            simpleCollections: 'both' as const,
-            legacyRelations: 'omit' as const,
-            ...this.config.postgraphile,
-        };
     };
 }

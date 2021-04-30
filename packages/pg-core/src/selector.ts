@@ -1,6 +1,5 @@
-import { EntityConnection, MayBeQueryable, NonQueryableKeys, Queryable } from '@flstk/pg/entity';
-import { SelectQuery } from '@flstk/pg/query';
-import { ArrayElement, UnwrapNominal, UnwrapNominalTag } from '@flstk/utils/types';
+import { MayBeQueryable, NonQueryableKeys } from '@flstk/pg-core/entity';
+import { UnwrapNominal, UnwrapNominalTag } from '@flstk/utils/types';
 
 export type OriginInfer<E, S extends FieldSelector<E, S> | unknown> = S extends { selector: FieldSelector<E, S> }
     ? OriginInferImpl<E, S['selector']>

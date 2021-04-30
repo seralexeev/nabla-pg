@@ -1,6 +1,14 @@
-import { EntityBase, EntityConnection, EntityCreate, EntityPatch, InferPrimaryKey } from '@flstk/pg/entity';
-import { NotFoundError } from '@flstk/pg/errors';
-import { Filter } from '@flstk/pg/filter';
+import { EntityBase, EntityConnection, EntityCreate, EntityPatch, InferPrimaryKey } from '@flstk/pg-core/entity';
+import { NotFoundError } from '@flstk/pg-core/errors';
+import { Filter } from '@flstk/pg-core/filter';
+import { FieldSelector, OriginInfer } from '@flstk/pg-core/selector';
+import { SavepointScope } from '@flstk/pg-core/transaction';
+import { reduceBy } from '@flstk/utils/index';
+import { NominalType } from '@flstk/utils/types';
+import { camelCase } from 'camel-case';
+import { constantCase } from 'constant-case';
+import deepmerge from 'deepmerge';
+import { GqlClient } from 'packages/pg-core/src/gql';
 import {
     ByPkQuery,
     ConnectionQuery,
@@ -9,18 +17,10 @@ import {
     DeleteMutation,
     FindAndCountResult,
     FindOneQuery,
-    GqlClient,
     Query,
     SelectQuery,
-    TransactionalGqlClient,
-    UpdateMutation,
-} from '@flstk/pg/query';
-import { FieldSelector, OriginInfer } from '@flstk/pg/selector';
-import { reduceBy } from '@flstk/utils/index';
-import { NominalType } from '@flstk/utils/types';
-import { camelCase } from 'camel-case';
-import { constantCase } from 'constant-case';
-import deepmerge from 'deepmerge';
+    UpdateMutation
+} from 'packages/pg-core/src/query';
 import pluralize from 'pluralize';
 
 const symbol = Symbol('meta');
@@ -395,19 +395,19 @@ export class EntityAccessor<E extends EntityBase> extends ReadonlyEntityAccessor
     };
 
     public findOneOrCreate = async <S extends FieldSelector<E, S>>(
-        client: TransactionalGqlClient,
+        client: SavepointScope<GqlClient>,
         args: { filter: Filter<E>; selector: S; item: EntityCreate<E> },
     ): Promise<[slice: OriginInfer<E, S>, created: boolean]> => {
         const { filter, selector, item } = args;
 
-        return client.transaction(async (t) => {
+        return client.savepoint(async (t) => {
             const res = await this.findOne(t, { filter, selector });
             return res ? [res, false] : [await this.create(t, { item, selector }), true];
         });
     };
 
     public async updateOrCreate<S extends FieldSelector<E, S> = []>(
-        client: TransactionalGqlClient,
+        client: SavepointScope<GqlClient>,
         args: {
             pk: InferPrimaryKey<E>;
             selector?: S;
@@ -417,7 +417,7 @@ export class EntityAccessor<E extends EntityBase> extends ReadonlyEntityAccessor
     ): Promise<[slice: OriginInfer<E, S>, created: boolean]> {
         const { patch, pk, selector, item } = args;
 
-        return client.transaction(async (t) => {
+        return client.savepoint(async (t) => {
             const res = await this.findByPk(t, { pk, selector });
 
             return res

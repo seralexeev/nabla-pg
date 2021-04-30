@@ -1,6 +1,7 @@
+import { EntityBase, EntityConnection, IdPkey } from '@flstk/pg-core/entity';
+import { EntityAccessor } from '@flstk/pg-core/EntityAccessor';
 import { Pg } from '@flstk/pg/db';
-import { EntityBase, EntityConnection, IdPkey } from '@flstk/pg/entity';
-import { EntityAccessor } from '@flstk/pg/EntityAccessor';
+import { describe, expect, it } from '@jest/globals';
 
 type Entity = EntityBase<IdPkey> & {
     string: string;
@@ -42,7 +43,7 @@ async () => {
     const pg: Pg = null!;
 
     const ss = pg.transaction(async (t) => {
-        return t.transaction(async (t) => {
+        return t.savepoint(async (t) => {
             return 2;
         });
     });
@@ -53,3 +54,9 @@ async () => {
         },
     });
 };
+
+describe('selectors', () => {
+    it('should compile without errors', () => {
+        expect(true).toEqual(true);
+    });
+});

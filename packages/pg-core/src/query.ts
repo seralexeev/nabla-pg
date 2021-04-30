@@ -1,6 +1,6 @@
-import { EntityConnection, EntityCreate, EntityPatch, InferPrimaryKey, NonQueryableKeys } from '@flstk/pg/entity';
-import { Filter } from '@flstk/pg/filter';
-import { FieldSelector, OriginInfer } from '@flstk/pg/selector';
+import { EntityCreate, EntityPatch, InferPrimaryKey, NonQueryableKeys } from '@flstk/pg-core/entity';
+import { Filter } from '@flstk/pg-core/filter';
+import { OriginInfer } from 'packages/pg-core/src/selector';
 
 export type OrderBy<E> = Array<[NonQueryableKeys<E>, 'ASC' | 'DESC']>;
 
@@ -12,9 +12,7 @@ export type Query<E> = {
 };
 
 export type SelectQuery<E, S> = { selector: S } & Query<E>;
-
 export type FindOneQuery<E, S> = Omit<SelectQuery<E, S>, 'first'>;
-
 export type ConnectionQuery<E, S> = SelectQuery<E, S>;
 
 export type ByPkQuery<E, S> = {
@@ -42,6 +40,3 @@ export type CountResult = { total: number };
 export type FindAndCountResult<E, S> = CountResult & {
     items: Array<OriginInfer<E, S>>;
 };
-
-export type GqlInvoke = <T = any>(query: string, variables?: Record<string, any>) => Promise<T>;
-export type GqlClient = { gql: GqlInvoke };

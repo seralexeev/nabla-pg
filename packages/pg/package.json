@@ -25,6 +25,7 @@
     "dedent": "0.7.0",
     "deepmerge": "4.2.2",
     "graphql": "15.5.0",
+    "jest": "26.6.3",
     "pg": "8.6.0",
     "postgraphile": "4.11.0",
     "postgraphile-core": "4.11.2",
@@ -36,7 +37,8 @@
     "@types/big.js": "^6",
     "@types/dedent": "^0",
     "@types/pluralize": "0.0.29",
-    "@types/yargs": "^16"
+    "@types/yargs": "^16",
+    "ts-jest": "26.5.5"
   },
   "gitHead": "5493fd29bc3f70835232290048d13617ce51632d"
 }

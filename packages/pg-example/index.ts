@@ -1,9 +1,9 @@
-import { Pg } from '@flstk/pg';
+import { createDefaultPg } from '@flstk/pg';
 import { Orders } from './entities/OrderEntity';
 import { Users } from './entities/UserEntity';
 
 (async () => {
-    const pg = new Pg('postgres://flstk:flstk@localhost:5432/flstk');
+    const pg = createDefaultPg('postgres://flstk:flstk@localhost:5432/flstk');
     const { id: userId } = await Users.create(pg, {
         item: { name: 'Nick' },
         selector: ['id', 'name'],
