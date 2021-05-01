@@ -1,4 +1,4 @@
-import { SqlError } from '@flstk/pg-core/errors';
+import { SqlError } from '@flstk/pg-core';
 import { Literal } from '@flstk/pg/literal';
 import { PoolClient, QueryResult } from 'pg';
 

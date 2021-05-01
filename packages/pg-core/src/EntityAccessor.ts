@@ -16,8 +16,7 @@ import {
 } from '@flstk/pg-core/query';
 import { FieldSelector, OriginInfer } from '@flstk/pg-core/selector';
 import { SavepointScope } from '@flstk/pg-core/transaction';
-import { reduceBy } from '@flstk/utils/index';
-import { NominalType } from '@flstk/utils/types';
+import { NominalType, reduceBy } from '@flstk/utils';
 import { camelCase } from 'camel-case';
 import { constantCase } from 'constant-case';
 import deepmerge from 'deepmerge';

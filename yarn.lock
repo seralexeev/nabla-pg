@@ -1360,6 +1360,7 @@ __metadata:
   dependencies:
     "@types/react": 17.0.3
     react: 17.0.2
+    tsc-alias: 1.2.10
   languageName: unknown
   linkType: soft
 
@@ -1419,6 +1420,7 @@ __metadata:
     jwt-decode: 3.1.2
     object-hash: 2.1.1
     react: 17.0.2
+    tsc-alias: 1.2.10
   languageName: unknown
   linkType: soft
 

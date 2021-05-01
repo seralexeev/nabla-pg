@@ -2,9 +2,10 @@
   "name": "@flstk/utils",
   "version": "0.0.7",
   "license": "MIT",
-  "private": true,
   "scripts": {
-    "compile": "tsc --noEmit"
+    "compile": "tsc --noEmit",
+    "build": "../../build.sh utils",
+    "prepublish": "yarn build"
   },
   "dependencies": {
     "lodash": "4.17.21"

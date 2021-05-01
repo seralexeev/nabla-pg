@@ -4,8 +4,8 @@
   "license": "MIT",
   "scripts": {
     "compile": "tsc --noEmit --skipLibCheck",
-    "build": "./build.sh",
-    "prepublish": "./build.sh"
+    "build": "../../build.sh pg",
+    "prepublish": "yarn build"
   },
   "bin": {
     "flstk-pg": "./bin/cli"

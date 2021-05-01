@@ -1,19 +1,20 @@
-import { EntityBase } from '@flstk/pg-core/entity';
-import { EntityAccessor } from '@flstk/pg-core/EntityAccessor';
 import {
     ByPkQuery,
     CountResult,
     CreateMutation,
+    EntityAccessor,
+    EntityBase,
+    FieldSelector,
     FindAndCountResult,
     FindOneQuery,
+    OriginInfer,
     Query,
     SelectQuery,
-    UpdateMutation
-} from '@flstk/pg-core/query';
-import { FieldSelector, OriginInfer } from '@flstk/pg-core/selector';
+    UpdateMutation,
+} from '@flstk/pg-core';
 import { useGraphQLClient } from '@flstk/pg-react/GqlProvider';
 import { AsyncResult, isError, makeErrorFromError, ResultErrorWrapper } from '@flstk/result';
-import { useFetch, UseFetchOptions } from '@flstk/use-api/useFetch';
+import { useFetch, UseFetchOptions } from '@flstk/use-api';
 import { useMemo } from 'react';
 
 const makeGqlError = (error: any) => {

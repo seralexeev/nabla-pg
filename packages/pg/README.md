@@ -1,12 +1,6 @@
 # @flstk/pg
 
-This is a library that greatly simplifies data access and gives you complete control over types and queries.
-
-![Pg example](../../images/pg-example.png)
-
-When I first saw the [postgraphile](https://github.com/graphile/postgraphile) I was amazed at how easy it is to make a graph interface to a relational database. With the right data structure and normalization, literally in a few lines, you can get all the benefits of the relational approach and simplicity of a non-relational database such as a mongodb. I have used the postgraphile in several of my projects and it was very convenient and simple. Eventually I switched to typescript and wanted to get full control and type safety over the queries and results. This is how this simple library was born, which can help with this.
-
-Generating code from .graphql files didn't suit me very well. I find this approach too lengthy to define requests and fields in advance, and in the company where I work the requirements change very often.
+This is a part of [the fullstack toolbelt](../) provides a simple and clear way to manage your data access layer based on [postgraphile](https://github.com/graphile/postgraphile). You can consider it as a replacement for a more traditional approach such [sequelize](https://github.com/sequelize/sequelize) or [TypeORM](https://github.com/typeorm/typeorm).
 
 ### Installation
 
@@ -25,44 +19,20 @@ In order to get proper nullable type inference you have to enable `strict` mode 
     "compilerOptions": {
         "strict": true
     }
-}
+}s
 ```
 
 ### TLDR;
 
-## [Full example](../pg-example)
-
-This library doesn't provide a migration functionality, you can use any migration tool you want
+As you can see below it is super easy to query a graph of entities from your database. Here you can look at [a full example](../pg-example).
 
 ```ts
-import { Pg, generateEntityFiles } from '@flstk/pg';
+import { Pg, generateEntityFiles, createDefaultPg } from '@flstk/pg';
 import { Orders } from './entities/OrderEntity';
 import { Users } from './entities/UserEntity';
 
 (async () => {
-    const pg = new Pg('postgres://flstk:flstk@localhost:5432/flstk');
-
-    await pg.sql`DROP TABLE IF EXISTS orders`;
-    await pg.sql`DROP TABLE IF EXISTS users`;
-    await pg.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
-
-    await pg.sql`CREATE TABLE IF NOT EXISTS users(
-          id uuid PRIMARY KEY DEFAULT uuid_generate_v4()
-        , name text NOT NULL
-    )`;
-
-    await pg.sql`CREATE TABLE IF NOT EXISTS orders(
-          id uuid PRIMARY KEY DEFAULT uuid_generate_v4()
-        , user_id uuid NOT NULL REFERENCES users(id)
-        , comment text
-    )`;
-
-    // or you can use flstk-pg from command line (flstk-pg -d ./entities -c postgres://flstk:flstk@localhost:5432/flstk)
-    generateEntityFiles(await pg.getSchema(), {
-        prefix: 'Entity',
-        entityImportPath: '.',
-        entityDir: './entities',
-    });
+    const pg = createDefaultPg('postgres://flstk:flstk@localhost:5432/flstk');
 
     const { id: userId } = await Users.create(pg, {
         item: { name: 'Nick' },
@@ -73,19 +43,64 @@ import { Users } from './entities/UserEntity';
         item: { userId, comment: 'Order #1' },
     });
 
-    const users = await pg.transaction(async (t) => {
-        return await Users.find(t, {
-            selector: {
-                id: true,
-                name: true,
-                orders: { id: true, comment: true },
-            },
-        });
+    const users = await Users.find(t, {
+        selector: {
+            id: true,
+            name: true,
+            orders: { id: true, comment: true },
+        },
     });
 
     console.log(JSON.stringify(users, null, 2));
 })();
 ```
+
+### Getting started
+
+The whole idea is quite simple.
+
+1. [Define your database structure](#defining-database-structure).
+2. Generate entities using cli
+3. Make you first query using all power of typescript completion and type checking!
+
+#### Defining database structure.
+
+This library doesn't provide a migration functionality, you can use any migration tool ([graphile-migrate](https://github.com/graphile/migrate), [TypORM](https://github.com/typeorm/typeorm), [sequelize](https://github.com/sequelize/sequelize), [node-pg-migrate](https://github.com/salsita/node-pg-migrate), etc.) as you want or or use just a plain DDL queries. For simplicity we will use plain DDL queries.
+
+**@flstk/pg** exposes single interface to your database: [Pg](./src/db.ts). Using this object you can make any queries, it uses [node-postgres](https://github.com/brianc/node-postgres) and pool for connection pooling under the hood. In order to get `Pg` your can use factory method `createDefaultPg` or create new instance of `Pg` class if you need full control. The first argument is `connection string` (`postgres://password:user@host:port/database`) or [Pool](https://node-postgres.com/api/pool) instance. The second argument is an [additional configuration](#configuration). The library uses `NonNullRelationsPlugin`,`PgNumericToBigJsPlugin`, `ConnectionFilterPlugin`, `PgManyToManyPlugin`,`PgSimplifyInflectorPlugin` and some special configurations hence using `createDefaultPg` factory method is the most preferable way.
+
+`Pg` instance has several extremely convenient methods:
+
+1. `getSchema: Promise<GraphQLSchema>` - to get postgraphile generated Graphql schema
+2. `transaction: <T>(fn: ServerSavepointCallback<T>): Promise<T>` - to make a new transaction / savepoint
+3. `sql` - to execute raw sql queries using tagged template string syntax in a safe way handling sql injections.
+4. `gql` - to execute raw gql queries and mutations
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ### Queries
 

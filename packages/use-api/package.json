@@ -2,9 +2,10 @@
   "name": "@flstk/use-api",
   "version": "0.0.7",
   "license": "MIT",
-  "private": true,
   "scripts": {
-    "compile": "tsc --noEmit"
+    "compile": "tsc --noEmit",
+    "build": "../../build.sh use-api",
+    "prepublish": "yarn build"
   },
   "dependencies": {
     "axios": "0.21.1",
@@ -15,7 +16,8 @@
   },
   "devDependencies": {
     "@types/object-hash": "2.1.0",
-    "@types/react": "17.0.3"
+    "@types/react": "17.0.3",
+    "tsc-alias": "1.2.10"
   },
   "gitHead": "1a45c09dc8f014ba7a6b86188c8e2bb6dba7bce9"
 }

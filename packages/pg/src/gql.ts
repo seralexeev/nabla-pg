@@ -1,5 +1,4 @@
-import { GqlError } from '@flstk/pg-core/errors';
-import { GqlClient } from '@flstk/pg-core/gql';
+import { GqlClient, GqlError } from '@flstk/pg-core';
 import { PgConfig } from '@flstk/pg/db';
 import { graphql, GraphQLSchema } from 'graphql';
 import { PoolClient } from 'pg';

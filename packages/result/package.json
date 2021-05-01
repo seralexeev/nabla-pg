@@ -2,9 +2,10 @@
   "name": "@flstk/result",
   "version": "0.0.6",
   "license": "MIT",
-  "private": true,
   "scripts": {
-    "compile": "tsc --noEmit"
+    "compile": "tsc --noEmit",
+    "build": "../../build.sh result",
+    "prepublish": "yarn build"
   },
   "gitHead": "1a45c09dc8f014ba7a6b86188c8e2bb6dba7bce9"
 }

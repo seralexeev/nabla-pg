@@ -1,5 +1,4 @@
-import { EntityBase, EntityConnection, IdPkey } from '@flstk/pg-core/entity';
-import { EntityAccessor } from '@flstk/pg-core/EntityAccessor';
+import { EntityAccessor, EntityBase, EntityConnection, IdPkey } from '@flstk/pg-core';
 import { Pg } from '@flstk/pg/db';
 import { describe, expect, it } from '@jest/globals';
 

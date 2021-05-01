@@ -1,5 +1,4 @@
-import { GqlClient, GqlInvoke } from '@flstk/pg-core/gql';
-import { SavepointCallback, SavepointScope } from '@flstk/pg-core/transaction';
+import { GqlClient, GqlInvoke, SavepointCallback, SavepointScope } from '@flstk/pg-core';
 import { enableExplain } from '@flstk/pg/explain';
 import { GqlClientImpl } from '@flstk/pg/gql';
 import { SqlClient, SqlClientImpl, SqlInvoke } from '@flstk/pg/sql';
