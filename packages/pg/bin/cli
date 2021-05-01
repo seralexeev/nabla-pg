@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const { generateEntityFiles, Pg } = require('../');
+const { generateEntityFiles, createDefaultPg } = require('../');
 const yargs = require('yargs/yargs');
 const { hideBin } = require('yargs/helpers');
 const argv = yargs(hideBin(process.argv))
@@ -28,7 +28,7 @@ const argv = yargs(hideBin(process.argv))
     )
     .help().argv;
 
-new Pg(argv.connection)
+createDefaultPg(argv.connection)
     .getSchema()
     .then((schema) =>
         generateEntityFiles(schema, {
