@@ -8,7 +8,6 @@
   "scripts": {
     "clean": "git clean -fdx && yarn",
     "compile": "yarn workspaces foreach run compile",
-    "build": "yarn workspaces foreach run build",
     "lerna": "lerna",
     "publish": "lerna publish --contents dist"
   },
