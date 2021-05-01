@@ -7,6 +7,10 @@
     "build": "../../build.sh use-api",
     "prepublish": "yarn build"
   },
+  "publishConfig": {
+    "directory": "dist",
+    "access": "public"
+  },
   "dependencies": {
     "axios": "0.21.1",
     "axios-auth-refresh": "3.1.0",

@@ -7,5 +7,9 @@
     "build": "../../build.sh result",
     "prepublish": "yarn build"
   },
+  "publishConfig": {
+    "directory": "dist",
+    "access": "public"
+  },
   "gitHead": "3d5eb252195129f0ab15441770022ad2ede3719a"
 }

@@ -7,6 +7,10 @@
     "build": "../../build.sh pg-react",
     "prepublish": "yarn build"
   },
+  "publishConfig": {
+    "directory": "dist",
+    "access": "public"
+  },
   "dependencies": {
     "react": "17.0.2",
     "tsc-alias": "1.2.10"
