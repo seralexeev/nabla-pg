@@ -1,6 +1,6 @@
 {
   "name": "@flstk/pg-example",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "private": true,
   "scripts": {
     "example": "ts-node src/example.ts",
@@ -8,7 +8,7 @@
     "gen": "flstk-pg -d entities -c postgres://flstk:flstk@localhost:5432/flstk"
   },
   "dependencies": {
-    "@flstk/pg": "^0.1.20",
+    "@flstk/pg": "^0.1.21",
     "body-parser": "1.19.0",
     "cors": "2.8.5",
     "express": "4.17.1",
