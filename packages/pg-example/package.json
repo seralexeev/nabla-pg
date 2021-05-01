@@ -1,13 +1,13 @@
 {
   "name": "@flstk/pg-example",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "private": true,
   "scripts": {
     "start": "ts-node index.ts",
     "gen": "flstk-pg -d entities -c postgres://flstk:flstk@localhost:5432/flstk"
   },
   "dependencies": {
-    "@flstk/pg": "^0.1.15",
+    "@flstk/pg": "^0.1.16",
     "ts-node": "9.1.1",
     "typescript": "4.2.4"
   }
