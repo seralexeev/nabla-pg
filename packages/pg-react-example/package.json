@@ -1,0 +1,19 @@
+{
+  "name": "@flstk/pg-react-example",
+  "version": "0.0.2",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "compile": "tsc --noEmit",
+    "gen": "npx @flstk/pg -d entities -c postgres://flstk:flstk@localhost:5432/flstk"
+  },
+  "dependencies": {
+    "react": "17.0.2",
+    "react-dom": "17.0.2"
+  },
+  "devDependencies": {
+    "@flstk/pg": "0.1.14",
+    "@types/react": "17.0.3",
+    "@types/react-dom": "^17"
+  }
+}

@@ -25,8 +25,8 @@ export const useAxiosInstance = (auth?: boolean) => {
     const { authenticated, axios } = useContext(AxiosContext);
     return auth ? authenticated : axios;
 };
+
 export const useAuth = () => useContext(AuthContext);
-export const useApiRequest = (options?: RequestOptions) => useRequest(useAxiosInstance(true), options);
 
 type AuthProps = {
     refreshTokenUrl: string;

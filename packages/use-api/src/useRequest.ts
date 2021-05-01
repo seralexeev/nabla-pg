@@ -1,4 +1,5 @@
 import { AsyncResult, ifSuccess } from '@flstk/result';
+import { useAxiosInstance } from '@flstk/use-api/AxiosProvider';
 import Axios, { AxiosInstance, AxiosRequestConfig, CancelTokenSource } from 'axios';
 import { MutableRefObject, useCallback, useEffect, useMemo, useRef } from 'react';
 
@@ -56,6 +57,8 @@ export const useRequest = (axios: AxiosInstance, options: RequestOptions = {}): 
         return request;
     }, [axios, cancelPrev, cancelRef]);
 };
+
+export const useApiRequest = (options?: RequestOptions) => useRequest(useAxiosInstance(true), options);
 
 export const useCancelRequest = () => {
     const cancelRef = useRef<CancelTokenSource>();

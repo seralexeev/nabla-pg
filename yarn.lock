@@ -429,13 +429,34 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@flstk/pg-example@workspace:packages/pg-example"
   dependencies:
-    "@flstk/pg": ^0.1.13
+    "@flstk/pg": 0.1.14
     ts-node: 9.1.1
     typescript: 4.2.4
   languageName: unknown
   linkType: soft
 
-"@flstk/pg@^0.1.13, @flstk/pg@workspace:packages/pg":
+"@flstk/pg-react-example@workspace:packages/pg-react-example":
+  version: 0.0.0-use.local
+  resolution: "@flstk/pg-react-example@workspace:packages/pg-react-example"
+  dependencies:
+    "@flstk/pg": 0.1.14
+    "@types/react": 17.0.3
+    "@types/react-dom": ^17
+    react: 17.0.2
+    react-dom: 17.0.2
+  languageName: unknown
+  linkType: soft
+
+"@flstk/pg-react@workspace:packages/pg-react":
+  version: 0.0.0-use.local
+  resolution: "@flstk/pg-react@workspace:packages/pg-react"
+  dependencies:
+    "@types/react": 17.0.3
+    react: 17.0.2
+  languageName: unknown
+  linkType: soft
+
+"@flstk/pg@0.1.14, @flstk/pg@workspace:packages/pg":
   version: 0.0.0-use.local
   resolution: "@flstk/pg@workspace:packages/pg"
   dependencies:
@@ -458,6 +479,7 @@ __metadata:
     postgraphile-plugin-connection-filter: 2.2.0
     sql-formatter: 4.0.2
     ts-jest: 26.5.5
+    tsc-alias: 1.2.10
     yargs: 16.2.0
   bin:
     flstk-pg: ./bin/cli
@@ -2103,6 +2125,26 @@ __metadata:
   version: 1.2.3
   resolution: "@types/range-parser@npm:1.2.3"
   checksum: 092fabae0ecbd728d3e4debc938cd043e97cb9f210cfec1c56ff6065c6e91666f376eb586591825d6757a058fd1a1dc4831d34e04ecfbb0800f35b8d86d38635
+  languageName: node
+  linkType: hard
+
+"@types/react-dom@npm:^17":
+  version: 17.0.3
+  resolution: "@types/react-dom@npm:17.0.3"
+  dependencies:
+    "@types/react": "*"
+  checksum: 9314c91a985f153591e1e74aef3d63d8b22e098069773f32745bf0733740a49802731761a46da8788a7d3dd2c21346036f12c2c24627630e5a6210b120a650e6
+  languageName: node
+  linkType: hard
+
+"@types/react@npm:*":
+  version: 17.0.4
+  resolution: "@types/react@npm:17.0.4"
+  dependencies:
+    "@types/prop-types": "*"
+    "@types/scheduler": "*"
+    csstype: ^3.0.2
+  checksum: d7a8121faa889d52148df392751b771be16a45369872e9ad2b5db3d5bb8f76e684db27c2447b440441e3da1f353d434fa20fdcb45b3a56a296aab0757862da77
   languageName: node
   linkType: hard
 
@@ -8708,6 +8750,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-dom@npm:17.0.2":
+  version: 17.0.2
+  resolution: "react-dom@npm:17.0.2"
+  dependencies:
+    loose-envify: ^1.1.0
+    object-assign: ^4.1.1
+    scheduler: ^0.20.2
+  peerDependencies:
+    react: 17.0.2
+  checksum: 960a74ff6670766846a73097a599115963df1574833c59ca0c2fd909758ebe7a6214cd14f5e6aa63ce846d8f39fde7f3b80474ccfcfadc45dd7f3246364718c6
+  languageName: node
+  linkType: hard
+
 "react-is@npm:^17.0.1":
   version: 17.0.2
   resolution: "react-is@npm:17.0.2"
@@ -9233,6 +9288,16 @@ __metadata:
   dependencies:
     xmlchars: ^2.2.0
   checksum: 6ad14be68da9b84af0fa3de346fd78bd3a8e8a73a462e2852279a1fff1e2619988919294001abe3ecef3783f9498962a0619d960ccca4ec2ca914526fde1acc2
+  languageName: node
+  linkType: hard
+
+"scheduler@npm:^0.20.2":
+  version: 0.20.2
+  resolution: "scheduler@npm:0.20.2"
+  dependencies:
+    loose-envify: ^1.1.0
+    object-assign: ^4.1.1
+  checksum: 2ba121e53e8a438394598612ec9a8f465b39157042f912d2dd5956af643e0d45ec6937ae4eeb0a807d1945b209515263aed12fc3bca95c7a027ec2a54e76b399
   languageName: node
   linkType: hard
 

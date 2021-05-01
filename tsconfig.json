@@ -2,18 +2,24 @@
   "compilerOptions": {
     "target": "es5",
     "module": "commonjs",
+    "moduleResolution": "node",
 
     "declaration": true,
 
     "strict": true,
 
-    "baseUrl": "./",
+    "baseUrl": ".",
     "paths": {
       "@flstk/result/*": ["packages/result/src/*"],
+      "@flstk/result": ["packages/result/src/index"],
+
       "@flstk/use-api/*": ["packages/use-api/src/*"],
+      "@flstk/use-api": ["packages/use-api/src/index"],
+
       "@flstk/utils/*": ["packages/utils/src/*"],
       "@flstk/pg/*": ["packages/pg/src/*"],
       "@flstk/pg-core/*": ["packages/pg-core/src/*"],
+      "@flstk/pg-react/*": ["packages/pg-react/src/*"],
       "@flstk/rest/*": ["packages/rest/src/*"]
     },
     "allowSyntheticDefaultImports": true,

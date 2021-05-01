@@ -7,7 +7,7 @@
     "gen": "flstk-pg -d entities -c postgres://flstk:flstk@localhost:5432/flstk"
   },
   "dependencies": {
-    "@flstk/pg": "^0.1.14",
+    "@flstk/pg": "0.1.14",
     "ts-node": "9.1.1",
     "typescript": "4.2.4"
   }

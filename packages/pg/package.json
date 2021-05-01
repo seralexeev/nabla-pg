@@ -38,7 +38,8 @@
     "@types/dedent": "^0",
     "@types/pluralize": "0.0.29",
     "@types/yargs": "^16",
-    "ts-jest": "26.5.5"
+    "ts-jest": "26.5.5",
+    "tsc-alias": "1.2.10"
   },
   "gitHead": "5493fd29bc3f70835232290048d13617ce51632d"
 }
