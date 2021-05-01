@@ -1,6 +1,6 @@
 {
   "name": "@flstk/use-api",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "license": "MIT",
   "scripts": {
     "compile": "tsc --noEmit",
