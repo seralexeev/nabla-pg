@@ -6,6 +6,7 @@
     "Graphile",
     "Queryable",
     "SAVEPOINT",
+    "Savepoints",
     "Unmount",
     "deepmerge",
     "esbuild",

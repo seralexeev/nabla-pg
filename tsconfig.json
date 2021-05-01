@@ -17,9 +17,17 @@
       "@flstk/use-api": ["packages/use-api/src/index"],
 
       "@flstk/utils/*": ["packages/utils/src/*"],
+      "@flstk/utils": ["packages/utils/src/index"],
+
       "@flstk/pg/*": ["packages/pg/src/*"],
+      "@flstk/pg": ["packages/pg/src/index"],
+
       "@flstk/pg-core/*": ["packages/pg-core/src/*"],
+      "@flstk/pg-core": ["packages/pg-core/src/index"],
+
       "@flstk/pg-react/*": ["packages/pg-react/src/*"],
+      "@flstk/pg-react": ["packages/pg-react/src/index"],
+
       "@flstk/rest/*": ["packages/rest/src/*"]
     },
     "allowSyntheticDefaultImports": true,

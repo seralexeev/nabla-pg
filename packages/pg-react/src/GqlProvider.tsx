@@ -1,16 +1,17 @@
 import { GqlInvoke } from '@flstk/pg-core/gql';
 import { SavepointCallback } from '@flstk/pg-core/transaction';
 import { ClientGqlClient, ClientSavepointCallback } from '@flstk/pg-react/gql';
-import { makeError } from '@flstk/result';
-import { AxiosRequest, useApiRequest } from '@flstk/use-api/useRequest';
+import { isError, ResultErrorWrapper } from '@flstk/result';
+import { AxiosRequest, RequestOptions, useApiRequest } from '@flstk/use-api/useRequest';
 import React, { createContext, FC, useContext, useMemo } from 'react';
 
 type GqlClientProviderProp = {
     path: string;
 };
 
+const options: RequestOptions = { cancelPrev: false };
 export const GqlClientProvider: FC<GqlClientProviderProp> = ({ path, children }) => {
-    const request = useApiRequest();
+    const request = useApiRequest(options);
     if (!request) {
         throw new Error(
             'Unable to receive AxiosInstance using react context. Ensure you place AxiosProvider close to the root of your app',
@@ -25,15 +26,16 @@ class GqlClientImpl implements ClientGqlClient {
     public constructor(private path: string, private request: AxiosRequest) {}
 
     public gql: GqlInvoke = async (query, variables) => {
-        const { data, errors } = await this.request.post<any>(this.path, { query, variables });
-        if (!errors && data) {
-            return data;
+        const res = await this.request.post<any>(this.path, { query, variables });
+        if (isError(res)) {
+            throw new ResultErrorWrapper(res);
         }
 
-        return makeError('INTERNAL_ERROR', 'Graphql error', { payload: { data, errors } });
+        return res.data;
     };
 
     public savepoint: <R>(fn: SavepointCallback<ClientGqlClient, R>) => Promise<R> = (fn) => {
+        console.warn('Savepoints are not supported');
         return fn(new SavepointScopeImpl(this));
     };
 }

@@ -1,5 +1,5 @@
-export type ResultError<T = unknown> = { __error: true; code: string; message: string; payload?: T; error?: any };
 export type Result<T, P = unknown> = T | ResultError<P>;
+export type ResultError<T = unknown> = { __error: true; code: string; message: string; payload?: T; error?: any };
 export type AsyncResult<T = unknown, P = unknown> = Promise<Result<T, P>>;
 
 export const ifSuccess = <TSrcResult, Error, TDestResult>(
@@ -29,3 +29,17 @@ export const makeError = <P>(
 ): ResultError<P> => {
     return { __error: true, code, message, ...data };
 };
+
+export const makeErrorFromError = <P>(error: Error): ResultError<P> => {
+    return { __error: true, code: 'UNKNOWN', message: error?.message, error };
+};
+
+export class ResultErrorWrapper<T = unknown> extends Error {
+    public static isResultError = (error: unknown): error is ResultErrorWrapper => {
+        return (error as any)?.error?.__error === true;
+    };
+
+    constructor(public error: ResultError<T>) {
+        super(error.message);
+    }
+}

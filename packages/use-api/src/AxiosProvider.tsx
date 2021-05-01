@@ -1,5 +1,4 @@
 import { ifSuccess, isError, makeError, Result, ResultError } from '@flstk/result';
-import { RequestOptions, useRequest } from '@flstk/use-api/useRequest';
 import Axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import createAuthRefreshInterceptor from 'axios-auth-refresh';
 import jwtDecode from 'jwt-decode';
@@ -185,11 +184,11 @@ const handleError = (error: any, onError?: (error: ResultError) => void) => {
     } else {
         const message = error.message ?? error.code ?? 'Unknown error';
         if (!error.response?.data) {
-            resError = makeError('UNKNOWN', message, { error });
+            resError = makeError('UNKNOWN1', message, { error });
         } else {
             resError = isError(error.response?.data)
-                ? error.response?.data
-                : makeError('UNKNOWN', message, { payload: error?.response?.data });
+                ? error.response.data
+                : makeError('UNKNOWN2', message, { payload: error.response.data });
         }
     }
 

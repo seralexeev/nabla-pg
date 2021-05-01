@@ -109,8 +109,8 @@ export const generateEntities = (schema: GraphQLSchema, config?: GenerateEntityC
         }
 
         let imports = dedent`
-            import type { ${essentialImports.join(', ')} } from '@flstk/pg';
-            import { EntityAccessor } from '@flstk/pg';
+            import type { ${essentialImports.join(', ')} } from '@flstk/pg-core';
+            import { EntityAccessor } from '@flstk/pg-core';
         `;
 
         imports += '\n';

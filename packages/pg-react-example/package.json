@@ -5,15 +5,30 @@
   "private": true,
   "scripts": {
     "compile": "tsc --noEmit",
-    "gen": "npx @flstk/pg -d entities -c postgres://flstk:flstk@localhost:5432/flstk"
+    "start": "webpack serve",
+    "gen": "npx @flstk/pg -d src/entities -c postgres://flstk:flstk@localhost:5432/flstk"
   },
   "dependencies": {
+    "@babel/preset-typescript": "7.13.0",
     "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "react-dom": "17.0.2",
+    "ts-loader": "9.1.1"
   },
   "devDependencies": {
+    "@babel/core": "7.14.0",
+    "@babel/plugin-proposal-class-properties": "7.13.0",
+    "@babel/preset-env": "7.14.0",
     "@flstk/pg": "^0.1.16",
+    "@types/babel__core": "^7",
+    "@types/babel__preset-env": "^7",
     "@types/react": "17.0.3",
-    "@types/react-dom": "^17"
+    "@types/react-dom": "^17",
+    "@types/webpack-dev-server": "^3",
+    "babel-loader": "8.2.2",
+    "clean-webpack-plugin": "4.0.0-alpha.0",
+    "html-webpack-plugin": "5.3.1",
+    "webpack": "5.36.2",
+    "webpack-cli": "4.6.0",
+    "webpack-dev-server": "3.11.2"
   }
 }

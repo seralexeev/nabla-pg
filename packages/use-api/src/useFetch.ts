@@ -52,6 +52,7 @@ export function useFetch<P extends any[], R, E, S = R>(
 
             return caller(...args)
                 .then((res) => {
+                    console.log('hrere', res);
                     if (isError(res)) {
                         setError(res);
                     } else {
