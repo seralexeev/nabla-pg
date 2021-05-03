@@ -1,11 +1,16 @@
+import { makeEntityWrapper } from '@flstk/pg-react-antd';
 import { useEntityAccessor } from '@flstk/pg-react/useEntityAccessor';
 import React, { useEffect, VFC } from 'react';
+import { Orders } from './entities/OrderEntity';
 import { Users } from './entities/UserEntity';
+
+const UsersWrapper = makeEntityWrapper(Users);
 
 export const EntityAccessorExample: VFC = () => {
     const ent = useEntityAccessor(Users);
     const [data, { loading, refetch, refetching, error }] = ent.find.fetch({
         selector: ['id', 'name'],
+        first: 2,
     });
 
     useEffect(() => {
@@ -34,6 +39,36 @@ export const EntityAccessorExample: VFC = () => {
             </h1>
 
             <pre>{JSON.stringify(data, null, 2)}</pre>
+
+            <UsersWrapper.ByPk
+                pk={{ id: '0006834c-a3f5-44dd-8072-5f5b42ea82f3' }}
+                selector={['id', 'name']}
+                children={(x, { refetch }) => (
+                    <div>
+                        <button onClick={refetch}>refetch</button>
+                        <pre>{JSON.stringify(x, null, 2)}</pre>
+                    </div>
+                )}
+            />
+
+            <UsersWrapper.Table
+                selector={{
+                    id: true,
+                    name: true,
+                    orders: Orders.createQuery({ selector: ['id', 'comment'], orderBy: [['comment', 'DESC']] }),
+                }}
+                rowKey='id'
+                columns={[
+                    'id',
+                    'name',
+                    ['Orders Count', (x) => x.orders.length],
+                    ['Last order comment', (x) => x.orders[0]?.comment ?? ' - '],
+                    { title: 'Random date', render: (_, x) => new Date().getTime(), width: 128 },
+                ]}
+                size='small'
+                bordered
+                showHeader
+            />
         </div>
     );
 };

@@ -2,7 +2,7 @@ import { AsyncResult, isError, ResultError } from '@flstk/result';
 import hash from 'object-hash';
 import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from 'react';
 
-type FetchResultExtra<R, E, S> = {
+export type FetchResultExtra<R, E = unknown, S = R> = {
     loading: boolean;
     error: ResultError<E> | null;
     refetch: () => AsyncResult<R, E>;

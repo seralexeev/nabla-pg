@@ -1,8 +1,7 @@
-import { EntityTable } from '@flstk/pg-react-antd';
-import { useListFetcher } from '@flstk/pg-react-antd';
-import { UserEntity, Users } from './entities/UserEntity';
-import { Orders } from './entities/OrderEntity';
+import { AntdEntityTable } from '@flstk/pg-react-antd';
 import React, { FC } from 'react';
+import { Orders } from './entities/OrderEntity';
+import { Users } from './entities/UserEntity';
 
 export const AntdExample: FC = () => {
     const selector = Users.createSelector({
@@ -16,7 +15,7 @@ export const AntdExample: FC = () => {
 
     return (
         <div>
-            <EntityTable
+            <AntdEntityTable
                 accessor={Users}
                 selector={selector}
                 rowKey='id'

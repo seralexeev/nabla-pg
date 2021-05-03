@@ -1,11 +1,11 @@
 import {
+    EntityAccessor,
     EntityBase,
     FieldSelector,
     Filter,
     NonQueryableKeys,
     OrderBy,
-    ReadonlyEntityAccessor,
-    SelectorShape,
+    OriginInfer
 } from '@flstk/pg-core';
 import { useListFetcher } from '@flstk/pg-react-antd/useListFetcher';
 import { FilterKeys } from '@flstk/utils/types';
@@ -16,26 +16,28 @@ import React, { Fragment, ReactNode, useMemo } from 'react';
 
 type AntdTableProps<E extends EntityBase, S extends FieldSelector<E, S>> = Omit<
     TableProps<S>,
-    'columns' | 'dataSource'
+    'columns' | 'dataSource' | 'rowKey'
 >;
 
-type EntityTableProps<E extends EntityBase, S extends FieldSelector<E, S>> = AntdTableProps<E, S> & {
-    accessor: ReadonlyEntityAccessor<E>;
+export type AntdEntityTableProps<E extends EntityBase, S extends FieldSelector<E, S>> = AntdTableProps<E, S> & {
+    accessor: EntityAccessor<E>;
     filter?: Filter<E>;
     orderBy?: OrderBy<E>;
     selector: S;
     initialPageSize?: number;
     columns: Array<
-        | FilterKeys<SelectorShape<S>, string | number>
-        | [string, FilterKeys<SelectorShape<S>, string | number>]
-        | [string, (x: SelectorShape<S>) => ReactNode]
-        | ColumnType<SelectorShape<S>>
+        | FilterKeys<OriginInfer<E, S>, string | number>
+        | [string, FilterKeys<OriginInfer<E, S>, string | number>]
+        | [string, (x: OriginInfer<E, S>) => ReactNode]
+        | ColumnType<OriginInfer<E, S>>
     >;
-    rowKey: NonQueryableKeys<SelectorShape<S>> | ((x: SelectorShape<S>) => string);
+    rowKey: NonQueryableKeys<OriginInfer<E, S>> | ((x: OriginInfer<E, S>) => string);
     onQueryFilter?: (query: string) => Filter<E>;
 };
 
-export const EntityTable = <E extends EntityBase, S extends FieldSelector<E, S>>(props: EntityTableProps<E, S>) => {
+export const AntdEntityTable = <E extends EntityBase, S extends FieldSelector<E, S>>(
+    props: AntdEntityTableProps<E, S>,
+) => {
     const { accessor, filter, selector, orderBy, initialPageSize, onQueryFilter, columns, rowKey, ...rest } = props;
 
     const [data, { loading, refetch }, pagination] = useListFetcher<E, S>(
@@ -48,18 +50,18 @@ export const EntityTable = <E extends EntityBase, S extends FieldSelector<E, S>>
         { pageSize: initialPageSize },
     );
 
-    const mappedColumns: Array<ColumnType<SelectorShape<S>>> = useMemo(() => {
+    const mappedColumns: Array<ColumnType<OriginInfer<E, S>>> = useMemo(() => {
         return columns.map((x) => {
             if (typeof x === 'string') {
-                return { title: capitalCase(x), render: (_, record) => record[x] } as ColumnType<SelectorShape<S>>;
+                return { title: capitalCase(x), render: (_, record) => record[x] } as ColumnType<OriginInfer<E, S>>;
             } else if (Array.isArray(x)) {
                 const [title, keyOrSelector] = x;
                 const render =
                     typeof keyOrSelector === 'string' ? (_: any, record: any) => record[keyOrSelector] : keyOrSelector;
 
-                return { title, render } as ColumnType<SelectorShape<S>>;
+                return { title, render } as ColumnType<OriginInfer<E, S>>;
             } else {
-                return x as ColumnType<SelectorShape<S>>;
+                return x as ColumnType<OriginInfer<E, S>>;
             }
         });
     }, [columns]);
