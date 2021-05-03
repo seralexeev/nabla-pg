@@ -17,7 +17,7 @@ export const useListFetcher = <E extends EntityBase, S extends FieldSelector<E, 
     options: UseListFetcherOptions = {},
 ) => {
     const { pageSize: initialPageSize, ...fetchProps } = options;
-    const [pageSize, setPageSize] = useState(initialPageSize ?? 50);
+    const [pageSize, setPageSize] = useState(initialPageSize ?? 10);
     const [page, setPage] = useState(1);
     const [data, rest] = useEntityAccessor(accessor as EntityAccessor<E>).findAndCount.fetch(
         { first: pageSize, offset: (page - 1) * pageSize, ...query },
