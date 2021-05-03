@@ -20,7 +20,7 @@
   },
   "devDependencies": {
     "@types/object-hash": "2.1.0",
-    "@types/react": "17.0.3",
+    "@types/react": "17.0.4",
     "tsc-alias": "1.2.10"
   },
   "gitHead": "3d5eb252195129f0ab15441770022ad2ede3719a"

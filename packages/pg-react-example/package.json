@@ -9,24 +9,27 @@
     "gen": "npx @flstk/pg -d src/entities -c postgres://flstk:flstk@localhost:5432/flstk"
   },
   "dependencies": {
-    "@babel/preset-typescript": "7.13.0",
+    "antd": "4.15.4",
+    "css-loader": "5.2.4",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "ts-loader": "9.1.1"
+    "react-router": "5.2.0",
+    "react-router-dom": "5.2.0",
+    "style-loader": "2.0.0"
   },
   "devDependencies": {
-    "@babel/core": "7.14.0",
-    "@babel/plugin-proposal-class-properties": "7.13.0",
-    "@babel/preset-env": "7.14.0",
-    "@flstk/pg": "^0.1.23",
-    "@types/babel__core": "^7",
-    "@types/babel__preset-env": "^7",
+    "@flstk/pg": "0.1.23",
+    "@pmmmwh/react-refresh-webpack-plugin": "0.4.3",
     "@types/react": "17.0.3",
     "@types/react-dom": "^17",
-    "@types/webpack-dev-server": "^3",
-    "babel-loader": "8.2.2",
+    "@types/react-router": "^5",
+    "@types/react-router-dom": "^5",
+    "@types/webpack-dev-server": "^3.11.3",
     "clean-webpack-plugin": "4.0.0-alpha.0",
     "html-webpack-plugin": "5.3.1",
+    "react-refresh": "0.10.0",
+    "react-refresh-typescript": "2.0.0",
+    "ts-loader": "9.1.1",
     "webpack": "5.36.2",
     "webpack-cli": "4.6.0",
     "webpack-dev-server": "3.11.2"

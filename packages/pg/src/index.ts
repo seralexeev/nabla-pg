@@ -1,5 +1,7 @@
 export {
+    ArrayFilter,
     ByPkQuery,
+    ConnectionFilter,
     ConnectionQuery,
     CountResult,
     CreateMutation,
@@ -12,6 +14,7 @@ export {
     EntityCreate,
     EntityPatch,
     FieldSelector,
+    Filter,
     FindAndCountResult,
     FindOneQuery,
     GqlClient,
@@ -20,8 +23,10 @@ export {
     IdPkey,
     InferPrimaryKey,
     Json,
+    JsonFilter,
     JsonObject,
     Many2Many,
+    MaybeNominalScalar,
     MayBeQueryable,
     NonQueryableKeys,
     NotFoundError,
@@ -35,9 +40,11 @@ export {
     ReadonlyValue,
     SavepointCallback,
     SavepointScope,
+    Scalar,
     SelectorShape,
     SelectQuery,
     SqlError,
+    StringFilter,
     UpdateMutation,
 } from '@flstk/pg-core';
 export {

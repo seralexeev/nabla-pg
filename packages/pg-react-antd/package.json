@@ -1,5 +1,5 @@
 {
-  "name": "@flstk/pg-react",
+  "name": "@flstk/pg-react-antd",
   "version": "0.0.10",
   "license": "MIT",
   "scripts": {
@@ -12,11 +12,16 @@
     "access": "public"
   },
   "dependencies": {
+    "antd": "4.15.4",
+    "capital-case": "1.0.4",
+    "deepmerge": "4.2.2",
     "react": "17.0.2",
+    "react-dom": "17.0.2",
     "tsc-alias": "1.2.10"
   },
   "devDependencies": {
-    "@types/react": "17.0.4"
-  },
-  "gitHead": "3d5eb252195129f0ab15441770022ad2ede3719a"
+    "@types/deepmerge": "2.2.0",
+    "@types/react": "17.0.4",
+    "@types/react-dom": "^17.0.3"
+  }
 }

@@ -1,7 +1,9 @@
-import { GqlClientProvider, useEntityAccessor } from '@flstk/pg-react';
+import { GqlClientProvider } from '@flstk/pg-react';
 import { AxiosProvider, AxiosProviderProps } from '@flstk/use-api';
-import React, { useEffect, VFC } from 'react';
-import { Users } from './entities/UserEntity';
+import React, { VFC } from 'react';
+import { BrowserRouter, Link, Route, Switch } from 'react-router-dom';
+import { AntdExample } from './AntdExample';
+import { EntityAccessorExample } from './EntityAccessorExample';
 
 const config: AxiosProviderProps = {
     config: {
@@ -13,44 +15,34 @@ export const App: VFC = () => {
     return (
         <AxiosProvider {...config}>
             <GqlClientProvider path='/graphql'>
-                <ExampleComponent />
+                <BrowserRouter>
+                    <div>
+                        <nav>
+                            <ul>
+                                <li>
+                                    <Link to='/'>Home</Link>
+                                </li>
+                                <li>
+                                    <Link to='/about'>EntityAccessor</Link>
+                                </li>
+                                <li>
+                                    <Link to='/users'>Antd</Link>
+                                </li>
+                            </ul>
+                        </nav>
+
+                        <Switch>
+                            <Route path='/about'>
+                                <EntityAccessorExample />
+                            </Route>
+                            <Route path='/users'>
+                                <AntdExample />
+                            </Route>
+                            <Route path='/'></Route>
+                        </Switch>
+                    </div>
+                </BrowserRouter>
             </GqlClientProvider>
         </AxiosProvider>
-    );
-};
-
-const ExampleComponent: VFC = () => {
-    const ent = useEntityAccessor(Users);
-    const [data, { loading, refetch, refetching, error }] = ent.find.fetch({
-        selector: ['id', 'name'],
-    });
-
-    useEffect(() => {
-        ent.findByPkOrError({
-            pk: { id: '26707f69-46ff-4c71-946d-d764a7a5d909' },
-            selector: ['id'],
-        }).then((res) => console.log('rrrres', JSON.stringify(res, null, 2)));
-    }, []);
-
-    if (loading) {
-        return <pre>loading...</pre>;
-    }
-
-    if (refetching) {
-        return <pre>refetching...</pre>;
-    }
-
-    if (error) {
-        return <pre>{JSON.stringify(error, null, 2)}</pre>;
-    }
-
-    return (
-        <div>
-            <h1>
-                Data from server <button onClick={refetch}>refetch</button>
-            </h1>
-
-            <pre>{JSON.stringify(data, null, 2)}</pre>
-        </div>
     );
 };

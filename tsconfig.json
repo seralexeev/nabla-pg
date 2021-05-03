@@ -28,6 +28,9 @@
       "@flstk/pg-react/*": ["packages/pg-react/src/*"],
       "@flstk/pg-react": ["packages/pg-react/src/index"],
 
+      "@flstk/pg-react-antd/*": ["packages/pg-react-antd/src/*"],
+      "@flstk/pg-react-antd": ["packages/pg-react-antd/src/index"],
+
       "@flstk/rest/*": ["packages/rest/src/*"]
     },
     "allowSyntheticDefaultImports": true,

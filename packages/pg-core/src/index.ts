@@ -19,6 +19,15 @@ export {
 } from '@flstk/pg-core/entity';
 export { EntityAccessor, ReadonlyEntityAccessor } from '@flstk/pg-core/EntityAccessor';
 export { GqlError, NotFoundError, SqlError } from '@flstk/pg-core/errors';
+export {
+    ArrayFilter,
+    ConnectionFilter,
+    Filter,
+    JsonFilter,
+    MaybeNominalScalar,
+    Scalar,
+    StringFilter,
+} from '@flstk/pg-core/filter';
 export { GqlClient, GqlInvoke } from '@flstk/pg-core/gql';
 export {
     ByPkQuery,

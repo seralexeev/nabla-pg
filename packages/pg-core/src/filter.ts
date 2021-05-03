@@ -1,7 +1,7 @@
 import { EntityBase, EntityConnection, JsonObject } from '@flstk/pg-core/entity';
 import { UnwrapNominal } from '@flstk/utils/types';
 
-type MaybeNominalScalar<T> =
+export type MaybeNominalScalar<T> =
     | { isNull: boolean }
     | { equalTo: T }
     | { notEqualTo: T }
@@ -14,9 +14,9 @@ type MaybeNominalScalar<T> =
     | { greaterThan: T }
     | { greaterThanOrEqualTo: T };
 
-type Scalar<T> = MaybeNominalScalar<UnwrapNominal<T>>;
+export type Scalar<T> = MaybeNominalScalar<UnwrapNominal<T>>;
 
-type StringFilter =
+export type StringFilter =
     | { includes: string }
     | { notIncludes: string }
     | { includesInsensitive: string }
@@ -35,7 +35,7 @@ type StringFilter =
     | { similarTo: string }
     | { notSimilarTo: string };
 
-type ArrayFilter<T> =
+export type ArrayFilter<T> =
     | { isNull: boolean }
     | { equalTo: T[] }
     | { notEqualTo: T[] }
@@ -76,6 +76,6 @@ export type Filter<T> =
     | { not: Filter<T> };
 
 // TODO: Add `contains`, and `containedBy`
-type JsonFilter = { containsAllKeys: string[] } | { containsAnyKeys: string[] } | { containsKey: string };
+export type JsonFilter = { containsAllKeys: string[] } | { containsAnyKeys: string[] } | { containsKey: string };
 
-type ConnectionFilter<Entity> = { some: Filter<Entity> } | { none: Filter<Entity> } | { every: Filter<Entity> };
+export type ConnectionFilter<Entity> = { some: Filter<Entity> } | { none: Filter<Entity> } | { every: Filter<Entity> };

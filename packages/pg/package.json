@@ -1,6 +1,6 @@
 {
   "name": "@flstk/pg",
-  "version": "0.1.23",
+  "version": "0.1.22",
   "license": "MIT",
   "scripts": {
     "compile": "tsc --noEmit --skipLibCheck",
@@ -16,10 +16,14 @@
     "url": "https://github.com/seralexeev/flstk.git",
     "directory": "packages/pg"
   },
+  "publishConfig": {
+    "directory": "dist",
+    "access": "public"
+  },
   "dependencies": {
     "@graphile-contrib/pg-many-to-many": "1.0.1",
     "@graphile-contrib/pg-simplify-inflector": "6.1.0",
-    "big.js": "6.0.3",
+    "big.js": "6.1.0",
     "camel-case": "4.1.2",
     "constant-case": "3.0.4",
     "dedent": "0.7.0",
@@ -29,15 +33,15 @@
     "pg": "8.6.0",
     "postgraphile": "4.11.0",
     "postgraphile-core": "4.11.2",
-    "postgraphile-plugin-connection-filter": "2.2.0",
+    "postgraphile-plugin-connection-filter": "2.2.1",
     "sql-formatter": "4.0.2",
-    "yargs": "16.2.0"
+    "yargs": "17.0.0"
   },
   "devDependencies": {
-    "@types/big.js": "^6",
-    "@types/dedent": "^0",
+    "@types/big.js": "6.0.2",
+    "@types/dedent": "0.7.0",
     "@types/pluralize": "0.0.29",
-    "@types/yargs": "^16",
+    "@types/yargs": "16.0.1",
     "ts-jest": "26.5.5",
     "tsc-alias": "1.2.10"
   },

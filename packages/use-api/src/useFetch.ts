@@ -1,6 +1,6 @@
+import { AsyncResult, isError, ResultError } from '@flstk/result';
 import hash from 'object-hash';
 import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from 'react';
-import { AsyncResult, isError, ResultError } from '@flstk/result';
 
 type FetchResultExtra<R, E, S> = {
     loading: boolean;
@@ -13,7 +13,7 @@ type FetchResultExtra<R, E, S> = {
 
 export type FetchResult<R, E, S = R> = [S | undefined, FetchResultExtra<R, E, S>];
 
-export type UseFetchOptions<R = any, S = any> = {
+export type UseFetchOptions<R, S = R> = {
     skip?: boolean;
     refreshVersion?: number;
     onData?: (prev: S | undefined, data: R) => S;
@@ -52,7 +52,6 @@ export function useFetch<P extends any[], R, E, S = R>(
 
             return caller(...args)
                 .then((res) => {
-                    console.log('hrere', res);
                     if (isError(res)) {
                         setError(res);
                     } else {

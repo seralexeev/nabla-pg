@@ -24,7 +24,7 @@ export type FilterKeys<T, F> = {
 }[keyof T];
 
 export type InverseFilterKeys<T, F> = {
-    [K in keyof T]: T[K] extends F ? never : K;
+    [K in keyof T]: T[K] extends F ? never : K extends string ? K : never;
 }[keyof T];
 
 export type ArrayElement<T> = T extends Array<infer A> ? A : never;
