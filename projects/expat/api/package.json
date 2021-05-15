@@ -1,0 +1,16 @@
+{
+  "name": "expat-api",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "db:gen": "ts-node --transpile-only --files -r tsconfig-paths/register ../../../packages/pg/src/cli -d src/entities/generated -i @projects/expat/api/entities/generated -c postgres://flstk:flstk@localhost:5432/flstk"
+  },
+  "dependencies": {
+    "cors": "2.8.5",
+    "express": "4.17.1"
+  },
+  "devDependencies": {
+    "@types/cors": "2.8.10",
+    "@types/express": "4.17.11"
+  }
+}

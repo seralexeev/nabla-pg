@@ -476,6 +476,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@flstk/config@workspace:packages/config":
+  version: 0.0.0-use.local
+  resolution: "@flstk/config@workspace:packages/config"
+  dependencies:
+    "@types/flat": 5.0.1
+    flat: 5.0.2
+  languageName: unknown
+  linkType: soft
+
 "@flstk/pg-core@workspace:packages/pg-core":
   version: 0.0.0-use.local
   resolution: "@flstk/pg-core@workspace:packages/pg-core"
@@ -2184,6 +2193,13 @@ __metadata:
     "@types/qs": "*"
     "@types/serve-static": "*"
   checksum: 2818120a0fd8b7982215864929cdc6cd14942dd44849f93054fe2a90b4233dff67aadc34c73b5937922a02c688b0263d00a4807aa2e59307ac859a1458d73669
+  languageName: node
+  linkType: hard
+
+"@types/flat@npm:5.0.1":
+  version: 5.0.1
+  resolution: "@types/flat@npm:5.0.1"
+  checksum: 7a7f1011b6720b93b623699f259e65f1d0cc14d0634b55050df7f9e95789f7b4922c149c2cbd8da49251c83724afac2574a4cf304ead65029f165fb3ec69bf0e
   languageName: node
   linkType: hard
 
@@ -5515,6 +5531,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"expat-api@workspace:projects/expat/api":
+  version: 0.0.0-use.local
+  resolution: "expat-api@workspace:projects/expat/api"
+  dependencies:
+    "@types/cors": 2.8.10
+    "@types/express": 4.17.11
+    cors: 2.8.5
+    express: 4.17.1
+  languageName: unknown
+  linkType: soft
+
 "expect@npm:^26.6.2":
   version: 26.6.2
   resolution: "expect@npm:26.6.2"
@@ -5819,6 +5846,15 @@ __metadata:
     micromatch: ^4.0.2
     resolve-dir: ^1.0.1
   checksum: 77cae4d79cd46b00c3fe8dc8b4e06472e75351096a70de0ebd57f11b7efdb69e3bfe3097f54e7f219e385dd5e84e4f11029fbe6b003f0bf2140ebb6695ed13ea
+  languageName: node
+  linkType: hard
+
+"flat@npm:5.0.2":
+  version: 5.0.2
+  resolution: "flat@npm:5.0.2"
+  bin:
+    flat: cli.js
+  checksum: 549b3012e9c8e90da9eab25c283443a39a6c5b0a35a6d382827e4bfc5e88161d1dac5faf667f6255571a42edc58e679b432a1452b9bdbd7ab16718a740bef556
   languageName: node
   linkType: hard
 

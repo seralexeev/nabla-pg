@@ -135,7 +135,7 @@ export const generateEntities = (schema: GraphQLSchema, config?: GenerateEntityC
 
         definition = imports + extraImport + '\n' + (extra ? `${extra}\n\n` : '') + definition;
 
-        const pkDefStr = pkDef ? `, { pkDef: { ${pkDef} } }` : '';
+        const pkDefStr = pkDef ? `, { pk: { ${pkDef} } }` : '';
 
         definition += `export const ${pluralize(type.name)} = new EntityAccessor<${entityName}>('${
             type.name
@@ -236,7 +236,7 @@ export const generateEntityFiles = (schema: GraphQLSchema, config: GenerateEntit
     let index = '';
     for (const [name, { content, accessor }] of Object.entries(generateEntities(schema, generatorConfig))) {
         fs.writeFileSync(`${entityDir}/${name}.ts`, content, { flag: 'w' });
-        index += `export { ${name}, ${accessor} } from ${generatorConfig.entityImportPath}/${name}`;
+        index += `export { ${name}, ${accessor} } from '${generatorConfig.entityImportPath}/${name}'\n`;
     }
 
     fs.writeFileSync(`${entityDir}/index.ts`, index, { flag: 'w' });

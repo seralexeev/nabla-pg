@@ -18,7 +18,7 @@ export const enableExplain = (options?: ExplainOptions) => {
     }
 
     const logger = options?.logger ?? console.log;
-    const formatter = options?.sqlFormat ?? sqlFormat.format;
+    const formatter = options?.sqlFormat ?? console.log;
 
     const notExplainable = [
         'CREATE',

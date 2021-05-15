@@ -16,14 +16,16 @@ export type ReadyQueryClient = ServerClient & {
     client: PoolClient;
 };
 
+export type ExplainConfig = {
+    enabled: boolean;
+    logger?: (message?: any, ...optionalParams: any[]) => any;
+    gqlFormat?: (source: string) => string;
+    sqlFormat?: (source: string) => string;
+};
+
 export type PgConfig = {
     schema?: string;
-    explain?: {
-        enabled: boolean;
-        logger?: (message?: any, ...optionalParams: any[]) => any;
-        gqlFormat?: (source: string) => string;
-        sqlFormat?: (source: string) => string;
-    };
+    explain?: ExplainConfig | boolean;
     postgraphile?: {
         options?: PostGraphileCoreOptions;
         onSchema?: (schema: GraphQLSchema) => void;
@@ -42,7 +44,7 @@ export class Pg implements ServerSavepointScope {
         this.isPoolExternal = typeof pool !== 'string';
 
         if (config.explain) {
-            enableExplain(config.explain);
+            enableExplain(typeof config.explain === 'boolean' ? undefined : config.explain);
         }
     }
 

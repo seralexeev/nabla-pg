@@ -1,0 +1,20 @@
+{
+  "name": "@flstk/config",
+  "version": "0.0.1",
+  "license": "MIT",
+  "scripts": {
+    "compile": "tsc --noEmit",
+    "build": "../../build.sh config",
+    "prepublish": "yarn build"
+  },
+  "publishConfig": {
+    "directory": "dist",
+    "access": "public"
+  },
+  "dependencies": {
+    "flat": "5.0.2"
+  },
+  "devDependencies": {
+    "@types/flat": "5.0.1"
+  }
+}

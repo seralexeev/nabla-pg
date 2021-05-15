@@ -1,17 +1,24 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "ESNext",
     "module": "commonjs",
     "moduleResolution": "node",
-
     "declaration": true,
-
     "strict": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
 
     "baseUrl": ".",
     "paths": {
       "@flstk/result/*": ["packages/result/src/*"],
       "@flstk/result": ["packages/result/src/index"],
+
+      "@flstk/config/*": ["packages/config/src/*"],
+      "@flstk/config": ["packages/config/src/index"],
 
       "@flstk/use-api/*": ["packages/use-api/src/*"],
       "@flstk/use-api": ["packages/use-api/src/index"],
@@ -34,15 +41,9 @@
       "@flstk/pg-react-antd/*": ["packages/pg-react-antd/src/*"],
       "@flstk/pg-react-antd": ["packages/pg-react-antd/src/index"],
 
-      "@flstk/rest/*": ["packages/rest/src/*"]
-    },
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
+      "@flstk/rest/*": ["packages/rest/src/*"],
 
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+      "@projects/expat/api/*": ["projects/expat/api/src/*"]
+    }
   }
 }

@@ -2,23 +2,18 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "debub intro",
+      "name": "Debug expat-api",
       "type": "node",
       "request": "launch",
-      "protocol": "inspector",
       "cwd": "${workspaceRoot}",
       "program": "${workspaceRoot}/node_modules/.bin/ts-node-dev",
-      "args": [
-        "--inspect",
-        "--transpile-only",
-        "-r",
-        "tsconfig-paths/register",
-        "${workspaceRoot}/packages/pg/src/intro.ts"
-      ],
-      "env": {},
+      "args": ["--transpile-only", "-r", "tsconfig-paths/register", "${workspaceRoot}/projects/expat/api/src/index.ts"],
       "restart": true,
       "console": "integratedTerminal",
-      "outputCapture": "std"
+      "env": {
+        "FLSTK_env": "dev",
+        "TS_NODE_PROJECT": "${workspaceFolder}/projects/expat/api/tsconfig.json"
+      }
     }
   ]
 }

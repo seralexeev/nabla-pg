@@ -5,6 +5,8 @@
     "Antd",
     "Datetime",
     "Graphile",
+    "Overrided",
+    "Overrider",
     "Queryable",
     "SAVEPOINT",
     "Savepoints",
@@ -19,6 +21,7 @@
     "timestamptz",
     "timestampz",
     "ttypescript",
+    "unflatten",
     "xact"
   ]
 }
