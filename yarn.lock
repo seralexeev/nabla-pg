@@ -508,6 +508,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@flstk/pg-migration@workspace:packages/pg-migration":
+  version: 0.0.0-use.local
+  resolution: "@flstk/pg-migration@workspace:packages/pg-migration"
+  bin:
+    flstk-pg-migration: ./bin/cli
+  languageName: unknown
+  linkType: soft
+
 "@flstk/pg-react-antd@workspace:packages/pg-react-antd":
   version: 0.0.0-use.local
   resolution: "@flstk/pg-react-antd@workspace:packages/pg-react-antd"

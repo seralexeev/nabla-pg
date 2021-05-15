@@ -16,6 +16,9 @@
     "postgraphile",
     "postgres",
     "refetching",
-    "ttypescript"
+    "timestamptz",
+    "timestampz",
+    "ttypescript",
+    "xact"
   ]
 }

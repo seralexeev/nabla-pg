@@ -9,6 +9,7 @@ import { watchPostGraphileSchema } from 'postgraphile/build/postgraphile';
 
 export type ServerClient = GqlClient & SqlClient;
 export type ServerSavepointScope = SavepointScope<ServerClient>;
+export type Transaction = ServerSavepointScope;
 export type ServerSavepointCallback<T> = SavepointCallback<ServerClient, T>;
 
 export type ReadyQueryClient = ServerClient & {
@@ -107,6 +108,9 @@ export class Pg implements ServerSavepointScope {
         }
     };
 
+    /**
+     * Alias for transaction
+     */
     public savepoint = async <T>(fn: ServerSavepointCallback<T>): Promise<T> => {
         return this.transaction(fn);
     };

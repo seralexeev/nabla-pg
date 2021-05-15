@@ -1,0 +1,23 @@
+{
+  "name": "@flstk/pg-migration",
+  "version": "0.0.1",
+  "license": "MIT",
+  "scripts": {
+    "compile": "tsc --noEmit --skipLibCheck",
+    "build": "../../build.sh pg-migration",
+    "prepublish": "yarn build"
+  },
+  "bin": {
+    "flstk-pg-migration": "./bin/cli"
+  },
+  "types": "index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/seralexeev/flstk.git",
+    "directory": "packages/pg-migration"
+  },
+  "publishConfig": {
+    "directory": "dist",
+    "access": "public"
+  }
+}

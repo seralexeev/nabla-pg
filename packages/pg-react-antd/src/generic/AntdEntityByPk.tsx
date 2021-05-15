@@ -18,7 +18,7 @@ export const AntdEntityByPk = <E extends EntityBase, S extends FieldSelector<E, 
                     <antd.Result
                         status='500'
                         title='An error has occurred'
-                        subTitle={(error as any)?.message}
+                        subTitle={error?.message}
                         extra={<antd.Button type='primary' children='Refetch' onClick={refetch} />}
                     />
                 ))

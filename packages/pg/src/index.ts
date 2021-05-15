@@ -54,6 +54,7 @@ export {
     ServerClient,
     ServerSavepointCallback,
     ServerSavepointScope,
+    Transaction,
 } from '@flstk/pg/db';
 export { createDefaultPg } from '@flstk/pg/factory';
 export { generateEntities, GenerateEntityConfig, generateEntityFiles, MappingConfig } from '@flstk/pg/generator';

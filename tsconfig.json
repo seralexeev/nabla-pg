@@ -22,6 +22,9 @@
       "@flstk/pg/*": ["packages/pg/src/*"],
       "@flstk/pg": ["packages/pg/src/index"],
 
+      "@flstk/pg-migration/*": ["packages/pg-migration/src/*"],
+      "@flstk/pg-migration": ["packages/pg-migration/src/index"],
+
       "@flstk/pg-core/*": ["packages/pg-core/src/*"],
       "@flstk/pg-core": ["packages/pg-core/src/index"],
 

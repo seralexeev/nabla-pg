@@ -5,7 +5,7 @@ import {
     Filter,
     NonQueryableKeys,
     OrderBy,
-    OriginInfer
+    OriginInfer,
 } from '@flstk/pg-core';
 import { useListFetcher } from '@flstk/pg-react-antd/useListFetcher';
 import { FilterKeys } from '@flstk/utils/types';
