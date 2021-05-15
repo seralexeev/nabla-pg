@@ -35,7 +35,7 @@ export const generateEntities = (schema: GraphQLSchema, config?: GenerateEntityC
         return false;
     });
 
-    const result: Record<string, string> = {};
+    const result: Record<string, { content: string; accessor: string }> = {};
     for (const entity of entities) {
         const type = entity.type as GraphQLObjectType<any>;
         const entityName = type.name + prefix;
@@ -141,7 +141,7 @@ export const generateEntities = (schema: GraphQLSchema, config?: GenerateEntityC
             type.name
         }'${pkDefStr});\n`;
 
-        result[entityName] = warning + definition;
+        result[entityName] = { content: warning + definition, accessor: pluralize(type.name) };
     }
 
     return result;
@@ -233,7 +233,11 @@ export const generateEntityFiles = (schema: GraphQLSchema, config: GenerateEntit
 
     fs.mkdirSync(entityDir, { recursive: true });
 
-    for (const [name, def] of Object.entries(generateEntities(schema, generatorConfig))) {
-        fs.writeFileSync(`${entityDir}/${name}.ts`, def, { flag: 'w' });
+    let index = '';
+    for (const [name, { content, accessor }] of Object.entries(generateEntities(schema, generatorConfig))) {
+        fs.writeFileSync(`${entityDir}/${name}.ts`, content, { flag: 'w' });
+        index += `export { ${name}, ${accessor} } from ${generatorConfig.entityImportPath}/${name}`;
     }
+
+    fs.writeFileSync(`${entityDir}/index.ts`, index, { flag: 'w' });
 };

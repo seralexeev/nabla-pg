@@ -1,13 +1,20 @@
 import { makeEntityWrapper } from '@flstk/pg-react-antd';
 import { useEntityAccessor } from '@flstk/pg-react/useEntityAccessor';
+import { createApiHook, Loader } from '@flstk/use-api';
 import React, { useEffect, VFC } from 'react';
 import { Orders } from './entities/OrderEntity';
-import { Users } from './entities/UserEntity';
+import { Users as UsersAccessor } from './entities/UserEntity';
 
-const UsersWrapper = makeEntityWrapper(Users);
+const Users = makeEntityWrapper(UsersAccessor);
+
+const useApi = createApiHook({
+    status: ({ get }) => () => {
+        return get(`https://httpbin.org/get`);
+    },
+});
 
 export const EntityAccessorExample: VFC = () => {
-    const ent = useEntityAccessor(Users);
+    const ent = useEntityAccessor(UsersAccessor);
     const [data, { loading, refetch, refetching, error }] = ent.find.fetch({
         selector: ['id', 'name'],
         first: 2,
@@ -37,10 +44,8 @@ export const EntityAccessorExample: VFC = () => {
             <h1>
                 Data from server <button onClick={refetch}>refetch</button>
             </h1>
-
             <pre>{JSON.stringify(data, null, 2)}</pre>
-
-            <UsersWrapper.ByPk
+            <Users.FindByPk
                 pk={{ id: '0006834c-a3f5-44dd-8072-5f5b42ea82f3' }}
                 selector={['id', 'name']}
                 children={(x, { refetch }) => (
@@ -50,8 +55,16 @@ export const EntityAccessorExample: VFC = () => {
                     </div>
                 )}
             />
-
-            <UsersWrapper.Table
+            <Users.Find
+                selector={['id', 'name']}
+                children={(data, { refetch }) => (
+                    <div>
+                        <button onClick={refetch}>refetch</button>
+                        <pre>{JSON.stringify(data, null, 2)}</pre>
+                    </div>
+                )}
+            />
+            <Users.Table
                 selector={{
                     id: true,
                     name: true,
@@ -63,12 +76,12 @@ export const EntityAccessorExample: VFC = () => {
                     'name',
                     ['Orders Count', (x) => x.orders.length],
                     ['Last order comment', (x) => x.orders[0]?.comment ?? ' - '],
-                    { title: 'Random date', render: (_, x) => new Date().getTime(), width: 128 },
                 ]}
                 size='small'
                 bordered
                 showHeader
             />
+            {/* <Loader caller={() => useApi((x) => x.status)} children={(data) => <pre>{JSON.stringify(data)}</pre>} />; */}
         </div>
     );
 };

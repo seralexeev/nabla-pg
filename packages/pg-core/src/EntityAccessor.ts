@@ -128,7 +128,7 @@ export class ReadonlyEntityAccessor<E extends EntityBase> {
     };
 
     public find = <S extends FieldSelector<E, S>>(
-        { gql }: GqlClient,
+        client: GqlClient,
         query: SelectQuery<E, S>,
     ): Promise<Array<OriginInfer<E, S>>> => {
         const { selector, varsDeclaration, variables, varsAssign } = this.prepareQuery(query);
@@ -138,11 +138,11 @@ export class ReadonlyEntityAccessor<E extends EntityBase> {
             }
         `;
 
-        return gql(queryString, variables).then((x) => x.items as Array<OriginInfer<E, S>>);
+        return client.gql(queryString, variables).then((x) => x.items as Array<OriginInfer<E, S>>);
     };
 
     public findAndCount = <S extends FieldSelector<E, S>>(
-        { gql }: GqlClient,
+        client: GqlClient,
         query: SelectQuery<E, S>,
     ): Promise<FindAndCountResult<E, S>> => {
         const { selector, varsDeclaration, variables, varsAssign } = this.prepareQuery(query);
@@ -155,10 +155,10 @@ export class ReadonlyEntityAccessor<E extends EntityBase> {
             }
         `;
 
-        return gql(queryString, variables).then((x) => x.result as FindAndCountResult<E, S>);
+        return client.gql(queryString, variables).then((x) => x.result as FindAndCountResult<E, S>);
     };
 
-    public count = ({ gql }: GqlClient, query: Query<E> = {}): Promise<CountResult> => {
+    public count = (client: GqlClient, query: Query<E> = {}): Promise<CountResult> => {
         const { varsDeclaration, variables, varsAssign } = this.prepareQuery(query);
         const queryString = `
             query${this.joinWithParentheses(varsDeclaration)} {
@@ -168,11 +168,11 @@ export class ReadonlyEntityAccessor<E extends EntityBase> {
             }
         `;
 
-        return gql(queryString, variables).then((x) => x.result as CountResult);
+        return client.gql(queryString, variables).then((x) => x.result as CountResult);
     };
 
     public findOne = <S extends FieldSelector<E, S>>(
-        { gql }: GqlClient,
+        client: GqlClient,
         query: FindOneQuery<E, S>,
     ): Promise<OriginInfer<E, S> | null> => {
         const { selector, varsDeclaration, variables, varsAssign } = this.prepareQuery({ ...query, first: 1 });
@@ -182,7 +182,7 @@ export class ReadonlyEntityAccessor<E extends EntityBase> {
             }          
         `;
 
-        return gql(queryString, variables).then((x) => (x.items[0] ?? null) as OriginInfer<E, S> | null);
+        return client.gql(queryString, variables).then((x) => (x.items[0] ?? null) as OriginInfer<E, S> | null);
     };
 
     public findOneOrError = async <S extends FieldSelector<E, S>>(
@@ -198,7 +198,7 @@ export class ReadonlyEntityAccessor<E extends EntityBase> {
     };
 
     public findByPk = <S extends FieldSelector<E, S> = []>(
-        { gql }: GqlClient,
+        client: GqlClient,
         query: ByPkQuery<E, S>,
     ): Promise<OriginInfer<E, S> | null> => {
         const { pk } = query;
@@ -209,10 +209,9 @@ export class ReadonlyEntityAccessor<E extends EntityBase> {
             }
         `;
 
-        return gql(queryString, {
-            ...pk,
-            ...variables,
-        }).then((x) => (x.item ?? null) as OriginInfer<E, S> | null);
+        return client
+            .gql(queryString, { ...pk, ...variables })
+            .then((x) => (x.item ?? null) as OriginInfer<E, S> | null);
     };
 
     public findByPkOrError = async <S extends FieldSelector<E, S>>(
@@ -334,7 +333,7 @@ export class EntityAccessor<E extends EntityBase> extends ReadonlyEntityAccessor
     }
 
     public create = <S extends FieldSelector<E, S> = []>(
-        { gql }: GqlClient,
+        client: GqlClient,
         args: CreateMutation<E, S>,
     ): Promise<OriginInfer<E, S>> => {
         const { item } = args;
@@ -347,14 +346,11 @@ export class EntityAccessor<E extends EntityBase> extends ReadonlyEntityAccessor
             }
         `;
 
-        return gql(queryString, {
-            item,
-            ...variables,
-        }).then((x) => x.result.item as OriginInfer<E, S>);
+        return client.gql(queryString, { item, ...variables }).then((x) => x.result.item as OriginInfer<E, S>);
     };
 
     public update = <S extends FieldSelector<E, S> = []>(
-        { gql }: GqlClient,
+        client: GqlClient,
         args: UpdateMutation<E, S>,
     ): Promise<OriginInfer<E, S>> => {
         const { pk, patch } = args;
@@ -367,14 +363,13 @@ export class EntityAccessor<E extends EntityBase> extends ReadonlyEntityAccessor
             }
         `;
 
-        return gql(queryString, {
-            input: { ...pk, patch },
-            ...variables,
-        }).then((x) => x.result.item as OriginInfer<E, S>);
+        return client
+            .gql(queryString, { input: { ...pk, patch }, ...variables })
+            .then((x) => x.result.item as OriginInfer<E, S>);
     };
 
     public delete = <S extends FieldSelector<E, S> = []>(
-        { gql }: GqlClient,
+        client: GqlClient,
         args: DeleteMutation<E, S>,
     ): Promise<OriginInfer<E, S>> => {
         const { pk } = args;
@@ -387,10 +382,7 @@ export class EntityAccessor<E extends EntityBase> extends ReadonlyEntityAccessor
             }
         `;
 
-        return gql(queryString, {
-            input: pk,
-            ...variables,
-        }).then((x) => x.result.item as OriginInfer<E, S>);
+        return client.gql(queryString, { input: pk, ...variables }).then((x) => x.result.item as OriginInfer<E, S>);
     };
 
     public findOneOrCreate = async <S extends FieldSelector<E, S>>(

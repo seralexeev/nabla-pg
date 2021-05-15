@@ -1,0 +1,14 @@
+{
+    "createtable": {
+        "prefix": ["createtable"],
+        "body": [
+            "await sql`CREATE TABLE IF NOT EXISTS ${1:table} (\n    id uuid PRIMARY KEY DEFAULT uuid_generate_v4()\n    , $0\n    , updated_at timestamptz NOT NULL DEFAULT clock_timestamp()\n    , created_at timestamptz NOT NULL DEFAULT clock_timestamp()\n)`;\n\nawait sql`CREATE INDEX IF NOT EXISTS ${1}_updated_at_idx ON ${1}(updated_at)`;\nawait sql`CREATE INDEX IF NOT EXISTS ${1}_created_at_idx ON ${1}(created_at)`;"
+        ]
+    },
+    "rfc": {
+        "prefix": ["rfc"],
+        "body": [
+            "import React, { VFC } from 'react';\n\ntype ${TM_FILENAME_BASE}Props = {\n\n}\n\nexport const ${TM_FILENAME_BASE}: VFC<${TM_FILENAME_BASE}Props> = (props) => {\n    return $2\n}"
+        ]
+    }
+}
