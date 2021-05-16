@@ -1,11 +1,16 @@
+import 'reflect-metadata';
+
 import { ConfigLoader } from '@flstk/config';
 import { createDefaultPg } from '@flstk/pg';
 import { pick } from '@flstk/utils';
 import { defaultConfig } from '@projects/expat/api/config/default';
+import { MigrationResolver } from '@projects/expat/api/modules/migrations/resolver';
 import { Migrations } from '@projects/expat/shared/entities/generated';
 import cors from 'cors';
 import express from 'express';
 import { Pool } from 'pg';
+import { buildSchema, Resolver } from 'type-graphql';
+import { printSchema } from 'graphql';
 
 const { config } = new ConfigLoader(['dev', 'prod'], defaultConfig).load();
 const pool = new Pool(pick(config.pg, ['database', 'host', 'port', 'user', 'password']));
@@ -21,6 +26,14 @@ app.get('/test', (req, res) => {
     }).then((x) => res.json(x));
 });
 
-app.listen(config.port, () => {
-    console.log(`Server listening on port ${config.port}`);
-});
+(async () => {
+    const schema = await buildSchema({
+        resolvers: [MigrationResolver],
+    });
+
+    console.log(printSchema(schema));
+})();
+
+// app.listen(config.port, () => {
+//     console.log(`Server listening on port ${config.port}`);
+// });

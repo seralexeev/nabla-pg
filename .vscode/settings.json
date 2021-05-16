@@ -11,6 +11,7 @@
     "SAVEPOINT",
     "Savepoints",
     "Unmount",
+    "codegen",
     "deepmerge",
     "esbuild",
     "flstk",

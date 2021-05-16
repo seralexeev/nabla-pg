@@ -1,5 +1,9 @@
 {
   "name": "expat-shared",
   "version": "0.0.1",
-  "private": true
+  "private": true,
+  "dependencies": {
+    "class-validator": "0.13.1",
+    "type-graphql": "1.1.1"
+  }
 }

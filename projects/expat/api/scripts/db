@@ -37,6 +37,12 @@ restart() {
     echo -e "> Restarting docker success\n"
 }
 
+gql_emit() {
+    echo -e "> Emiting gql schema:"
+    ts-node --transpile-only --files -r tsconfig-paths/register ../api/src/cli emit_gql $REST_ARGS
+    echo -e "> Emiting gql schema success\n"
+}
+
 case $1 in
 
 gen)
@@ -53,6 +59,10 @@ migration:create)
 
 restart)
     restart
+    ;;
+
+gql:emit)
+    gql_emit
     ;;
 
 prepare)

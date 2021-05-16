@@ -1,0 +1,8 @@
+schema:
+  - ../shared/src/graphql/schema.gql
+
+generates:
+  ../shared/src/graphql/types.ts:
+    plugins:
+      - typescript
+      - typescript-generic-sdk
