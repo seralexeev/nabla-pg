@@ -6,7 +6,7 @@ import {
     useAxiosInstance,
     useFetch,
     UseFetchOptions,
-    useRequest,
+    useRequest
 } from '@flstk/use-api';
 import { useCallback } from 'react';
 
@@ -33,3 +33,11 @@ export const createApiHook = <T extends Record<string, (request: AxiosRequest) =
         return result;
     };
 };
+
+export type ApiClient<T> = {
+    [K in keyof T]: T[K] extends (...args: infer P) => infer R
+        ? (request: AxiosRequest) => P extends undefined ? () => () => AsyncResult<R> : (...args: P) => AsyncResult<R>
+        : never;
+};
+
+export const createApiClient = <T>(map: ApiClient<T>) => createApiHook(map);
