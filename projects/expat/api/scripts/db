@@ -14,7 +14,7 @@ REST_ARGS="${@:2}"
 
 gen() {
     echo -e "> Starting entity generation:"
-    ts-node --transpile-only --files -r tsconfig-paths/register ../../../packages/pg/src/cli -d src/entities/generated -i @projects/expat/api/entities/generated -c $CONNECTION_STRING
+    ts-node --transpile-only --files -r tsconfig-paths/register ../../../packages/pg/src/cli -d ../shared/src/entities/generated -i @projects/expat/shared/entities/generated -c $CONNECTION_STRING
     echo -e "> Entity generation success\n"
 }
 

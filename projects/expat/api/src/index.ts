@@ -2,7 +2,7 @@ import { ConfigLoader } from '@flstk/config';
 import { createDefaultPg } from '@flstk/pg';
 import { pick } from '@flstk/utils';
 import { defaultConfig } from '@projects/expat/api/config/default';
-import { Migrations } from '@projects/expat/api/entities/generated';
+import { Migrations } from '@projects/expat/shared/entities/generated';
 import cors from 'cors';
 import express from 'express';
 import { Pool } from 'pg';
