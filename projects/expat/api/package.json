@@ -3,11 +3,16 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "db:gen": "ts-node --transpile-only --files -r tsconfig-paths/register ../../../packages/pg/src/cli -d src/entities/generated -i @projects/expat/api/entities/generated -c postgres://flstk:flstk@localhost:5432/flstk"
+    "db:gen": "./scripts/db gen",
+    "db:restart": "./scripts/db restart",
+    "db:migration:run": "./scripts/db migration:run",
+    "db:migration:create": "./scripts/db migration:create",
+    "db:prepare": "./scripts/db prepare"
   },
   "dependencies": {
     "cors": "2.8.5",
-    "express": "4.17.1"
+    "express": "4.17.1",
+    "pg": "8.6.0"
   },
   "devDependencies": {
     "@types/cors": "2.8.10",

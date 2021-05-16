@@ -5539,6 +5539,7 @@ __metadata:
     "@types/express": 4.17.11
     cors: 2.8.5
     express: 4.17.1
+    pg: 8.6.0
   languageName: unknown
   linkType: soft
 

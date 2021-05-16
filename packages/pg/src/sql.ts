@@ -1,6 +1,6 @@
 import { SqlError } from '@flstk/pg-core';
 import { Literal } from '@flstk/pg/literal';
-import { PoolClient, QueryResult } from 'pg';
+import { PoolClient } from 'pg';
 
 export type SqlInvoke = <T = any>(strings: TemplateStringsArray, ...chunks: unknown[]) => Promise<T[]>;
 export type SqlClient = { sql: SqlInvoke };
@@ -8,11 +8,12 @@ export type SqlClient = { sql: SqlInvoke };
 export class SqlClientImpl implements SqlClient {
     public constructor(private client: PoolClient) {}
 
-    public sql = <T = any>(strings: TemplateStringsArray, ...chunks: unknown[]): Promise<T[]> => {
+    public sql = async <T = any>(strings: TemplateStringsArray, ...chunks: unknown[]): Promise<T[]> => {
         const { query, values } = this.prepareSql(strings, ...chunks);
 
         try {
-            return this.client.query<T>(query, values).then((x) => x.rows);
+            const x = await this.client.query<T>(query, values);
+            return x.rows;
         } catch (error) {
             throw new SqlError(error, query, values);
         }

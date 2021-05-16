@@ -1,4 +1,4 @@
-import { createDefaultPg, literal, Pg, Transaction } from '@flstk/pg';
+import { literal, Pg, Transaction } from '@flstk/pg';
 import { promises as fs } from 'fs';
 import path from 'path';
 
@@ -71,7 +71,7 @@ const migrate = async (args: { t: Transaction; directory: string }) => {
 
         log(`[${name}]: starting`);
         const now = new Date().getTime();
-        const fullPath = path.join(directory, name);
+        const fullPath = path.resolve(path.join(directory, name));
         const module = require(fullPath);
         if (!module?.default) {
             throw new Error(`Migration "${name}" (${fullPath}) is not a node module with default export`);
@@ -92,19 +92,3 @@ const migrate = async (args: { t: Transaction; directory: string }) => {
 
     type MigrationResult = { migratedAt: Date };
 };
-
-// docker run -d --name flstk-db -e POSTGRES_DB=flstk -e POSTGRES_USER=flstk -e POSTGRES_PASSWORD=flstk -p 5432:5432 postgres
-
-(async () => {
-    try {
-        const pg = createDefaultPg('postgres://flstk:flstk@localhost:5432/flstk');
-        await runMigrations({
-            pg,
-            directory: '/Users/sergeyalekseev/work/flstk/packages/pg-migration/testm',
-        });
-    } catch (e) {
-        console.error(e);
-    } finally {
-        process.exit(1);
-    }
-})();
