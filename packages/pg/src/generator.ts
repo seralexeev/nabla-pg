@@ -72,6 +72,7 @@ export const generateEntities = (schema: GraphQLSchema, config?: GenerateEntityC
         const relatedEntities: Record<string, boolean> = {};
 
         let definition = `export type ${type.name}${prefix} = EntityBase<${pk}> & {\n`;
+        let importDefaultValue = false;
         for (const field of Object.values(fields)) {
             if (pkKeys.includes(field.name) || field.name === 'nodeId') {
                 continue;
@@ -85,6 +86,7 @@ export const generateEntities = (schema: GraphQLSchema, config?: GenerateEntityC
             }
             if (field.name === 'updatedAt' || field.name === 'createdAt') {
                 type = 'DefaultValue<Date>';
+                importDefaultValue = true;
             } else if (info.isNullable) {
                 type += ' | null';
             } else if (info.isList) {
@@ -99,7 +101,11 @@ export const generateEntities = (schema: GraphQLSchema, config?: GenerateEntityC
 
         definition += '}\n\n';
 
-        const essentialImports = ['EntityBase', 'DefaultValue'];
+        const essentialImports = ['EntityBase'];
+        if (importDefaultValue) {
+            essentialImports.push('DefaultValue');
+        }
+
         if (hasConnection) {
             essentialImports.push('EntityConnection');
         }
