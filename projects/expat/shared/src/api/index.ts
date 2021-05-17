@@ -1,10 +1,9 @@
 import { createApiClient } from '@flstk/use-api';
+import { SplitString } from '@flstk/utils';
 
 type ApiDef<T> = {
-    [K in keyof T]: Split<K>[0] extends 'GET' | 'POST' ? T[K] : never;
+    [K in keyof T]: SplitString<K>[0] extends 'GET' | 'POST' ? T[K] : never;
 };
-
-type Split<S> = S extends `${infer TLeft} ${infer TRight}` ? [TLeft, TRight] : never;
 
 type MigrationApi = ApiDef<{
     'GET /migrations': () => Array<{ name: string; migratedAt: string | Date }>;

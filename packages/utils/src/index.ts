@@ -9,4 +9,5 @@ export {
     TypeTag,
     UnwrapNominal,
     UnwrapNominalTag,
+    SplitString,
 } from '@flstk/utils/types';
