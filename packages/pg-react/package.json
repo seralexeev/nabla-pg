@@ -16,7 +16,7 @@
     "tsc-alias": "1.2.10"
   },
   "devDependencies": {
-    "@types/react": "17.0.4"
+    "@types/react": "17.0.5"
   },
   "gitHead": "3d5eb252195129f0ab15441770022ad2ede3719a"
 }

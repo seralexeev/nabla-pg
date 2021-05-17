@@ -23,7 +23,7 @@
   "dependencies": {
     "@graphile-contrib/pg-many-to-many": "1.0.1",
     "@graphile-contrib/pg-simplify-inflector": "6.1.0",
-    "big.js": "6.1.0",
+    "big.js": "6.1.1",
     "camel-case": "4.1.2",
     "constant-case": "3.0.4",
     "dedent": "0.7.0",
@@ -35,14 +35,14 @@
     "postgraphile-core": "4.11.2",
     "postgraphile-plugin-connection-filter": "2.2.1",
     "sql-formatter": "4.0.2",
-    "yargs": "17.0.0"
+    "yargs": "17.0.1"
   },
   "devDependencies": {
     "@types/big.js": "6.0.2",
     "@types/dedent": "0.7.0",
     "@types/pluralize": "0.0.29",
     "@types/yargs": "16.0.1",
-    "ts-jest": "26.5.5",
+    "ts-jest": "26.5.6",
     "tsc-alias": "1.2.10"
   },
   "gitHead": "3d5eb252195129f0ab15441770022ad2ede3719a"

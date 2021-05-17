@@ -44,7 +44,8 @@
       "@flstk/rest/*": ["packages/rest/src/*"],
 
       "@projects/expat/api/*": ["projects/expat/api/src/*"],
-      "@projects/expat/shared/*": ["projects/expat/shared/src/*"]
+      "@projects/expat/shared/*": ["projects/expat/shared/src/*"],
+      "@projects/expat/app/*": ["projects/expat/app/src/*"]
     }
   }
 }

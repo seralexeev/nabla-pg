@@ -15,7 +15,7 @@
     "lodash": "4.17.21"
   },
   "devDependencies": {
-    "@types/lodash": "4.14.168"
+    "@types/lodash": "4.14.169"
   },
   "gitHead": "3d5eb252195129f0ab15441770022ad2ede3719a"
 }
