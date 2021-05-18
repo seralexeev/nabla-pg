@@ -3,6 +3,8 @@ require_relative '../../../../node_modules/@react-native-community/cli-platform-
 
 platform :ios, '10.0'
 
+inhibit_all_warnings!
+
 target 'ExpatApp' do
   config = use_native_modules!
 
@@ -15,5 +17,12 @@ target 'ExpatApp' do
 
   post_install do |installer|
     react_native_post_install(installer)
+
+    installer.pods_project.targets.each do |t|
+      t.build_configurations.each do |config|
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '10.0'
+        config.build_settings['ONLY_ACTIVE_ARCH'] = 'YES'
+      end
+    end
   end
 end

@@ -20,11 +20,13 @@ const plugins = [
                 '.json',
             ],
             alias: {
-                '@flstk/utils': path.resolve(__dirname, '../../packages/utils/src'),
+                '@flstk/utils': path.resolve(__dirname, '../../../packages/utils/src'),
+                '@projects/expat/app': path.resolve(__dirname, '../app/src'),
+                '@projects/expat/shared': path.resolve(__dirname, '../shared/src'),
             },
         },
     ],
-    '../../packages/babel-plugins/babel-plugin-replacer',
+    '../../../packages/babel-plugins/replacer',
 ];
 
 module.exports = {

@@ -1,18 +1,15 @@
-import { createApiClient } from '@flstk/use-api';
-import { SplitString } from '@flstk/utils';
+// import { ApiDefinition } from '@projects/expat/shared/api/utils';
 
-type ApiDef<T> = {
-    [K in keyof T]: SplitString<K>[0] extends 'GET' | 'POST' ? T[K] : never;
-};
+// import { SplitString } from '@flstk/utils';
 
-type MigrationApi = ApiDef<{
-    'GET /migrations': () => Array<{ name: string; migratedAt: string | Date }>;
-}>;
+// export type UserApi = ApiDefinition<{
+//     'GET /profile/:id': ApiOptions<{ id: string; name: string }>;
+// }>;
 
-const api = createApiClient<MigrationApi>({
-    'GET /migrations': ({ get }) => {
-        return () => get('/migrations');
-    },
-});
+// export type ApiDefinition<T> = {
+//     [K in keyof T]: SplitString<K>[0] extends 'GET' | 'POST' ? (T[K] extends () => any ? T[K] : never) : never;
+// };
 
-const [data] = api((x) => x['GET /migrations']).fetch();
+// const createApi = <T>(t: ApiDefinition<T>) => {};
+
+// useApi('GET /profile/:id');
