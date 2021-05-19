@@ -7,7 +7,7 @@ export class ConfigLoader<TEnv extends string, TConfig> {
     public constructor(
         public readonly appEnvironments: readonly TEnv[],
         private defaultConfig: TConfig,
-        private envConfigs?: Partial<Record<TEnv, ConfigOverride<TConfig>>>,
+        private envConfigs: Record<TEnv, ConfigOverride<TConfig>>,
         ...override: Array<ConfigOverride<TConfig>>
     ) {
         this.override = override;

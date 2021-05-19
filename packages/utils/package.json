@@ -12,9 +12,11 @@
     "access": "public"
   },
   "dependencies": {
+    "is-uuid": "1.0.2",
     "lodash": "4.17.21"
   },
   "devDependencies": {
+    "@types/is-uuid": "^1",
     "@types/lodash": "4.14.169"
   },
   "gitHead": "3d5eb252195129f0ab15441770022ad2ede3719a"

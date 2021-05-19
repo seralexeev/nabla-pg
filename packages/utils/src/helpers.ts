@@ -1,5 +1,6 @@
 import { FilterKeys } from '@flstk/utils/types';
 import lodash from 'lodash';
+import isUUIDLib from 'is-uuid';
 
 export const pick = <T, K extends keyof T>(value: T, keys: readonly K[]): Pick<T, K> => {
     return lodash.pick(value, keys) as Pick<T, K>;
@@ -16,4 +17,12 @@ export const reduceBy = <T, R = T>(
         acc[keySelectorFinally(item, index)] = map(item, index);
         return acc;
     }, {} as Record<string, R>);
+};
+
+export const isUUID = (value: unknown): value is string => {
+    if (!value || typeof value !== 'string') {
+        return false;
+    }
+
+    return isUUIDLib.v4(value);
 };

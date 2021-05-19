@@ -1,4 +1,4 @@
-export { pick, reduceBy } from '@flstk/utils/helpers';
+export { pick, reduceBy, isUUID } from '@flstk/utils/helpers';
 export {
     ArrayElement,
     FilterKeys,
@@ -10,4 +10,5 @@ export {
     UnwrapNominal,
     UnwrapNominalTag,
     SplitString,
+    Class,
 } from '@flstk/utils/types';

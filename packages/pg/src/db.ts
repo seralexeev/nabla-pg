@@ -33,7 +33,7 @@ export type PgConfig = {
 };
 
 export class Pg implements ServerSavepointScope {
-    private pool: Pool;
+    public readonly pool: Pool;
     private schema!: GraphQLSchema;
     private initPromise?: Promise<Pg>;
     private isPoolExternal: boolean;

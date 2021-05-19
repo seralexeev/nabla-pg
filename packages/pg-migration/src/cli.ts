@@ -44,7 +44,7 @@ yargs(hideBin(process.argv))
         },
         (argv) => {
             const dir = argv.dir as string;
-            const fileName = `${argv.name}_${new Date().getTime()}.ts`;
+            const fileName = `${new Date().getTime()}_${argv.name}.ts`;
             const path = `${dir as string}/${fileName}`;
             const content = `import { Transaction } from '@flstk/pg';
 

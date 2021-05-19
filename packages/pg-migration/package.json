@@ -19,5 +19,11 @@
   "publishConfig": {
     "directory": "dist",
     "access": "public"
+  },
+  "dependencies": {
+    "yargs": "17.0.1"
+  },
+  "devDependencies": {
+    "@types/yargs": "16.0.1"
   }
 }

@@ -46,10 +46,10 @@ const migrate = async (args: { t: Transaction; directory: string }) => {
     const files = await fs.readdir(directory).then((x) => {
         return x
             .map((file) => {
-                const [, dateStr] = file.split('_');
+                const [dateStr] = file.split('_');
                 const date = parseInt(dateStr, 10);
                 if (isNaN(date)) {
-                    log(`${file} doesn't satisfy convention (<name>_<date>), skipping`);
+                    log(`${file} doesn't satisfy convention (<date>_<name>), skipping`);
                 }
 
                 return [file, date] as const;

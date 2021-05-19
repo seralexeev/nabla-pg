@@ -1,15 +1,13 @@
 import { declare, OverridedConfig } from '@flstk/config';
+import { bootstrapperConfig } from '@flstk/rest/config';
+import { merge } from 'lodash';
 
-export const defaultConfig = {
-    port: declare.number(3000),
+export const defaultConfig = merge(bootstrapperConfig, {
     pg: {
-        port: declare.number(5433),
-        host: declare.string('localhost'),
         user: declare.string('expat'),
         password: declare.string('expat'),
         database: declare.string('expat'),
-        debugExplain: declare.boolean(false),
     },
-};
+});
 
 export type Config = OverridedConfig<typeof defaultConfig>;

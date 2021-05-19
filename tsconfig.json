@@ -42,6 +42,7 @@
       "@flstk/pg-react-antd": ["packages/pg-react-antd/src/index"],
 
       "@flstk/rest/*": ["packages/rest/src/*"],
+      "@flstk/rest": ["packages/rest/src/index"],
 
       "@projects/expat/api/*": ["projects/expat/api/src/*"],
       "@projects/expat/shared/*": ["projects/expat/shared/src/*"],

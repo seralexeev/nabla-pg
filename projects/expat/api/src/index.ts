@@ -1,26 +1,18 @@
+import 'reflect-metadata';
+
 import { ConfigLoader } from '@flstk/config';
-import { createDefaultPg } from '@flstk/pg';
-import { pick } from '@flstk/utils';
+import { bootstrap } from '@flstk/rest/bootstrapper';
 import { defaultConfig } from '@projects/expat/api/config/default';
-import { Migrations } from '@projects/expat/shared/entities/generated';
-import cors from 'cors';
-import express from 'express';
-import { Pool } from 'pg';
+import { dev } from '@projects/expat/api/config/dev';
+import { prod } from '@projects/expat/api/config/prod';
+import { UserController } from '@projects/expat/api/modules/user/UserController';
+import { UserService } from '@projects/expat/api/modules/user/UserService';
 
-const { config } = new ConfigLoader(['dev', 'prod'], defaultConfig).load();
-const pool = new Pool(pick(config.pg, ['database', 'host', 'port', 'user', 'password']));
-const pg = createDefaultPg(pool);
-
-const app = express();
-
-app.use(express.json());
-app.use(cors());
-app.get('/test', (req, res) => {
-    Migrations.find(pg, {
-        selector: ['name', 'migratedAt'],
-    }).then((x) => res.json(x));
+const { express, logger, config } = bootstrap({
+    configWrapper: new ConfigLoader(['dev', 'prod'], defaultConfig, { dev, prod }).load(),
 });
 
-app.listen(config.port, () => {
-    console.log(`Server listening on port ${config.port}`);
-});
+express({
+    controllers: [UserController],
+    UserService,
+}).listen(config.port, () => logger.info(`Server started on port ${config.port}`));

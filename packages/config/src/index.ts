@@ -1,2 +1,2 @@
-export { ConfigLoader } from '@flstk/config/loader';
-export { ConfigOverride, declare, OverridedConfig, ConfigOverrider as Overrider } from '@flstk/config/utils';
+export { ConfigLoader, ConfigWrapper } from '@flstk/config/loader';
+export { ConfigOverride, declare, OverridedConfig, ConfigOverrider } from '@flstk/config/utils';
