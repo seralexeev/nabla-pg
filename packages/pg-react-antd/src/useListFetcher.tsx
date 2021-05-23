@@ -1,5 +1,5 @@
 import { EntityAccessor, EntityBase, FieldSelector, Filter, OrderBy, ReadonlyEntityAccessor } from '@flstk/pg-core';
-import { useEntityAccessor } from '@flstk/pg-react/useEntityAccessor';
+import { useEntityAccessor } from '@flstk/pg-react';
 import { UseFetchOptions } from '@flstk/use-api';
 import { useMemo, useState } from 'react';
 

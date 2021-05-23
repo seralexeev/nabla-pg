@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 
 import { ConfigLoader } from '@flstk/config';
-import { bootstrap } from '@flstk/rest/bootstrapper';
+import { bootstrap } from '@flstk/rest';
 import { defaultConfig } from '@projects/expat/api/config/default';
 import { dev } from '@projects/expat/api/config/dev';
 import { prod } from '@projects/expat/api/config/prod';

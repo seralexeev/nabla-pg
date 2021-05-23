@@ -1,13 +1,7 @@
 import { AsyncResult } from '@flstk/result';
-import {
-    AxiosRequest,
-    FetchResult,
-    RequestOptions,
-    useAxiosInstance,
-    useFetch,
-    UseFetchOptions,
-    useRequest
-} from '@flstk/use-api';
+import { useAxiosInstance } from '@flstk/use-api/AxiosProvider';
+import { FetchResult, useFetch, UseFetchOptions } from '@flstk/use-api/useFetch';
+import { AxiosRequest, RequestOptions, useRequest } from '@flstk/use-api/useRequest';
 import { useCallback } from 'react';
 
 type Caller<R, P extends any[]> = (
@@ -34,10 +28,16 @@ export const createApiHook = <T extends Record<string, (request: AxiosRequest) =
     };
 };
 
-export type ApiClient<T> = {
-    [K in keyof T]: T[K] extends (...args: infer P) => infer R
-        ? (request: AxiosRequest) => P extends undefined ? () => () => AsyncResult<R> : (...args: P) => AsyncResult<R>
+type ReturnType<T> = T extends (...args: any) => infer R ? R : any;
+
+export type ApiClient<T, E> = {
+    [K in keyof E]: K extends keyof T
+        ? (request: AxiosRequest<T[K]>) => ReturnType<E[K]> extends (...args: infer P) => infer R ? (...args: P) => R : never
         : never;
 };
 
-export const createApiClient = <T>(map: ApiClient<T>) => createApiHook(map);
+export const createApiClient = <T>() => {
+    return <E extends ApiClient<T, E>>(obj: E) => {
+        return createApiHook(obj);
+    };
+};

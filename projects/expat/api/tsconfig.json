@@ -1,3 +1,24 @@
 {
-  "extends": "../../../tsconfig.json"
+  "extends": "../../../tsconfig.json",
+  "compilerOptions": {
+    "paths": {
+      "@flstk/result": ["packages/result/src/index"],
+      "@flstk/config": ["packages/config/src/index"],
+      "@flstk/utils": ["packages/utils/src/index"],
+      "@flstk/pg": ["packages/pg/src/index"],
+      "@flstk/rest": ["packages/rest/src/index"],
+      "@flstk/pg-migration": ["packages/pg-migration/src/index"],
+      "@projects/expat/api/*": ["projects/expat/api/src/*"],
+      "@projects/expat/shared/*": ["projects/expat/shared/src/*"]
+    }
+  },
+  "references": [
+    { "path": "../../../packages/result" },
+    { "path": "../../../packages/config" },
+    { "path": "../../../packages/utils" },
+    { "path": "../../../packages/pg" },
+    { "path": "../../../packages/rest" },
+    { "path": "../../../packages/pg-migration" },
+    { "path": "../shared" }
+  ]
 }

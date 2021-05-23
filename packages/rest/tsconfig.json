@@ -1,4 +1,15 @@
 {
   "extends": "../../tsconfig.json",
-  "outDir": "dist"
+  "compilerOptions": {
+    "outDir": "dist/rest/src",
+    "composite": true,
+    "paths": {
+      "@flstk/rest/*": ["packages/rest/src/*"],
+      "@flstk/config": ["packages/config/src/index"],
+      "@flstk/pg": ["packages/pg/src/index"],
+      "@flstk/utils": ["packages/utils/src/index"],
+      "@flstk/result": ["packages/result/src/index"]
+    }
+  },
+  "references": [{ "path": "../config" }, { "path": "../pg" }, { "path": "../utils" }, { "path": "../result" }]
 }

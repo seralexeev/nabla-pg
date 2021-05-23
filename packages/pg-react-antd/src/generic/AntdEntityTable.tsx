@@ -1,14 +1,6 @@
-import {
-    EntityAccessor,
-    EntityBase,
-    FieldSelector,
-    Filter,
-    NonQueryableKeys,
-    OrderBy,
-    OriginInfer,
-} from '@flstk/pg-core';
+import { EntityAccessor, EntityBase, FieldSelector, Filter, NonQueryableKeys, OrderBy, OriginInfer } from '@flstk/pg-core';
 import { useListFetcher } from '@flstk/pg-react-antd/useListFetcher';
-import { FilterKeys } from '@flstk/utils/types';
+import { FilterKeys } from '@flstk/utils';
 import * as antd from 'antd';
 import { ColumnType, TableProps } from 'antd/lib/table';
 import { capitalCase } from 'capital-case';
@@ -35,9 +27,7 @@ export type AntdEntityTableProps<E extends EntityBase, S extends FieldSelector<E
     onQueryFilter?: (query: string) => Filter<E>;
 };
 
-export const AntdEntityTable = <E extends EntityBase, S extends FieldSelector<E, S>>(
-    props: AntdEntityTableProps<E, S>,
-) => {
+export const AntdEntityTable = <E extends EntityBase, S extends FieldSelector<E, S>>(props: AntdEntityTableProps<E, S>) => {
     const { accessor, filter, selector, orderBy, initialPageSize, onQueryFilter, columns, rowKey, ...rest } = props;
 
     const [data, { loading, refetch }, pagination] = useListFetcher<E, S>(

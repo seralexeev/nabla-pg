@@ -19,8 +19,5 @@ export default async (t: Transaction) => {
         , created_at timestamptz NOT NULL DEFAULT clock_timestamp()
     )`;
 
-    await t.sql`CREATE TRIGGER set_timestamp
-        BEFORE UPDATE ON users
-        FOR EACH ROW
-        EXECUTE PROCEDURE trigger_set_updated_at()`;
+    await t.sql`CREATE TRIGGER set_timestamp BEFORE UPDATE ON users FOR EACH ROW EXECUTE PROCEDURE trigger_set_updated_at()`;
 };

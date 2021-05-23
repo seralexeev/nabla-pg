@@ -11,4 +11,6 @@ export default async (t: Transaction) => {
         , updated_at timestamptz NOT NULL DEFAULT clock_timestamp()
         , created_at timestamptz NOT NULL DEFAULT clock_timestamp()
     )`;
+
+    await t.sql`CREATE TRIGGER set_timestamp BEFORE UPDATE ON devices FOR EACH ROW EXECUTE PROCEDURE trigger_set_updated_at()`;
 };

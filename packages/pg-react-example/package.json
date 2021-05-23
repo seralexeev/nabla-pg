@@ -4,7 +4,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "compile": "tsc --noEmit",
+    "compile": "tsc --build",
     "start": "webpack serve",
     "gen": "npx @flstk/pg -d src/entities -c postgres://flstk:flstk@localhost:5432/flstk"
   },

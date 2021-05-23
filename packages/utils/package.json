@@ -3,7 +3,7 @@
   "version": "0.0.14",
   "license": "MIT",
   "scripts": {
-    "compile": "tsc --noEmit",
+    "compile": "tsc --build",
     "build": "../../build.sh utils",
     "prepublish": "yarn build"
   },

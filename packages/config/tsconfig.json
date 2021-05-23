@@ -1,6 +1,11 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "outDir": "dist/config/src"
+    "composite": true,
+    "outDir": "dist/config/src",
+    "paths": {
+      "@flstk/config/*": ["packages/config/src/*"],
+      "@flstk/utils": ["packages/utils/src/index"]
+    }
   }
 }

@@ -25,7 +25,7 @@ export type ExplainConfig = {
 
 export type PgConfig = {
     schema?: string;
-    explain?: ExplainConfig | boolean;
+    explain?: ExplainConfig;
     postgraphile?: {
         options?: PostGraphileCoreOptions;
         onSchema?: (schema: GraphQLSchema) => void;

@@ -1,4 +1,4 @@
-import { Pg } from '@flstk/pg/db';
+import { Pg } from '@flstk/pg';
 import { permissionGuard } from '@flstk/rest/middlewares/authMiddleware';
 import { Express } from 'express';
 import { DependencyContainer } from 'tsyringe';

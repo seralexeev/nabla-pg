@@ -1,5 +1,5 @@
 import { declare, OverridedConfig } from '@flstk/config';
-import { bootstrapperConfig } from '@flstk/rest/config';
+import { bootstrapperConfig } from '@flstk/rest';
 import { merge } from 'lodash';
 
 export const defaultConfig = merge(bootstrapperConfig, {

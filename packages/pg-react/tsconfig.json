@@ -2,6 +2,15 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "jsx": "react",
-    "outDir": "dist"
-  }
+    "outDir": "dist/pg-react/src",
+    "composite": true,
+    "paths": {
+      "@flstk/pg-react/*": ["packages/pg-react/src/*"],
+      "@flstk/pg-core": ["packages/pg-core/src/index"],
+      "@flstk/result": ["packages/result/src/index"],
+      "@flstk/use-api": ["packages/use-api/src/index"],
+      "@flstk/utils": ["packages/utils/src/index"]
+    }
+  },
+  "references": [{ "path": "../pg-core" }, { "path": "../result" }, { "path": "../use-api" }, { "path": "../utils" }]
 }

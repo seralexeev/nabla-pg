@@ -3,6 +3,12 @@
   "compilerOptions": {
     "jsx": "react",
     "lib": ["ES2018"],
-    "outDir": "dist"
-  }
+    "outDir": "dist/use-api/src",
+    "composite": true,
+    "paths": {
+      "@flstk/use-api/*": ["packages/use-api/src/*"],
+      "@flstk/result": ["packages/result/src/index"],
+    }
+  },
+  "references": [{ "path": "../result" }]
 }

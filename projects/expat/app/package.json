@@ -5,8 +5,10 @@
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
+    "ios:device": "react-native run-ios --device",
     "dev": "react-native start",
-    "postinstall": "cd ios && pod install"
+    "postinstall": "cd ios && pod install",
+    "compile": "tsc --build"
   },
   "dependencies": {
     "lodash": "4.17.21",

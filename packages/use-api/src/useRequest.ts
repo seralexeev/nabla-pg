@@ -14,10 +14,10 @@ const defaultOptions = {
     cancelOnUnmount: true,
 };
 
-export type AxiosRequest = {
-    <T>(config: AxiosRequestConfig): AsyncResult<T>;
-    post: <T>(url: string, data?: any, config?: Omit<AxiosRequestConfig, 'data'>) => AsyncResult<T>;
-    get: <T>(url: string, config?: AxiosRequestConfig) => AsyncResult<T>;
+export type AxiosRequest<T = unknown> = {
+    <R = T>(config: AxiosRequestConfig): AsyncResult<R>;
+    post: <R = T>(url: string, data?: unknown, config?: Omit<AxiosRequestConfig, 'data'>) => AsyncResult<R>;
+    get: <R = T>(url: string, config?: AxiosRequestConfig) => AsyncResult<R>;
 };
 
 export const useRequest = (axios: AxiosInstance, options: RequestOptions = {}): AxiosRequest => {

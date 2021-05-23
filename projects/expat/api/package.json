@@ -7,14 +7,16 @@
     "db:restart": "./scripts/db restart",
     "db:migration:run": "./scripts/db migration:run",
     "db:migration:create": "./scripts/db migration:create",
-    "db:prepare": "./scripts/db prepare"
+    "db:prepare": "./scripts/db prepare",
+    "compile": "tsc --build"
   },
   "dependencies": {
     "cors": "2.8.5",
     "express": "4.17.1",
     "pg": "8.6.0",
     "pino": "6.11.3",
-    "routing-controllers": "0.9.0"
+    "routing-controllers": "0.9.0",
+    "tsyringe": "4.5.0"
   },
   "devDependencies": {
     "@types/cors": "2.8.10",

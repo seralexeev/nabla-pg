@@ -1,3 +1,12 @@
 {
-  "extends": "../../tsconfig.json"
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "composite": true,
+    "outDir": "dist/pg-core/src",
+    "paths": {
+      "@flstk/pg-core/*": ["packages/pg-core/src/*"],
+      "@flstk/utils": ["packages/utils/src/index"]
+    }
+  },
+  "references": [{ "path": "../utils" }]
 }

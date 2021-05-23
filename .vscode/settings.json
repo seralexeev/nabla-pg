@@ -18,6 +18,7 @@
     "flstk",
     "graphiql",
     "inflector",
+    "jsonb",
     "middlewares",
     "ossp",
     "pgraphile",

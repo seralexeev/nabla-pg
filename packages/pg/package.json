@@ -3,7 +3,7 @@
   "version": "0.1.22",
   "license": "MIT",
   "scripts": {
-    "compile": "tsc --noEmit --skipLibCheck",
+    "compile": "tsc --build",
     "build": "../../build.sh pg",
     "prepublish": "yarn build"
   },

@@ -1,4 +1,4 @@
-import { ConfigWrapper } from '@flstk/config/loader';
+import { ConfigWrapper } from '@flstk/config';
 import { Pg, Transaction } from '@flstk/pg';
 import { BootstrapperConfig } from '@flstk/rest/config';
 import { DeviceInfo } from '@flstk/rest/entities/DeviceInfo';

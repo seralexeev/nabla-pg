@@ -1,4 +1,4 @@
-import { ConfigWrapper } from '@flstk/config/loader';
+import { ConfigWrapper } from '@flstk/config';
 import { BootstrapperConfig } from '@flstk/rest/config';
 import { ApiError, BadRequest, InternalError } from '@flstk/rest/errors';
 import { AppLogger } from '@flstk/rest/logger';

@@ -1310,6 +1310,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@flstk/react-core@workspace:packages/react-core":
+  version: 0.0.0-use.local
+  resolution: "@flstk/react-core@workspace:packages/react-core"
+  dependencies:
+    "@types/react": 17.0.5
+    react: 17.0.2
+    tsc-alias: 1.2.10
+  languageName: unknown
+  linkType: soft
+
 "@flstk/rest@workspace:packages/rest":
   version: 0.0.0-use.local
   resolution: "@flstk/rest@workspace:packages/rest"
@@ -7322,6 +7332,7 @@ __metadata:
     pg: 8.6.0
     pino: 6.11.3
     routing-controllers: 0.9.0
+    tsyringe: 4.5.0
   languageName: unknown
   linkType: soft
 

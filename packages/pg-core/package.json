@@ -4,7 +4,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "compile": "tsc --noEmit"
+    "compile": "tsc --build"
   },
   "publishConfig": {
     "directory": "dist",

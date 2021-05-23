@@ -1,6 +1,8 @@
 import { createApiClient } from '@flstk/use-api';
-// import { UserApi } from '@projects/expat/shared/api';
+import type { UserApi } from '@projects/expat/api/modules/user/UserController';
 
-const api = createApiClient<UserApi>({
-    'GET /profile': () => get('/migrations'),
+export const useUserApi = createApiClient<UserApi>()({
+    'GET /profile': ({ get }) => {
+        return () => get('/profile');
+    },
 });

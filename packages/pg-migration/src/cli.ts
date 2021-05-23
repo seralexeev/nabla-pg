@@ -1,5 +1,5 @@
 import { runMigrations } from '@flstk/pg-migration/migration';
-import { createDefaultPg } from '@flstk/pg/factory';
+import { createDefaultPg } from '@flstk/pg';
 import { promises as fs } from 'fs';
 import { hideBin } from 'yargs/helpers';
 import yargs from 'yargs/yargs';

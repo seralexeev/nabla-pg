@@ -1,5 +1,5 @@
 import { EntityBase, EntityConnection, JsonObject } from '@flstk/pg-core/entity';
-import { UnwrapNominal } from '@flstk/utils/types';
+import { UnwrapNominal } from '@flstk/utils';
 
 export type MaybeNominalScalar<T> =
     | { isNull: boolean }

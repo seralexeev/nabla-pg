@@ -1,4 +1,4 @@
-import { ConfigWrapper } from '@flstk/config/loader';
+import { ConfigWrapper } from '@flstk/config';
 import { BootstrapperConfig } from '@flstk/rest/config';
 import { Express, RequestHandler } from 'express';
 import promBundle from 'express-prom-bundle';

@@ -1,8 +1,14 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "composite": true,
     "target": "ESNext",
     "lib": ["ES2017"],
-    "outDir": "dist"
-  }
+    "outDir": "dist/pg/src",
+    "paths": {
+      "@flstk/pg/*": ["packages/pg/src/*"],
+      "@flstk/pg-core": ["packages/pg-core/src/index"]
+    }
+  },
+  "references": [{ "path": "../pg-core" }]
 }

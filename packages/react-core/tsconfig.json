@@ -1,0 +1,11 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "jsx": "react",
+    "outDir": "dist/react-core/src",
+    "composite": true,
+    "paths": {
+      "@flstk/react-core/*": ["packages/react-core/src/*"]
+    }
+  }
+}

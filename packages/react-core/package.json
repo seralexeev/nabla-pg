@@ -1,10 +1,10 @@
 {
-  "name": "@flstk/config",
+  "name": "@flstk/react-core",
   "version": "0.0.1",
   "license": "MIT",
   "scripts": {
     "compile": "tsc --build",
-    "build": "../../build.sh config",
+    "build": "../../build.sh react",
     "prepublish": "yarn build"
   },
   "publishConfig": {
@@ -12,9 +12,10 @@
     "access": "public"
   },
   "dependencies": {
-    "flat": "5.0.2"
+    "react": "17.0.2",
+    "tsc-alias": "1.2.10"
   },
   "devDependencies": {
-    "@types/flat": "5.0.1"
+    "@types/react": "17.0.5"
   }
 }

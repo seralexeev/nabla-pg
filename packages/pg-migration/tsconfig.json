@@ -3,6 +3,12 @@
   "compilerOptions": {
     "target": "ESNext",
     "lib": ["ES2017"],
-    "outDir": "dist"
-  }
+    "outDir": "dist/pg-migration/src",
+    "composite": true,
+    "paths": {
+      "@flstk/pg-migration/*": ["packages/pg-migration/src/*"],
+      "@flstk/pg": ["packages/pg/src/index"]
+    }
+  },
+  "references": [{ "path": "../pg" }]
 }

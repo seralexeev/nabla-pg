@@ -1,4 +1,4 @@
-import { DefaultValue, EntityAccessor, EntityBase, IdPkey } from '@flstk/pg-core';
+import { DefaultValue, EntityAccessor, EntityBase, IdPkey } from '@flstk/pg';
 
 export type UserDeviceEntity = EntityBase<IdPkey> & {
     userId: string;
