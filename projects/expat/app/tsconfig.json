@@ -2,6 +2,7 @@
   "extends": "../../../tsconfig.json",
   "compilerOptions": {
     "jsx": "react-native",
+    "outDir": "dist",
     "paths": {
       "@flstk/result": ["packages/result/src/index"],
       "@flstk/use-api": ["packages/use-api/src/index"],
@@ -11,5 +12,12 @@
       "@projects/expat/app/*": ["projects/expat/app/src/*"],
       "@projects/expat/api/*": ["projects/expat/api/src/*"]
     }
-  }
+  },
+  "references": [
+    { "path": "../../../packages/result" },
+    { "path": "../../../packages/use-api" },
+    { "path": "../../../packages/utils" },
+    { "path": "../shared" },
+    { "path": "../api" }
+  ]
 }

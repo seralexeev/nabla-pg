@@ -2,13 +2,13 @@
   "extends": "../../../tsconfig.json",
   "compilerOptions": {
     "composite": true,
+    "outDir": "dist",
     "paths": {
       "@flstk/result": ["packages/result/src/index"],
       "@flstk/utils": ["packages/utils/src/index"],
       "@flstk/pg-core": ["packages/pg-core/src/index"],
-      "@projects/expat/shared/*": ["projects/expat/shared/src/*"],
-      "@projects/expat/api/*": ["projects/expat/api/src/*"]
+      "@projects/expat/shared/*": ["projects/expat/shared/src/*"]
     }
   },
-  "references": [{ "path": "../../../packages/pg-core" }, { "path": "../api" }]
+  "references": [{ "path": "../../../packages/pg-core" }]
 }
