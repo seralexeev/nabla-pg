@@ -1,7 +1,13 @@
-import { pick } from '@flstk/utils';
+import { AxiosProvider } from '@flstk/use-api';
+import { TranslateScreen } from '@projects/expat/app/modules/translate/TranslateScreen';
 import React from 'react';
-import { Text } from 'react-native';
+
+const config = { baseURL: 'http://localhost:3000/api' };
 
 export const App = () => {
-    return <Text>{JSON.stringify(pick({ a: 1 }, ['a']))}</Text>;
+    return (
+        <AxiosProvider config={config}>
+            <TranslateScreen />
+        </AxiosProvider>
+    );
 };

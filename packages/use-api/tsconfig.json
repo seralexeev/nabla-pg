@@ -8,7 +8,8 @@
     "paths": {
       "@flstk/use-api/*": ["packages/use-api/src/*"],
       "@flstk/result": ["packages/result/src/index"],
+      "@flstk/utils": ["packages/utils/src/index"]
     }
   },
-  "references": [{ "path": "../result" }]
+  "references": [{ "path": "../result" }, { "path": "../utils" }]
 }

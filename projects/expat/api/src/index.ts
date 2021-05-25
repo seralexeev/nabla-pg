@@ -7,12 +7,13 @@ import { dev } from '@projects/expat/api/config/dev';
 import { prod } from '@projects/expat/api/config/prod';
 import { UserController } from '@projects/expat/api/modules/user/UserController';
 import { UserService } from '@projects/expat/api/modules/user/UserService';
+import { TranslateController } from '@projects/expat/api/modules/translate/TranslateController';
 
 const { express, logger, config } = bootstrap({
     configWrapper: new ConfigLoader(['dev', 'prod'], defaultConfig, { dev, prod }).load(),
 });
 
 express({
-    controllers: [UserController],
+    controllers: [UserController, TranslateController],
     UserService,
 }).listen(config.port, () => logger.info(`Server started on port ${config.port}`));

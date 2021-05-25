@@ -11,4 +11,5 @@ export {
     UnwrapNominalTag,
     SplitString,
     Class,
+    PromiseValue,
 } from '@flstk/utils/types';

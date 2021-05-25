@@ -28,6 +28,7 @@ export type InverseFilterKeys<T, F> = {
 }[keyof T];
 
 export type ArrayElement<T> = T extends Array<infer A> ? A : never;
+export type PromiseValue<T> = T extends Promise<infer E> ? E : never;
 
 export type SplitString<S, TSeparator extends string = ' '> = S extends `${infer TLeft}${TSeparator}${infer TRight}`
     ? [TLeft, ...SplitString<TRight, TSeparator>]

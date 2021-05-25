@@ -20,8 +20,16 @@ const plugins = [
                 '.json',
             ],
             alias: {
+                react: path.resolve(__dirname, '../../../node_modules/react'),
+
+                // TODO: generalize it
                 '@flstk/utils': path.resolve(__dirname, '../../../packages/utils/src'),
+                '@flstk/result': path.resolve(__dirname, '../../../packages/result/src'),
+                '@flstk/use-api': path.resolve(__dirname, '../../../packages/use-api/src'),
+
                 '@projects/expat/app': path.resolve(__dirname, '../app/src'),
+                '@projects/expat/api': path.resolve(__dirname, '../api/src'),
+                '@projects/expat/shared': path.resolve(__dirname, '../shared/src'),
                 '@projects/expat/shared': path.resolve(__dirname, '../shared/src'),
             },
         },

@@ -52,7 +52,7 @@ export const PermissionRequired = (...permissions: PermissionsOptions) => {
     return Authorized(permissions);
 };
 
-export const ApiController = (route: string) => {
+export const ApiController = (route?: string) => {
     return (target: any) => {
         singleton()(target);
         Controller(route)(target);

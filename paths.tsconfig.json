@@ -1,0 +1,23 @@
+{
+  "paths": {
+    "@flstk/utils/*": ["packages/utils/src/*"],
+    "@flstk/use-api/*": ["packages/use-api/src/*"],
+    "@flstk/rest": ["packages/rest/src/index"],
+    "@flstk/pg-migration": ["packages/pg-migration/src/index"],
+    "@projects/expat/api/*": ["projects/expat/api/src/*"],
+    "@projects/expat/shared/*": ["projects/expat/shared/src/*"],
+    "@flstk/rest/*": ["packages/rest/src/*"],
+    "@flstk/config": ["packages/config/src/index"],
+    "@flstk/pg": ["packages/pg/src/index"],
+    "@flstk/utils": ["packages/utils/src/index"],
+    "@flstk/result": ["packages/result/src/index"],
+    "@flstk/react-core/*": ["packages/react-core/src/*"],
+    "@flstk/pg-react/*": ["packages/pg-react/src/*"],
+    "@flstk/pg-core": ["packages/pg-core/src/index"],
+    "@flstk/use-api": ["packages/use-api/src/index"],
+    "@flstk/pg-migration/*": ["packages/pg-migration/src/*"],
+    "@flstk/pg-core/*": ["packages/pg-core/src/*"],
+    "@flstk/pg/*": ["packages/pg/src/*"],
+    "@flstk/config/*": ["packages/config/src/*"]
+  }
+}

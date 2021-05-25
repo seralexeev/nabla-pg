@@ -8,6 +8,11 @@ export const defaultConfig = merge(bootstrapperConfig, {
         password: declare.string('expat'),
         database: declare.string('expat'),
     },
+    yandex: {
+        iamToken: declare.string(''),
+        folderId: declare.string('b1gaeqnrfb0oevt0kv2m'),
+        translate: {
+            url: declare.string('https://translate.api.cloud.yandex.net/translate/v2/translate'),
+        },
+    },
 });
-
-export type Config = OverridedConfig<typeof defaultConfig>;
