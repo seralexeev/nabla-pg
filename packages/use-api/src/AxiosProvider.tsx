@@ -72,10 +72,6 @@ const SimpleAxiosProvider: FC<{
     const value: AxiosContextType = useMemo(() => {
         const axios = createAxios();
         axios.interceptors.response.use(undefined, errorInterceptor);
-        axios.interceptors.request.use((config) => {
-            console.log(config);
-            return config;
-        });
         return {
             axios,
             authenticated: axios,

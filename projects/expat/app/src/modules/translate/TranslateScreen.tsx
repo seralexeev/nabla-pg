@@ -1,17 +1,17 @@
+import { uikit } from '@flstk/react-native';
 import { useTranslateApi } from '@projects/expat/app/modules/translate/api';
 import React, { useState, VFC } from 'react';
-import { Text, TextInput, View } from 'react-native';
+import { Text } from 'react-native';
 
-type TranslateScreenProps = {};
-
-export const TranslateScreen: VFC<TranslateScreenProps> = (props) => {
+export const TranslateScreen: VFC = () => {
     const [text, setText] = useState('');
 
     return (
-        <View style={{ paddingVertical: 100, paddingHorizontal: 20 }}>
-            <TextInput onChangeText={setText} value={text} style={{ borderColor: 'red', borderWidth: 2 }} />
+        <uikit.View paddingVertical={100} padding>
+            <uikit.Text level={1}>Enter text</uikit.Text>
+            <uikit.TextInput onChangeText={setText} value={text} autoFocus />
             <TranslateResult text={text} />
-        </View>
+        </uikit.View>
     );
 };
 
@@ -22,7 +22,7 @@ const TranslateResult: VFC<{ text: string }> = ({ text }) => {
     });
 
     if (refetching || loading) {
-        return <Text>loading...</Text>;
+        return <uikit.Spinner />;
     }
 
     if (error) {

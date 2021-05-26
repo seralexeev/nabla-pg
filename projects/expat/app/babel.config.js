@@ -26,6 +26,8 @@ const plugins = [
                 '@flstk/utils': path.resolve(__dirname, '../../../packages/utils/src'),
                 '@flstk/result': path.resolve(__dirname, '../../../packages/result/src'),
                 '@flstk/use-api': path.resolve(__dirname, '../../../packages/use-api/src'),
+                '@flstk/react-core': path.resolve(__dirname, '../../../packages/react-core/src'),
+                '@flstk/react-native': path.resolve(__dirname, '../../../packages/react-native/src'),
 
                 '@projects/expat/app': path.resolve(__dirname, '../app/src'),
                 '@projects/expat/api': path.resolve(__dirname, '../api/src'),

@@ -51,10 +51,11 @@ const splitStyleProps = (props: Record<string, any>, mods: ModsMap<any>) => {
 
 export function valueModFactory<T>() {
     function createValueModImpl<P extends keyof T>(key: P): (value: T[P]) => T;
-    function createValueModImpl<P extends keyof T>(key: P, defaultValue: T[P]): (value?: T[P]) => T;
+    function createValueModImpl<P extends keyof T>(key: P, defaultValue: T[P] | (() => T[P])): (value?: T[P]) => T;
     function createValueModImpl(key: string, defaultValue?: any) {
-        return (value: any) => ({ [key]: value ?? defaultValue });
+        return (value: any) => ({ [key]: value ?? (typeof defaultValue === 'function' ? defaultValue() : defaultValue) });
     }
+
     return createValueModImpl;
 }
 

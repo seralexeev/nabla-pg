@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "jsx": "react",
+    "outDir": "dist/react-native/src",
+    "composite": true,
+    "paths": {
+      "@flstk/react-native/*": ["packages/react-native/src/*"],
+      "@flstk/react-core": ["packages/react-core/src/index"]
+    }
+  },
+  "references": [{ "path": "../react-core" }]
+}

@@ -8,6 +8,7 @@
       "@flstk/use-api": ["packages/use-api/src/index"],
       "@flstk/utils": ["packages/utils/src/index"],
       "@flstk/react-core": ["packages/react-core/src/index"],
+      "@flstk/react-native": ["packages/react-native/src/index"],
       "@projects/expat/shared/*": ["projects/expat/shared/src/*"],
       "@projects/expat/app/*": ["projects/expat/app/src/*"],
       "@projects/expat/api/*": ["projects/expat/api/src/*"]
@@ -17,6 +18,8 @@
     { "path": "../../../packages/result" },
     { "path": "../../../packages/use-api" },
     { "path": "../../../packages/utils" },
+    { "path": "../../../packages/react-core" },
+    { "path": "../../../packages/react-native" },
     { "path": "../shared" },
     { "path": "../api" }
   ]
