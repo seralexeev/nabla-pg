@@ -1,8 +1,16 @@
 import { ModsProps } from '@flstk/react-core';
 import { mods } from '@flstk/react-native/ui-kit/mods/viewMods';
-import { withReactNativeStyleMods } from '@flstk/react-native/utils';
-import { View as ReactNativeView, ViewProps as ReactNativeViewProps } from 'react-native';
+import { withRnStyleMods } from '@flstk/react-native/utils';
+import React from 'react';
+import { SafeAreaView, NativeSafeAreaViewProps } from 'react-native-safe-area-context';
+import { View as RnView } from 'react-native';
 
-export type ViewProps = ReactNativeViewProps & ModsProps<typeof mods>;
+export type ViewProps = NativeSafeAreaViewProps & ModsProps<typeof mods>;
 
-export const View = withReactNativeStyleMods(mods)(ReactNativeView);
+export const View = withRnStyleMods(mods)(({ style, edges, ...rest }: ViewProps) => {
+    return edges && edges.length ? (
+        <SafeAreaView style={style} edges={edges ?? ['left']} {...rest} />
+    ) : (
+        <RnView style={style} {...rest} />
+    );
+});

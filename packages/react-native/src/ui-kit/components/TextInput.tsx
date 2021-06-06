@@ -1,9 +1,11 @@
 import { mods } from '@flstk/react-native/ui-kit/mods/viewMods';
-import { styleCompose, withReactNativeStyleMods } from '@flstk/react-native/utils';
+import { styleCompose, withRnStyleMods } from '@flstk/react-native/utils';
 import React from 'react';
 import * as rn from 'react-native';
 
-export const TextInput = withReactNativeStyleMods(mods)(({ style, ...rest }: rn.TextInputProps) => {
+export type InputProps = rn.TextInputProps;
+
+export const TextInput = withRnStyleMods(mods)(({ style, ...rest }: InputProps) => {
     return <rn.TextInput {...rest} style={styleCompose(styles.input, style)} />;
 });
 

@@ -4,7 +4,7 @@ import { Dimensions } from 'react-native';
 const { width, height, fontScale, scale } = Dimensions.get('window');
 
 export const Layout = {
-    window: width,
+    width,
     height,
     fontScale,
     scale,

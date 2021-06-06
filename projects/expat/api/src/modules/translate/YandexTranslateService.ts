@@ -33,6 +33,10 @@ export class YandexTranslateService implements TranslateService {
             },
         });
 
-        return result.translations[0].text;
+        return {
+            text,
+            translations: result.translations.map((x) => x.text),
+            examples: [],
+        };
     };
 }

@@ -1,11 +1,10 @@
-import { ModsProps } from '@flstk/react-core';
 import { spacingMods } from '@flstk/react-native/ui-kit/mods/spacingMods';
 import { StyleGuide } from '@flstk/react-native/ui-kit/StyleGuide';
-import { reactNativeStyleMods } from '@flstk/react-native/utils';
-import { StyleSheet, ViewProps as ReactNativeViewProps, ViewStyle } from 'react-native';
+import { rnStyleMods } from '@flstk/react-native/utils';
+import { StyleSheet, ViewStyle } from 'react-native';
 
-export const viewMods = reactNativeStyleMods({
-    fitContainer: StyleSheet.absoluteFillObject,
+export const viewMods = rnStyleMods({
+    fillContainer: StyleSheet.absoluteFillObject,
     flex: (flex: number = 1) => ({ flex }),
     flexGrow: (flexGrow: number = 1) => ({ flexGrow }),
     flexShrink: (flexShrink: number = 1) => ({ flexShrink }),

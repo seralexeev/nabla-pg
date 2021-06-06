@@ -5,6 +5,7 @@ export class ConfigLoader<TEnv extends string, TConfig> {
     private override;
 
     public constructor(
+        public readonly prefix: string,
         public readonly appEnvironments: readonly TEnv[],
         private defaultConfig: TConfig,
         private envConfigs: Record<TEnv, ConfigOverride<TConfig>>,
@@ -16,10 +17,10 @@ export class ConfigLoader<TEnv extends string, TConfig> {
     public load = (env?: TEnv) => {
         const envVariables = process.env;
         if (!env) {
-            const envCandidate = envVariables['FLSTK_env'] as TEnv;
+            const envCandidate = envVariables[`${this.prefix}_env`] as TEnv;
             if (!this.appEnvironments.includes(envCandidate)) {
                 throw new Error(
-                    `FLSTK_env should be one of [${this.appEnvironments.join(', ')}], got "${String(envCandidate)}"`,
+                    `${this.prefix}_env should be one of [${this.appEnvironments.join(', ')}], got "${String(envCandidate)}"`,
                 );
             }
 
@@ -27,26 +28,21 @@ export class ConfigLoader<TEnv extends string, TConfig> {
         }
 
         const envOverride = this.envConfigs?.[env] ?? {};
-        const flatConfig = flatten<TConfig, Record<string, (override: string | undefined) => unknown>>(
-            this.defaultConfig,
-            { delimiter: '_' },
-        );
+        const flatConfig = flatten<TConfig, Record<string, (override: string | undefined) => unknown>>(this.defaultConfig, {
+            delimiter: '_',
+        });
 
         const flatEnvOverride = flatten<ConfigOverride<TConfig>, Record<string, unknown>>(envOverride, {
             delimiter: '_',
         });
 
         const flatOverride: Record<string, unknown> = this.override.reduce((acc, item) => {
-            return Object.assign(
-                acc,
-                flatten<ConfigOverride<TConfig>, Record<string, unknown>>(item, { delimiter: '_' }),
-            );
+            return Object.assign(acc, flatten<ConfigOverride<TConfig>, Record<string, unknown>>(item, { delimiter: '_' }));
         }, {});
 
         const traces: Record<string, string> = {};
         const overridedFlatConfig = Object.entries(flatConfig).reduce((acc, [key, valueFnOrValue]) => {
-            const parseEnv = (val: string | undefined) =>
-                typeof valueFnOrValue === 'function' ? valueFnOrValue(val) : val;
+            const parseEnv = (val: string | undefined) => (typeof valueFnOrValue === 'function' ? valueFnOrValue(val) : val);
 
             // загрузка из 4 источников:
             // arg - первый приоритет из агрументов `loadConfig`
@@ -58,16 +54,16 @@ export class ConfigLoader<TEnv extends string, TConfig> {
                 ['arg', flatOverride[key]],
                 [
                     'env',
-                    envVariables['FLSTK_' + key] !== undefined ? parseEnv(envVariables['FLSTK_' + key]) : undefined,
+                    envVariables[`${this.prefix}_` + key] !== undefined
+                        ? parseEnv(envVariables[`${this.prefix}_` + key])
+                        : undefined,
                 ],
                 ['sta', flatEnvOverride[key]],
                 ['def', typeof valueFnOrValue === 'function' ? valueFnOrValue(undefined) : valueFnOrValue],
             ];
             const [from, value] = values.find(([, x]) => x !== undefined) || ['err', undefined];
             acc[key] = value;
-            traces[key] = `[${from}] -> ${value} (${typeof value}) trace: [${values
-                .map(([, x]) => String(x))
-                .join(' -> ')}]`;
+            traces[key] = `[${from}] -> ${value} (${typeof value}) trace: [${values.map(([, x]) => String(x)).join(' -> ')}]`;
             return acc;
         }, {} as Record<string, unknown>);
 

@@ -1,10 +1,10 @@
 import { valueModFactory } from '@flstk/react-core';
 import { StyleGuide } from '@flstk/react-native/ui-kit/StyleGuide';
-import { reactNativeStyleMods, RnStyle } from '@flstk/react-native/utils';
+import { rnStyleMods, RnStyle } from '@flstk/react-native/utils';
 
 const mod = valueModFactory<RnStyle>();
 
-export const spacingMods = reactNativeStyleMods({
+export const spacingMods = rnStyleMods({
     marginBottom: mod('marginBottom', StyleGuide.spacing),
     marginLeft: mod('marginLeft', StyleGuide.spacing),
     marginRight: mod('marginRight', StyleGuide.spacing),

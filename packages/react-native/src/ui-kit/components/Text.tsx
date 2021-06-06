@@ -1,7 +1,7 @@
 import { ModsProps } from '@flstk/react-core';
 import { spacingMods } from '@flstk/react-native/ui-kit/mods/spacingMods';
 import { StyleGuide } from '@flstk/react-native/ui-kit/StyleGuide';
-import { reactNativeStyleMods, styleCompose, withReactNativeStyleMods } from '@flstk/react-native/utils';
+import { rnStyleMods, styleCompose, withRnStyleMods } from '@flstk/react-native/utils';
 import React from 'react';
 import * as ReactNative from 'react-native';
 
@@ -17,7 +17,7 @@ applyDefaultProps(ReactNative.Text);
 
 export type TextProps = ReactNative.TextProps & ModsProps<typeof mods>;
 
-const textMods = reactNativeStyleMods({
+const textMods = rnStyleMods({
     bold: { fontWeight: Platform.OS === 'ios' ? '600' : 'bold' },
     fontWeight: (fontWeight: TextStyle['fontWeight']) => ({
         fontWeight: Platform.OS === 'android' && Number(fontWeight) > 600 ? 'bold' : fontWeight,
@@ -59,7 +59,7 @@ const levels: Record<number, TextStyle> = {
 
 const mods = { ...textMods, ...spacingMods };
 
-export const Text = withReactNativeStyleMods(mods)(({ style, ...rest }: ReactNative.TextProps) => {
+export const Text = withRnStyleMods(mods)(({ style, ...rest }: ReactNative.TextProps) => {
     return <ReactNative.Text {...rest} lineBreakMode='tail' style={styleCompose(styles.textCommon, style)} />;
 });
 

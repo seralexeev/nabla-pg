@@ -1,5 +1,5 @@
 import { mods } from '@flstk/react-native/ui-kit/mods/viewMods';
-import { withReactNativeStyleMods } from '@flstk/react-native/utils';
+import { withRnStyleMods } from '@flstk/react-native/utils';
 import React from 'react';
 import { ActivityIndicator, ActivityIndicatorProps } from 'react-native';
 
@@ -8,6 +8,6 @@ export type SpinnerProps = {
     color?: string;
 };
 
-export const Spinner = withReactNativeStyleMods(mods)(({ style, size = 'small', ...rest }: ActivityIndicatorProps) => {
+export const Spinner = withRnStyleMods(mods)(({ style, size = 'small', ...rest }: ActivityIndicatorProps) => {
     return <ActivityIndicator size={size} style={style} {...rest} />;
 });

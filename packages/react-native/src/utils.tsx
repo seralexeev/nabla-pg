@@ -18,5 +18,5 @@ export function styleCompose(...styles: any[]) {
     return styles.filter(Boolean);
 }
 
-export const reactNativeStyleMods = styleModsFactory<RnStyle>();
-export const withReactNativeStyleMods = withStyleModsFactory(styleCompose);
+export const rnStyleMods = styleModsFactory<RnStyle>();
+export const withRnStyleMods = withStyleModsFactory(styleCompose);

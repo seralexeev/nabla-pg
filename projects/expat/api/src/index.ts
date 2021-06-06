@@ -1,6 +1,5 @@
 import 'reflect-metadata';
 
-import { ConfigLoader } from '@flstk/config';
 import { bootstrap } from '@flstk/rest';
 import { defaultConfig } from '@projects/expat/api/config/default';
 import { dev } from '@projects/expat/api/config/dev';
@@ -10,7 +9,12 @@ import { UserService } from '@projects/expat/api/modules/user/UserService';
 import { TranslateController } from '@projects/expat/api/modules/translate/TranslateController';
 
 const { express, logger, config } = bootstrap({
-    configWrapper: new ConfigLoader(['dev', 'prod'], defaultConfig, { dev, prod }).load(),
+    config: {
+        prefix: 'EXPT',
+        environments: ['dev', 'prod'],
+        defaultConfig,
+        envConfigs: { dev, prod },
+    },
 });
 
 express({
