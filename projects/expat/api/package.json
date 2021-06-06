@@ -21,7 +21,7 @@
   },
   "devDependencies": {
     "@types/cors": "2.8.10",
-    "@types/express": "4.17.11",
-    "@types/pino": "^6"
+    "@types/express": "4.17.12",
+    "@types/pino": "^6.3.8"
   }
 }

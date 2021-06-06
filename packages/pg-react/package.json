@@ -13,10 +13,10 @@
   },
   "dependencies": {
     "react": "17.0.2",
-    "tsc-alias": "1.2.10"
+    "tsc-alias": "1.3.0"
   },
   "devDependencies": {
-    "@types/react": "17.0.5"
+    "@types/react": "17.0.9"
   },
   "gitHead": "3d5eb252195129f0ab15441770022ad2ede3719a"
 }

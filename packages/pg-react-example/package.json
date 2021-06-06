@@ -9,8 +9,8 @@
     "gen": "npx @flstk/pg -d src/entities -c postgres://flstk:flstk@localhost:5432/flstk"
   },
   "dependencies": {
-    "antd": "4.15.5",
-    "css-loader": "5.2.4",
+    "antd": "4.16.1",
+    "css-loader": "5.2.6",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-router": "5.2.0",
@@ -20,17 +20,19 @@
   "devDependencies": {
     "@flstk/pg": "0.1.23",
     "@pmmmwh/react-refresh-webpack-plugin": "0.4.3",
-    "@types/react": "17.0.5",
-    "@types/react-dom": "^17.0.5",
+    "@types/node": "15.12.1",
+    "@types/react": "17.0.9",
+    "@types/react-dom": "^17.0.6",
     "@types/react-router": "^5.1.14",
     "@types/react-router-dom": "^5.1.7",
     "@types/webpack-dev-server": "^3.11.4",
     "clean-webpack-plugin": "4.0.0-alpha.0",
     "html-webpack-plugin": "5.3.1",
     "react-refresh": "0.10.0",
-    "react-refresh-typescript": "2.0.0",
-    "ts-loader": "9.1.2",
-    "webpack": "5.37.0",
+    "react-refresh-typescript": "2.0.1",
+    "ts-loader": "9.2.3",
+    "typescript": "4.3.2",
+    "webpack": "5.38.1",
     "webpack-cli": "4.7.0",
     "webpack-dev-server": "3.11.2"
   }

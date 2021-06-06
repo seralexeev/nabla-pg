@@ -13,18 +13,19 @@
   "dependencies": {
     "lodash": "4.17.21",
     "react": "17.0.2",
-    "react-native": "0.64.1",
+    "react-native": "0.64.2",
     "react-native-safe-area-context": "3.2.0",
+    "react-native-svg": "12.1.1",
     "use-debounce": "6.0.1"
   },
   "devDependencies": {
-    "@babel/core": "7.14.2",
+    "@babel/core": "7.14.3",
     "@babel/runtime": "7.14.0",
-    "@types/lodash": "4.14.169",
-    "@types/react-native": "0.64.5",
+    "@types/lodash": "4.14.170",
+    "@types/react-native": "0.64.10",
     "babel-plugin-module-resolver": "4.1.0",
     "metro-react-native-babel-preset": "0.66.0",
     "react-native-svg-transformer": "0.14.3",
-    "typescript": "4.2.4"
+    "typescript": "4.3.2"
   }
 }
