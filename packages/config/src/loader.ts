@@ -44,12 +44,12 @@ export class ConfigLoader<TEnv extends string, TConfig> {
         const overridedFlatConfig = Object.entries(flatConfig).reduce((acc, [key, valueFnOrValue]) => {
             const parseEnv = (val: string | undefined) => (typeof valueFnOrValue === 'function' ? valueFnOrValue(val) : val);
 
-            // загрузка из 4 источников:
-            // arg - первый приоритет из агрументов `loadConfig`
-            // env - из переменных окружения и .env файла
-            // sta - статический конфиг, соответсвующий окружению
-            // def - конфиг по-умолчанию default.ts
-            // err - ошибка при загрузке
+            // loads from 4 sources in priority order:
+            // arg - from arguments
+            // env - from environment variables or .env file
+            // sta - static config, corresponding to selected environment
+            // def - default config default.ts
+            // err - error while loading
             const values: Array<['arg' | 'env' | 'sta' | 'def' | 'err', unknown]> = [
                 ['arg', flatOverride[key]],
                 [

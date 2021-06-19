@@ -13,7 +13,7 @@ export const createApiHook = <T extends Record<string, (request: AxiosRequest) =
     return <K extends keyof T>(selector: K, options: RequestOptions = {}) => {
         const axios = useAxiosInstance(true);
         const request = useRequest(axios, options);
-        const caller = t[selector];
+        const caller = t[selector]!;
 
         type Type = T[K] extends Caller<infer R, infer P, infer E> ? [R, P, E] : never;
         type R = PromiseValue<Type[0]>;

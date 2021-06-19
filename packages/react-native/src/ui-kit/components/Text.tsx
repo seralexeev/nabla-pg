@@ -1,6 +1,6 @@
 import { ModsProps } from '@flstk/react-core';
-import { spacingMods } from '@flstk/react-native/ui-kit/mods/spacingMods';
-import { StyleGuide } from '@flstk/react-native/ui-kit/StyleGuide';
+import { spacingMods } from '@flstk/react-native/mods/spacingMods';
+import { StyleGuide } from '@flstk/react-native/StyleGuide';
 import { rnStyleMods, styleCompose, withRnStyleMods } from '@flstk/react-native/utils';
 import React from 'react';
 import * as ReactNative from 'react-native';
@@ -33,7 +33,7 @@ const textMods = rnStyleMods({
         textDecorationLine: 'line-through',
         textDecorationStyle: 'solid',
     },
-    level: (level: 1 | 2 | 3 | 4) => levels[level],
+    level: (level: 1 | 2 | 3 | 4) => levels[level] ?? {},
 });
 
 const levels: Record<number, TextStyle> = {

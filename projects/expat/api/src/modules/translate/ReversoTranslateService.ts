@@ -10,11 +10,7 @@ type TranslateResult = {
 };
 
 export class ReversoTranslateService implements TranslateService {
-    private reverso;
-
-    public constructor() {
-        this.reverso = new Reverso();
-    }
+    private reverso = new Reverso();
 
     public translate = async (text: string) => {
         const result: TranslateResult = await this.reverso.getContext(text, 'English', 'Russian');

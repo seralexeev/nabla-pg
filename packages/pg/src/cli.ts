@@ -28,20 +28,22 @@ const argv = yargs(hideBin(process.argv))
     )
     .help().argv;
 
-createDefaultPg(argv.connection as string)
-    .getSchema()
-    .then((schema) =>
-        generateEntityFiles(schema, {
-            prefix: argv.suffix,
-            entityImportPath: argv.import,
-            entityDir: argv.dir as string,
-        }),
-    )
-    .then(() => {
-        console.log('Entities has been successfully generated');
-        process.exit(0);
-    })
-    .catch((e) => {
-        console.error(e);
-        process.exit(1);
-    });
+Promise.resolve(argv).then(({ connection, dir, import: entityImportPath, suffix }) => {
+    return createDefaultPg(connection as string)
+        .getSchema()
+        .then((schema) =>
+            generateEntityFiles(schema, {
+                prefix: suffix,
+                entityImportPath,
+                entityDir: dir as string,
+            }),
+        )
+        .then(() => {
+            console.log('Entities has been successfully generated');
+            process.exit(0);
+        })
+        .catch((e) => {
+            console.error(e);
+            process.exit(1);
+        });
+});

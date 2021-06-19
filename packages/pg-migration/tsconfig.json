@@ -7,8 +7,9 @@
     "composite": true,
     "paths": {
       "@flstk/pg-migration/*": ["packages/pg-migration/src/*"],
-      "@flstk/pg": ["packages/pg/src/index"]
+      "@flstk/pg": ["packages/pg/src/index"],
+      "@flstk/utils": ["packages/utils/src/index"]
     }
   },
-  "references": [{ "path": "../pg" }]
+  "references": [{ "path": "../pg" }, { "path": "../utils" }]
 }

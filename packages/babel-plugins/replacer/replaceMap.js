@@ -9,6 +9,7 @@ module.exports = [
         replaceWith: ipAddress,
     },
     {
+        // TODO: replace with proper variable
         find: '__FLSTK_CLIENT_APP_ENV__',
         replaceWith: process.env.FLSTK_CLIENT_APP_ENV || 'prod',
     },

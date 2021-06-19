@@ -16,7 +16,7 @@
     "lodash": "4.17.21"
   },
   "devDependencies": {
-    "@types/is-uuid": "^1.0.0",
+    "@types/is-uuid": "1.0.0",
     "@types/lodash": "4.14.170"
   },
   "gitHead": "3d5eb252195129f0ab15441770022ad2ede3719a"

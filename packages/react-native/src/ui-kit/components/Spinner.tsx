@@ -1,4 +1,4 @@
-import { mods } from '@flstk/react-native/ui-kit/mods/viewMods';
+import { mods } from '@flstk/react-native/mods/viewMods';
 import { withRnStyleMods } from '@flstk/react-native/utils';
 import React from 'react';
 import { ActivityIndicator, ActivityIndicatorProps } from 'react-native';

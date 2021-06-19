@@ -1,5 +1,6 @@
 import { literal, Pg, Transaction } from '@flstk/pg';
 import { promises as fs } from 'fs';
+import { never } from '@flstk/utils';
 import path from 'path';
 
 export type RunMigrationsArgs = {
@@ -22,7 +23,7 @@ export const runMigrations = async (args: RunMigrationsArgs) => {
     const { pg } = args;
 
     await pg.transaction(async (t) => {
-        const [{ lockObtained }] =
+        const [{ lockObtained } = never<{ lockObtained: false }>()] =
             await t.sql<AdvisoryXactLockResult>`SELECT pg_try_advisory_xact_lock(${LOCK_ID}) AS "lockObtained"`;
 
         if (lockObtained) {
@@ -46,7 +47,7 @@ const migrate = async (args: { t: Transaction; directory: string }) => {
     const files = await fs.readdir(directory).then((x) => {
         return x
             .map((file) => {
-                const [dateStr] = file.split('_');
+                const [dateStr = ''] = file.split('_');
                 const date = parseInt(dateStr, 10);
                 if (isNaN(date)) {
                     log(`${file} doesn't satisfy convention (<date>_<name>), skipping`);
@@ -84,11 +85,9 @@ const migrate = async (args: { t: Transaction; directory: string }) => {
 
         await fn(t, (s: string) => log(`    ${s}`));
 
-        const [{ migratedAt }] = await t.sql<MigrationResult>`
+        const [{ migratedAt } = never<{ migratedAt: Date }>()] = await t.sql<{ migratedAt: Date }>`
             INSERT INTO migrations (name, migrated_at) VALUES (${name}, clock_timestamp()) RETURNING migrated_at AS "migratedAt"`;
 
         log(`[${name}]: success at ${migratedAt.toISOString()} (${new Date().getTime() - now}ms)`);
     }
-
-    type MigrationResult = { migratedAt: Date };
 };

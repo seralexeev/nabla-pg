@@ -36,6 +36,7 @@ const plugins = [
             },
         },
     ],
+    '@babel/plugin-proposal-export-namespace-from',
     '../../../packages/babel-plugins/replacer',
 ];
 

@@ -15,4 +15,7 @@ export const defaultConfig = merge(bootstrapperConfig, {
             url: declare.string('https://translate.api.cloud.yandex.net/translate/v2/translate'),
         },
     },
+    deepl: {
+        url: declare.string('https://www2.deepl.com/jsonrpc'),
+    },
 });

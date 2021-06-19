@@ -20,7 +20,7 @@ export class SqlClientImpl implements SqlClient {
     };
 
     private prepareSql = (strings: TemplateStringsArray, ...values: unknown[]) => {
-        const result = { query: strings[0], values: [] as typeof values };
+        const result = { query: strings[0] ?? '', values: [] as typeof values };
 
         let index = 1;
         for (let i = 0; i < values.length; i++) {

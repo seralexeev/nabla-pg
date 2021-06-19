@@ -1,4 +1,4 @@
-export { pick, reduceBy, isUUID } from '@flstk/utils/helpers';
+export { never, pick, reduceBy, isUUID } from '@flstk/utils/helpers';
 export {
     ArrayElement,
     FilterKeys,

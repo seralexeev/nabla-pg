@@ -1,5 +1,5 @@
 import { valueModFactory } from '@flstk/react-core';
-import { StyleGuide } from '@flstk/react-native/ui-kit/StyleGuide';
+import { StyleGuide } from '@flstk/react-native/StyleGuide';
 import { rnStyleMods, RnStyle } from '@flstk/react-native/utils';
 
 const mod = valueModFactory<RnStyle>();

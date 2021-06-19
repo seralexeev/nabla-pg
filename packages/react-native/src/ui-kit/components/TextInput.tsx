@@ -1,4 +1,4 @@
-import { mods } from '@flstk/react-native/ui-kit/mods/viewMods';
+import { mods } from '@flstk/react-native/mods/viewMods';
 import { styleCompose, withRnStyleMods } from '@flstk/react-native/utils';
 import React from 'react';
 import * as rn from 'react-native';

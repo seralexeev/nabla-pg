@@ -50,7 +50,7 @@ export const generateEntities = (schema: GraphQLSchema, config?: GenerateEntityC
         let hasConnection = false;
 
         const pkKeys = entity.args.map((x) => x.name);
-        const pkFields = entity.args.map((x) => [x.name, getFieldInfo(x).type]);
+        const pkFields = entity.args.map((x) => [x.name, getFieldInfo(x).type] as const);
 
         let pkDef = entityConfig.pkDef ?? '';
         let pk = pkFields
@@ -176,11 +176,11 @@ const defaultFieldTypeMapping: Record<string, string> = {
 
 const getTSFieldType = (name: string, type: string, fieldMapping: Record<string, string> = {}) => {
     if (name in fieldMapping) {
-        return fieldMapping[name];
+        return fieldMapping[name]!;
     }
 
     if (type in defaultFieldTypeMapping) {
-        return defaultFieldTypeMapping[type];
+        return defaultFieldTypeMapping[type]!;
     }
 
     return type;

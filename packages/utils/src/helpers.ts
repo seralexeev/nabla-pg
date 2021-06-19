@@ -2,6 +2,8 @@ import { FilterKeys } from '@flstk/utils/types';
 import lodash from 'lodash';
 import isUUIDLib from 'is-uuid';
 
+export const never = <T>(): T => null as any;
+
 export const pick = <T, K extends keyof T>(value: T, keys: readonly K[]): Pick<T, K> => {
     return lodash.pick(value, keys) as Pick<T, K>;
 };

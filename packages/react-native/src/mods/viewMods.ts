@@ -1,5 +1,5 @@
-import { spacingMods } from '@flstk/react-native/ui-kit/mods/spacingMods';
-import { StyleGuide } from '@flstk/react-native/ui-kit/StyleGuide';
+import { spacingMods } from '@flstk/react-native/mods/spacingMods';
+import { StyleGuide } from '@flstk/react-native/StyleGuide';
 import { rnStyleMods } from '@flstk/react-native/utils';
 import { StyleSheet, ViewStyle } from 'react-native';
 
@@ -27,7 +27,7 @@ export const viewMods = rnStyleMods({
     zIndex: (zIndex: number) => ({ zIndex }),
     opacity: (opacity: number) => ({ opacity }),
 
-    border: ([borderWidth, borderColor]: [borderWidth: ViewStyle['borderWidth'], borderColor: ViewStyle['borderColor']]) => ({
+    border: ([borderWidth, borderColor]: [width: ViewStyle['borderWidth'], color: ViewStyle['borderColor']]) => ({
         borderWidth,
         borderColor,
     }),
