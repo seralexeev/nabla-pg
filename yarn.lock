@@ -8344,6 +8344,7 @@ __metadata:
     reverso-api: 2.16.2
     routing-controllers: 0.9.0
     tsyringe: 4.5.0
+    zod: 3.2.0
   languageName: unknown
   linkType: soft
 
@@ -20376,5 +20377,12 @@ typescript@4.3.2:
   version: 0.1.0
   resolution: "yocto-queue@npm:0.1.0"
   checksum: 096c3b40beb2804659539be1605a35c58eb0c85285f94b77b3e924f42ee265c1a40bf9f4153770039517146b469a964d51742395f35ca8135fc9f7e4982b785d
+  languageName: node
+  linkType: hard
+
+"zod@npm:3.2.0":
+  version: 3.2.0
+  resolution: "zod@npm:3.2.0"
+  checksum: 6a1bd281ddf19fa73c8a578672c9300d2702f7cee63ddb5f855f776e3ae64ba5250925fb04a008245fa18c06248521bc613f9c280ba393bf286bf4d64c6550dc
   languageName: node
   linkType: hard

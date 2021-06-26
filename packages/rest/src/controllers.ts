@@ -75,6 +75,6 @@ export const ApiController = (route?: string) => {
 
 export type HttpMethod = 'GET' | 'POST';
 
-export type Controller<T> = {
-    [K in keyof T]: K extends `${HttpMethod} /${string}` ? (...args: any[]) => any : never;
+export type Controller<T, S extends string> = {
+    [K in keyof T]: K extends `${HttpMethod} /${S}${string}` ? (...args: any[]) => any : never;
 };

@@ -5,12 +5,15 @@ import { YandexTranslateService } from '@projects/expat/api/modules/translate/Ya
 import { Body } from 'routing-controllers';
 
 @ApiController()
-export class TranslateController implements Controller<TranslateController> {
+export class TranslateController implements Controller<TranslateController, 'translate'> {
     public constructor(
         private yandex: YandexTranslateService,
         private reverso: ReversoTranslateService,
         private deepl: DeeplTranslateService,
     ) {}
+
+    public async ['POST /translate/a'](@Body() body: { text: string }) {
+    }
 
     public async ['POST /translate'](@Body() body: { text: string }) {
         const [yandex, reverso, deepl] = await Promise.allSettled([
