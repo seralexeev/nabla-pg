@@ -1,8 +1,17 @@
 # @flstk/pg
 
-This is a part of [the fullstack toolbelt](../) provides a simple and clear way to manage your data access layer based on [postgraphile](https://github.com/graphile/postgraphile). You can consider it as a replacement for a more traditional approach such [sequelize](https://github.com/sequelize/sequelize) or [TypeORM](https://github.com/typeorm/typeorm).
+This is a part of [the fullstack toolbelt](../) provides a simple and clear way to manage your data access layer based on [postgraphile](https://github.com/graphile/postgraphile). You can consider it as a replacement for a more traditional ORM based approach such [sequelize](https://github.com/sequelize/sequelize) or [TypeORM](https://github.com/typeorm/typeorm).
 
-### Installation
+-   Uses all the power of **typescript's** type system;
+-   Provides **codegen cli** to keep your code up to date with your db;
+-   Migrations with cli;
+-   Transaction and safepoint support;
+-   Rich and explains in debug mode;
+-   Provides low level api when necessary to do raw sql queries;
+-   Simple, straightforward and strongly types api;
+-   React hooks.
+
+## Installation
 
 ```bash
 # npm
@@ -22,85 +31,135 @@ In order to get proper nullable type inference you have to enable `strict` mode 
 }s
 ```
 
-### TLDR;
-
-As you can see below it is super easy to query a graph of entities from your database. Here you can look at [a full example](../pg-example).
-
-```ts
-import { Pg, generateEntityFiles, createDefaultPg } from '@flstk/pg';
-import { Orders } from './entities/OrderEntity';
-import { Users } from './entities/UserEntity';
-
-(async () => {
-    const pg = createDefaultPg('postgres://flstk:flstk@localhost:5432/flstk');
-
-    const { id: userId } = await Users.create(pg, {
-        item: { name: 'Nick' },
-        selector: ['id', 'name'],
-    });
-
-    await Orders.create(pg, {
-        item: { userId, comment: 'Order #1' },
-    });
-
-    const users = await Users.find(t, {
-        selector: {
-            id: true,
-            name: true,
-            orders: { id: true, comment: true },
-        },
-    });
-
-    console.log(JSON.stringify(users, null, 2));
-})();
-```
-
-### Getting started
+## Getting started
 
 The whole idea is quite simple.
 
-1. [Define your database structure](#defining-database-structure).
-2. Generate entities using cli
-3. Make you first query using all power of typescript completion and type checking!
+1. [Define your database structure](#defining-database-structure);
+2. Generate entities using provided cli;
+3. Use provided typed query api.
 
-#### Defining database structure.
+### Defining database structure.
 
-This library doesn't provide a migration functionality, you can use any migration tool ([graphile-migrate](https://github.com/graphile/migrate), [TypORM](https://github.com/typeorm/typeorm), [sequelize](https://github.com/sequelize/sequelize), [node-pg-migrate](https://github.com/salsita/node-pg-migrate), etc.) as you want or or use just a plain DDL queries. For simplicity we will use plain DDL queries.
+This library provides a database [migration tool](../pg-migration), but it's not necessary to use it. You can use any migration tool ([graphile-migrate](https://github.com/graphile/migrate), [TypORM](https://github.com/typeorm/typeorm), [sequelize](https://github.com/sequelize/sequelize), [node-pg-migrate](https://github.com/salsita/node-pg-migrate), etc.) as you want or or use just a plain DDL queries.
 
-**@flstk/pg** exposes single interface to your database: [Pg](./src/db.ts). Using this object you can make any queries, it uses [node-postgres](https://github.com/brianc/node-postgres) and pool for connection pooling under the hood. In order to get `Pg` your can use factory method `createDefaultPg` or create new instance of `Pg` class if you need full control. The first argument is `connection string` (`postgres://password:user@host:port/database`) or [Pool](https://node-postgres.com/api/pool) instance. The second argument is an [additional configuration](#configuration). The library uses `NonNullRelationsPlugin`,`PgNumericToBigJsPlugin`, `ConnectionFilterPlugin`, `PgManyToManyPlugin`,`PgSimplifyInflectorPlugin` and some special configurations hence using `createDefaultPg` factory method is the most preferable way.
+To generate empty migration run command:
+
+```bash
+npx @flstk/pg-migration create -d src/migrations first_migration
+```
+
+-   `-d src/migrations` is a directory of your migrations
+-   `first_migration` is a name of migration
+
+for more information run `npx @flstk/pg-migration -h`
+
+This will create a new file `<timestamp>_name.ts` in the specified directory with empty function:
+
+```ts
+export default async (t: Transaction) => {};
+```
+
+All migrations run in a transaction, so you won't get corrupted state of your database.
+
+`Transaction` - an interface with following methods:
+
+-   `sql` - low level api, works with tagged template strings and handles potential sql injections
+-   `gql` - low level api, to work with postgraphile directly
+-   `savepoint` - creates [postgres SAVEPOINT](https://www.postgresql.org/docs/current/sql-savepoint.html)
+
+Good practice is to keep your migrations immutable and don't import any data or methods which can be changed. Let's create our first migration.
+
+```ts
+export default async (t: Transaction) => {
+    await t.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+
+    await t.sql`CREATE OR REPLACE FUNCTION trigger_set_updated_at()
+        RETURNS TRIGGER AS $$
+            BEGIN
+                NEW.updated_at = clock_timestamp();
+                RETURN NEW;
+            END;
+        $$ LANGUAGE plpgsql`;
+
+    await t.sql`CREATE TABLE IF NOT EXISTS users (
+          id uuid PRIMARY KEY DEFAULT uuid_generate_v4()
+        , name text
+        , email text
+        , updated_at timestamptz NOT NULL DEFAULT clock_timestamp()
+        , created_at timestamptz NOT NULL DEFAULT clock_timestamp()
+    )`;
+
+    await t.sql`CREATE TRIGGER users_updated_at BEFORE UPDATE ON users FOR EACH ROW EXECUTE PROCEDURE trigger_set_updated_at()`;
+};
+```
+
+As you can see `sql` method takes tagged template as argument and returns promise;
+
+-   On the first call we create extension `uuid-ossp` in order to use uuid type in our models;
+-   The second call creates function which updates `updated_at` automatically when row is being updated;
+-   The third call creates our entity;
+-   The fourth call creates trigger to call `trigger_set_updated_at` on every row change.
+
+You can omit all the `updated_at` steps, but it is a good practice to have this field and `created_at` as well.
+
+To apply this and all migration from directory you have run following command:
+
+```bash
+npx @flstk/pg-migration run -d src/migrations -c 'postgres://flstk:flstk@localhost:5432/flstk'
+```
+
+-   `-d src/migrations` is a directory of your migrations
+-   `-c postgres://flstk:flstk@localhost:5432/flstk` is a connection string to the database
+
+The next step is entity code generation. It's always challenging to keep your code and mode up to date, but fortunately there is a code gen cli:
+
+```bash
+@flstk/pg -d src/entities/generated -i @projects/expat/shared/entities/generated -c 'postgres://flstk:flstk@localhost:5432/flstk'
+```
+
+-   `-d src/entities/generated` is a directory of your entities (if it's not present cli will create it)
+-   `-c postgres://flstk:flstk@localhost:5432/flstk` is a connection string to the database
+-   `-i @projects/entities/generated` is an import path. It necessary if you use path aliases in your project. If not, just omit this argument and all imports will be relative.
+
+The command creates directory and generates typescript files with entity definitions:
+
+```ts
+/**
+ * This file was auto-generated please do not modify it!
+ * To update models use @flstk/pg cli
+ */
+
+import type { EntityBase, DefaultValue, EntityConnection, IdPkey } from '@flstk/pg-core';
+import { EntityAccessor } from '@flstk/pg-core';
+
+export type UserEntity = EntityBase<IdPkey> & {
+    name: string | null;
+    email: string | null;
+    updatedAt: DefaultValue<Date>;
+    createdAt: DefaultValue<Date>;
+};
+
+export const Users = new EntityAccessor<UserEntity>('User');
+```
+
+As you can see the the cli generated type according your db model. That's it.
+
+## Queries
+
+**@flstk/pg** exposes single interface to your database: [Pg](./src/db.ts). Using this object you can make any queries, it uses [node-postgres](https://github.com/brianc/node-postgres) pool for connection pooling under the hood. In order to get `Pg` your can use factory method `createDefaultPg` or create new instance of `Pg` class if you need full control. Save this instance as a singleton and use it while your app is running.
+
+### createDefaultPg
+
+Using this factory is the most preferable way to create an `Pg` instance.
+The first argument is `connection string` (`postgres://password:user@host:port/database`) or [Pool](https://node-postgres.com/api/pool) instance. The second argument is an [additional configuration](#configuration). The library uses `NonNullRelationsPlugin`,`PgNumericToBigJsPlugin`, `ConnectionFilterPlugin`, `PgManyToManyPlugin`,`PgSimplifyInflectorPlugin` and some special configurations.
 
 `Pg` instance has several extremely convenient methods:
 
 1. `getSchema: Promise<GraphQLSchema>` - to get postgraphile generated Graphql schema
 2. `transaction: <T>(fn: ServerSavepointCallback<T>): Promise<T>` - to make a new transaction / savepoint
-3. `sql` - to execute raw sql queries using tagged template string syntax in a safe way handling sql injections.
-4. `gql` - to execute raw gql queries and mutations
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+3. `sql` - low level api to execute raw sql queries
+4. `gql` - low level api to execute raw gql queries
 
 ### Queries
 
@@ -486,3 +545,37 @@ export const GqlTable = <E extends EntityBase, F extends FieldSelector<E, F>>({
 ```
 
 You can find more examples in the tests
+![Example](../../images/example1.gif)
+
+### TLDR;
+
+[full example](../pg-example)
+
+```ts
+import { Pg, generateEntityFiles, createDefaultPg } from '@flstk/pg';
+import { Orders } from './entities/OrderEntity';
+import { Users } from './entities/UserEntity';
+
+(async () => {
+    const pg = createDefaultPg('postgres://flstk:flstk@localhost:5432/flstk');
+
+    const { id: userId } = await Users.create(pg, {
+        item: { name: 'Nick' },
+        selector: ['id', 'name'],
+    });
+
+    await Orders.create(pg, {
+        item: { userId, comment: 'Order #1' },
+    });
+
+    const users = await Users.find(t, {
+        selector: {
+            id: true,
+            name: true,
+            orders: { id: true, comment: true },
+        },
+    });
+
+    console.log(JSON.stringify(users, null, 2));
+})();
+```
